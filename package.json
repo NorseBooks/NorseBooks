@@ -1,5 +1,5 @@
 {
-  "name": "norse-books",
+  "name": "norsebooks",
   "version": "2.0.0",
   "description": "The NorseBooks project seeks to provide Luther College students a place to buy and sell textbooks to each other.",
   "author": "Will Allen",
@@ -7,12 +7,14 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:backend": "nest build",
+    "build:frontend": "cd app && npm run build && cd ..",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -24,6 +26,7 @@
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/serve-static": "^2.2.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
