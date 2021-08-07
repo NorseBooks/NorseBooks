@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://www.norsebooks.com/img/favicon-512.png" width="128" alt="NorseBooks logo" />
+  <img src="app/src/assets/img/logo.png" width="128" alt="NorseBooks logo" />
 </p>
 
 <h1 align="center">NorseBooks</h1>
