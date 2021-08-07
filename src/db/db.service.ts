@@ -53,7 +53,7 @@ export class DBService {
       max: 20,
     });
 
-    this.initializeDatabase();
+    this.initDB();
   }
 
   /**
@@ -257,8 +257,25 @@ export class DBService {
   /**
    * Initialize the database.
    */
-  private async initializeDatabase(): Promise<void> {
-    await this.executeAllFiles('init');
+  private async initDB(): Promise<void> {
+    const tables = [
+      'NB_IMAGE',
+      'NB_USER',
+      'NB_SESSION',
+      'NB_VERIFY',
+      'NB_PASSWORD_RESET',
+      'NB_DEPARTMENT',
+      'NB_BOOK_CONDITION',
+      'NB_BOOK',
+      'NB_REPORT',
+      'NB_MESSAGE',
+      'NB_SEARCH_SORT',
+      'NB_RESOURCE',
+      'NB_FEEDBACK',
+      'NB_USER_INTEREST',
+      'NB_REFERRAL',
+    ];
+    await this.executeFiles(tables.map((table) => `init/${table}.sql`));
   }
 
   /**
