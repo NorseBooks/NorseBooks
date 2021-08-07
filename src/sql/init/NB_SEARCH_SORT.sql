@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS "NB_SEARCH_SORT" (
+  "id"    SERIAL      NOT NULL,
+  "name"  VARCHAR(63) NOT NULL,
+  "query" VARCHAR(63) NOT NULL,
+
+  PRIMARY KEY ("id")
+);

@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS "NB_IMAGE" (
+  "id"         CHAR(16)        NOT NULL DEFAULT SUBSTR(MD5(RANDOM()::TEXT), 0, 17),
+  "data"       VARCHAR(262144) NOT NULL,
+  "createTime" TIMESTAMP       NOT NULL DEFAULT NOW(),
+
+  PRIMARY KEY ("id")
+);
