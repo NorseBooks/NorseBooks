@@ -44,7 +44,7 @@ interface OrderOptions {
 export class DBService {
   private pool: Pool;
   private closed = false;
-  private sqlPath = 'sql';
+  private sqlPath = 'src/sql';
 
   constructor() {
     this.pool = new Pool({
@@ -52,6 +52,8 @@ export class DBService {
       ssl: { rejectUnauthorized: false },
       max: 20,
     });
+
+    this.initializeDatabase();
   }
 
   /**
@@ -220,6 +222,43 @@ export class DBService {
       await this.pool.end();
       this.closed = true;
     }
+  }
+
+  /**
+   *
+   * @param dbm The database manager.
+   * @param table The table to populate.
+   * @param values Values to be inserted into the table.
+   */
+  private async populateTable<T>(
+    tableName: string,
+    values: T[],
+  ): Promise<void> {
+    const rows = await this.execute<any>(`SELECT * FROM "${tableName}";`);
+
+    if (rows.length === 0) {
+      const columns = Object.keys(values[0])
+        .map((columnName) => `"${columnName}"`)
+        .join(', ');
+      const queryValues = values
+        .map(
+          (row) =>
+            `(${Object.values(row)
+              .map((value) => `'${value}'`)
+              .join(', ')})`,
+        )
+        .join(', ');
+
+      const sql = `INSERT INTO "${tableName}" (${columns}) VALUES ${queryValues};`;
+      await this.execute(sql);
+    }
+  }
+
+  /**
+   * Initialize the database.
+   */
+  private async initializeDatabase(): Promise<void> {
+    await this.executeAllFiles('init');
   }
 
   /**
