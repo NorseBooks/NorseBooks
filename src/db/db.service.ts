@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Pool, types } from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as csv from 'csv';
 
 /**
  * Database URL
@@ -44,7 +45,7 @@ interface OrderOptions {
 export class DBService {
   private pool: Pool;
   private closed = false;
-  private sqlPath = 'src/sql';
+  private sqlPath = path.join('src', 'sql');
 
   constructor() {
     this.pool = new Pool({
@@ -225,9 +226,9 @@ export class DBService {
   }
 
   /**
+   * Populates a database table.
    *
-   * @param dbm The database manager.
-   * @param table The table to populate.
+   * @param tableName The table to populate.
    * @param values Values to be inserted into the table.
    */
   private async populateTable<T>(
@@ -255,6 +256,35 @@ export class DBService {
   }
 
   /**
+   * Populates a static database table from a CSV file.
+   *
+   * @param tableName The table to populate.
+   */
+  private async populateStaticTable(tableName: string): Promise<void> {
+    const rows = await this.execute<any>(`SELECT * FROM "${tableName}";`);
+
+    if (rows.length === 0) {
+      const data = await fs.promises.readFile(
+        path.join('src', 'tables', `${tableName}.csv`),
+      );
+      const parser = csv.parse(data, { columns: true });
+
+      for await (const row of parser) {
+        const keys = Object.keys(row)
+          .map((key) => `"${key}"`)
+          .join(', ');
+        const values = Object.values(row)
+          .map(() => '?')
+          .join(', ');
+
+        const sql = `INSERT INTO "${tableName}" (${keys}) VALUES (${values});`;
+        const params = Object.values(row);
+        await this.execute(sql, params);
+      }
+    }
+  }
+
+  /**
    * Initialize the database.
    */
   private async initDB(): Promise<void> {
@@ -276,6 +306,10 @@ export class DBService {
       'NB_REFERRAL',
     ];
     await this.executeFiles(tables.map((table) => `init/${table}.sql`));
+
+    await this.populateStaticTable('NB_DEPARTMENT');
+    await this.populateStaticTable('NB_BOOK_CONDITION');
+    await this.populateStaticTable('NB_SEARCH_SORT');
   }
 
   /**

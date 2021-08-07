@@ -1,0 +1,9 @@
+id,name,query
+0,Newest,listedTimestamp DESC
+1,Oldest,listedTimestamp ASC
+2,Author (A-Z),author ASC
+3,Author (Z-A),author DESC
+4,Price (low-high),price ASC
+5,Price (high-low),price DESC
+6,Condition (good-poor),conditionId ASC
+7,Condition (poor-good),conditionId DESC
