@@ -4,6 +4,7 @@ import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DBService } from './services/db/db.service';
+import { ResourceService } from './services/resource/resource.service';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { DBService } from './services/db/db.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, DBService],
+  providers: [AppService, DBService, ResourceService],
 })
 export class AppModule {}

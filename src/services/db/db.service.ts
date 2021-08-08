@@ -5,42 +5,45 @@ import * as path from 'path';
 import * as csv from 'csv';
 
 /**
- * Database URL
+ * Database URL.
  */
 const dbURL = process.env.DATABASE_URL;
 
 /**
- * Log database service errors
+ * Log database service errors.
  */
 const logErrors = true;
 
 /**
- * Parse timestamps
+ * Parse timestamps.
  */
 types.setTypeParser(1114, (timestamp) =>
   new Date(timestamp + '+0000').getTime(),
 );
 
 /**
- * Map of fields to values
+ * Map of fields to values.
  */
 interface FieldMap {
   [fieldName: string]: any;
 }
 
 /**
- * Query sort order options
+ * Query sort order options.
  */
 type SortOrder = 'ASC' | 'DESC';
 
 /**
- * Order options
+ * Order options.
  */
 interface OrderOptions {
   fieldName: string;
   sortOrder: SortOrder;
 }
 
+/**
+ * Database service.
+ */
 @Injectable()
 export class DBService {
   private pool: Pool;
@@ -289,6 +292,7 @@ export class DBService {
    */
   private async initDB(): Promise<void> {
     const tables = [
+      'NB_RESOURCE',
       'NB_IMAGE',
       'NB_USER',
       'NB_SESSION',
@@ -300,7 +304,6 @@ export class DBService {
       'NB_REPORT',
       'NB_MESSAGE',
       'NB_SEARCH_SORT',
-      'NB_RESOURCE',
       'NB_FEEDBACK',
       'NB_USER_INTEREST',
       'NB_REFERRAL',
