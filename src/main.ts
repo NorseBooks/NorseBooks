@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as enforce from 'express-sslify';
+import * as cookieParser from 'cookie-parser';
 
 /**
  * Debug/production environment.
@@ -21,6 +22,8 @@ async function bootstrap(): Promise<void> {
   if (!debug) {
     app.use(enforce.HTTPS({ trustProtoHeader: true }));
   }
+
+  app.use(cookieParser());
 
   await app.listen(port);
   console.log(`App running on port ${port}`);
