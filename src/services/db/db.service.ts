@@ -268,7 +268,7 @@ export class DBService {
 
     if (rows.length === 0) {
       const data = await fs.promises.readFile(
-        path.join('src', 'tables', `${tableName}.csv`),
+        path.join('src', 'sql', 'tables', `${tableName}.csv`),
       );
       const parser = csv.parse(data, { columns: true });
 
@@ -310,6 +310,7 @@ export class DBService {
     ];
     await this.executeFiles(tables.map((table) => `init/${table}.sql`));
 
+    await this.populateStaticTable('NB_RESOURCE');
     await this.populateStaticTable('NB_DEPARTMENT');
     await this.populateStaticTable('NB_BOOK_CONDITION');
     await this.populateStaticTable('NB_SEARCH_SORT');
