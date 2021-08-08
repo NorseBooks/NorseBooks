@@ -215,7 +215,7 @@ export class DBService {
     const filenames = (await fs.promises.readdir(dirpath)).filter((filename) =>
       filename.endsWith(ext),
     );
-    return await this.executeFiles(filenames, [], dirpath);
+    return this.executeFiles(filenames, [], dirpath);
   }
 
   /**

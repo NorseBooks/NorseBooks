@@ -53,7 +53,7 @@ export class UserService {
         if (!emailExists) {
           const passwordHash = await this.hashPassword(password);
 
-          return await this.dbService.create<NBUser>(this.tableName, {
+          return this.dbService.create<NBUser>(this.tableName, {
             firstname,
             lastname,
             email,
@@ -155,7 +155,7 @@ export class UserService {
       if (userExists) {
         const passwordHash = await this.hashPassword(newPassword);
 
-        return await this.dbService.updateByID<NBUser>(this.tableName, userID, {
+        return this.dbService.updateByID<NBUser>(this.tableName, userID, {
           passwordHash,
         });
       } else {
@@ -207,7 +207,7 @@ export class UserService {
     } else {
       const image = await this.imageService.createImage(imageData);
 
-      return await this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
         imageID: image.id,
       });
     }
@@ -225,7 +225,7 @@ export class UserService {
     if (user.imageID) {
       await this.imageService.deleteImage(user.imageID);
 
-      return await this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
         imageID: null,
       });
     } else {
