@@ -44,10 +44,15 @@ export class ResourceService {
    *
    * @returns All resources.
    */
-  public async getResources(): Promise<NBResource[]> {
-    return this.dbService.list<NBResource>(this.tableName, {
+  public async getResources(): Promise<{ [name: string]: string }> {
+    const resources = await this.dbService.list<NBResource>(this.tableName, {
       fieldName: 'name',
       sortOrder: 'ASC',
     });
+
+    return resources.reduce((acc, current) => {
+      acc[current.name] = current.value;
+      return acc;
+    }, {});
   }
 }
