@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DBService } from './services/db/db.service';
 import { ResourceService } from './services/resource/resource.service';
+import { ImageService } from './services/image/image.service';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { ResourceService } from './services/resource/resource.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, DBService, ResourceService],
+  providers: [AppService, DBService, ResourceService, ImageService],
 })
 export class AppModule {}
