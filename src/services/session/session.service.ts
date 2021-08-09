@@ -6,6 +6,9 @@ import { NBSession } from './session.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
 
+/**
+ * Session table service.
+ */
 @Injectable()
 export class SessionService {
   private readonly tableName = 'NB_SESSION';

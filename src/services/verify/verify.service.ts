@@ -6,6 +6,9 @@ import { NBVerify } from './verify.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
 
+/**
+ * Verify table service.
+ */
 @Injectable()
 export class VerifyService {
   private readonly tableName = 'NB_VERIFY';

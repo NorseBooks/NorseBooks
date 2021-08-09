@@ -10,6 +10,7 @@ import { ImageService } from './services/image/image.service';
 import { UserService } from './services/user/user.service';
 import { SessionService } from './services/session/session.service';
 import { VerifyService } from './services/verify/verify.service';
+import { PasswordResetService } from './services/password-reset/password-reset.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { VerifyService } from './services/verify/verify.service';
     UserService,
     SessionService,
     VerifyService,
+    PasswordResetService,
   ],
 })
 export class AppModule {}
