@@ -9,6 +9,7 @@ import { ResourceService } from './services/resource/resource.service';
 import { ImageService } from './services/image/image.service';
 import { UserService } from './services/user/user.service';
 import { SessionService } from './services/session/session.service';
+import { VerifyService } from './services/verify/verify.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SessionService } from './services/session/session.service';
     ImageService,
     UserService,
     SessionService,
+    VerifyService,
   ],
 })
 export class AppModule {}
