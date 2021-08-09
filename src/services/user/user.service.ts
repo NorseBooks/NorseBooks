@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { ImageService } from '../image/image.service';
+import { SessionService } from '../session/session.service';
 import { NBUser } from './user.interface';
+import { NBSession } from '../session/session.interface';
 import { ServiceException } from '../service.exception';
 import * as bcrypt from 'bcrypt';
 
@@ -17,6 +19,8 @@ export class UserService {
     private readonly dbService: DBService,
     private readonly resourceService: ResourceService,
     private readonly imageService: ImageService,
+    @Inject(forwardRef(() => SessionService))
+    private readonly sessionService: SessionService,
   ) {}
 
   /**
@@ -230,6 +234,38 @@ export class UserService {
       });
     } else {
       return user;
+    }
+  }
+
+  /**
+   * Log a user in and return the new session.
+   *
+   * @param email The user's email address.
+   * @param password The user's password.
+   * @returns The new user session.
+   */
+  public async login(email: string, password: string): Promise<NBSession> {
+    const userExists = await this.userExistsByEmail(email);
+
+    if (userExists) {
+      const user = await this.getUserByEmail(email);
+      const passwordMatch = await this.passwordMatch(
+        password,
+        user.passwordHash,
+      );
+
+      if (passwordMatch) {
+        const sql = `UPDATE "${this.tableName}" SET "lastLoginTime" = NOW() WHERE id = ?;`;
+        const params = [user.id];
+        await this.dbService.execute(sql, params);
+
+        const session = await this.sessionService.createSession(user.id);
+        return session;
+      } else {
+        throw new ServiceException('Invalid login');
+      }
+    } else {
+      throw new ServiceException('Invalid login');
     }
   }
 

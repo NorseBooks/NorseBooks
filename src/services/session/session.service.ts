@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { UserService } from '../user/user.service';
@@ -13,6 +13,7 @@ export class SessionService {
   constructor(
     private readonly dbService: DBService,
     private readonly resourceService: ResourceService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
