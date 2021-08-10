@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { NBImage } from './image.interface';
@@ -13,6 +13,7 @@ export class ImageService {
   private readonly tableName = 'NB_IMAGE';
 
   constructor(
+    @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
     private readonly resourceService: ResourceService,
   ) {}

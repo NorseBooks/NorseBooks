@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { NBResource } from './resource.interface';
 
@@ -9,7 +9,10 @@ import { NBResource } from './resource.interface';
 export class ResourceService {
   private readonly tableName = 'NB_RESOURCE';
 
-  constructor(private readonly dbService: DBService) {}
+  constructor(
+    @Inject(forwardRef(() => DBService))
+    private readonly dbService: DBService,
+  ) {}
 
   /**
    * Determine whether or not an app resource exists.

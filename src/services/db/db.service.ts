@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Pool, types } from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'csv';
+import { ResourceService } from '../resource/resource.service';
+import { UserService } from '../user/user.service';
+import { VerifyService } from '../verify/verify.service';
+import { PasswordResetService } from '../password-reset/password-reset.service';
 
 /**
  * Database URL.
@@ -50,7 +54,16 @@ export class DBService {
   private closed = false;
   private sqlPath = path.join('src', 'sql');
 
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => ResourceService))
+    private readonly resourceService: ResourceService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => VerifyService))
+    private readonly verifyService: VerifyService,
+    @Inject(forwardRef(() => PasswordResetService))
+    private readonly passwordResetService: PasswordResetService,
+  ) {
     this.pool = new Pool({
       connectionString: dbURL,
       ssl: { rejectUnauthorized: false },
@@ -288,6 +301,16 @@ export class DBService {
   }
 
   /**
+   * Prune records from the database.
+   */
+  private async pruneRecords(): Promise<void> {
+    console.log('HEY!');
+    await this.userService.pruneUnverifiedUsers();
+    await this.verifyService.pruneVerifications();
+    await this.passwordResetService.prunePasswordResets();
+  }
+
+  /**
    * Initialize the database.
    */
   private async initDB(): Promise<void> {
@@ -314,6 +337,16 @@ export class DBService {
     await this.populateStaticTable('NB_DEPARTMENT');
     await this.populateStaticTable('NB_BOOK_CONDITION');
     await this.populateStaticTable('NB_SEARCH_SORT');
+
+    const pruneIntervalResource = await this.resourceService.getResource(
+      'PRUNE_INTERVAL',
+    );
+    const pruneInterval = parseInt(pruneIntervalResource);
+
+    await this.pruneRecords();
+    setInterval(async () => {
+      await this.pruneRecords();
+    }, pruneInterval * 1000);
   }
 
   /**

@@ -16,6 +16,7 @@ export class UserService {
   private readonly tableName = 'NB_USER';
 
   constructor(
+    @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
     private readonly resourceService: ResourceService,
     private readonly imageService: ImageService,

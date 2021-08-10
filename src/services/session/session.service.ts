@@ -14,6 +14,7 @@ export class SessionService {
   private readonly tableName = 'NB_SESSION';
 
   constructor(
+    @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
     private readonly resourceService: ResourceService,
     @Inject(forwardRef(() => UserService))

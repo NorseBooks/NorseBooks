@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { UserService } from '../user/user.service';
@@ -14,6 +14,7 @@ export class PasswordResetService {
   private readonly tableName = 'NB_PASSWORD_RESET';
 
   constructor(
+    @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
