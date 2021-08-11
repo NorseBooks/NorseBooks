@@ -304,7 +304,6 @@ export class DBService {
    * Prune records from the database.
    */
   private async pruneRecords(): Promise<void> {
-    console.log('HEY!');
     await this.userService.pruneUnverifiedUsers();
     await this.verifyService.pruneVerifications();
     await this.passwordResetService.prunePasswordResets();
