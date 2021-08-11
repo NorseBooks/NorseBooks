@@ -19,11 +19,16 @@ const dbURL = process.env.DATABASE_URL;
 const logErrors = true;
 
 /**
- * Parse timestamps.
+ * Parse timestamp type.
  */
 types.setTypeParser(1114, (timestamp) =>
   new Date(timestamp + '+0000').getTime(),
 );
+
+/**
+ * Parse money type.
+ */
+types.setTypeParser(790, (amount) => parseFloat(amount.slice(1)));
 
 /**
  * Map of fields to values.
