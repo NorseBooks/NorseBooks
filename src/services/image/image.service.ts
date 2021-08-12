@@ -15,6 +15,7 @@ export class ImageService {
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
+    @Inject(forwardRef(() => ResourceService))
     private readonly resourceService: ResourceService,
   ) {}
 

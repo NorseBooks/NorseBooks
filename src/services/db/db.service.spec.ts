@@ -1,12 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DBService } from './db.service';
+import { ConfigModule } from '@nestjs/config';
+import { DBService } from '../db/db.service';
+import { ResourceService } from '../resource/resource.service';
+import { ImageService } from '../image/image.service';
+import { UserService } from '../user/user.service';
+import { SessionService } from '../session/session.service';
+import { VerifyService } from '../verify/verify.service';
+import { PasswordResetService } from '../password-reset/password-reset.service';
 
 describe('DBService', () => {
   let service: DBService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DBService],
+      imports: [ConfigModule.forRoot()],
+      providers: [
+        DBService,
+        ResourceService,
+        ImageService,
+        UserService,
+        SessionService,
+        VerifyService,
+        PasswordResetService,
+      ],
     }).compile();
 
     service = module.get<DBService>(DBService);

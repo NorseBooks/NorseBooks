@@ -9,16 +9,6 @@ import { VerifyService } from '../verify/verify.service';
 import { PasswordResetService } from '../password-reset/password-reset.service';
 
 /**
- * Database URL.
- */
-const dbURL = process.env.DATABASE_URL;
-
-/**
- * Log database service errors.
- */
-const logErrors = true;
-
-/**
  * Parse timestamp type.
  */
 types.setTypeParser(1114, (timestamp) =>
@@ -58,6 +48,11 @@ export class DBService {
   private pool: Pool;
   private closed = false;
   private sqlPath = path.join('src', 'sql');
+  private testing = !!parseInt(process.env.TESTING);
+  private dbURL = !this.testing
+    ? process.env.DATABASE_URL
+    : process.env.HEROKU_POSTGRESQL_SILVER_URL;
+  private logErrors = true;
 
   constructor(
     @Inject(forwardRef(() => ResourceService))
@@ -70,12 +65,14 @@ export class DBService {
     private readonly passwordResetService: PasswordResetService,
   ) {
     this.pool = new Pool({
-      connectionString: dbURL,
+      connectionString: this.dbURL,
       ssl: { rejectUnauthorized: false },
       max: 20,
     });
 
-    this.initDB();
+    if (!this.testing) {
+      this.initDB();
+    }
   }
 
   /**
@@ -125,7 +122,7 @@ export class DBService {
       conn.release();
       return res.rows;
     } catch (err) {
-      if (logErrors) {
+      if (this.logErrors) {
         this.logError(stmt, params, undefined, err);
       }
       conn.release();
@@ -154,7 +151,7 @@ export class DBService {
         const results = await conn.query(stmts[i], params[i] || []);
         res.push(results.rows);
       } catch (err) {
-        if (logErrors) {
+        if (this.logErrors) {
           this.logError(stmts[i], params[i], undefined, err);
         }
         conn.release();

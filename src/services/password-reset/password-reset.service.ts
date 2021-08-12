@@ -16,7 +16,9 @@ export class PasswordResetService {
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
+    @Inject(forwardRef(() => ResourceService))
     private readonly resourceService: ResourceService,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
   ) {}
 
