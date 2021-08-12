@@ -14,6 +14,11 @@ const debug = !!parseInt(process.env.DEBUG);
 const port = process.env.PORT || 3000;
 
 /**
+ * Mark not testing.
+ */
+process.env.TESTING = '0';
+
+/**
  * Bootstrap the application.
  */
 async function bootstrap(): Promise<void> {

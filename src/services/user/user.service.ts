@@ -18,7 +18,9 @@ export class UserService {
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
+    @Inject(forwardRef(() => ResourceService))
     private readonly resourceService: ResourceService,
+    @Inject(forwardRef(() => ImageService))
     private readonly imageService: ImageService,
     @Inject(forwardRef(() => SessionService))
     private readonly sessionService: SessionService,

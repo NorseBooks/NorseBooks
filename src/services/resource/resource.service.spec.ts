@@ -1,16 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ResourceService } from './resource.service';
+import { ResourceService } from '../resource/resource.service';
+import { getService, afterTestsWait } from '../test-util';
 
 describe('ResourceService', () => {
   let service: ResourceService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [ResourceService],
-    }).compile();
-
-    service = module.get<ResourceService>(ResourceService);
+    service = await getService(ResourceService);
   });
+
+  afterAll(afterTestsWait);
 
   it('should be defined', () => {
     expect(service).toBeDefined();
