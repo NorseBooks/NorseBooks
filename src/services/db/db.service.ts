@@ -41,6 +41,14 @@ interface OrderOptions {
 }
 
 /**
+ * Database initialization options
+ */
+interface InitDBOptions {
+  populateStatic?: boolean;
+  prune?: boolean;
+}
+
+/**
  * Database service.
  */
 @Injectable()
@@ -53,6 +61,23 @@ export class DBService {
     ? process.env.DATABASE_URL
     : process.env.HEROKU_POSTGRESQL_SILVER_URL;
   private logErrors = true;
+  private tables = [
+    'NB_RESOURCE',
+    'NB_IMAGE',
+    'NB_USER',
+    'NB_SESSION',
+    'NB_VERIFY',
+    'NB_PASSWORD_RESET',
+    'NB_DEPARTMENT',
+    'NB_BOOK_CONDITION',
+    'NB_BOOK',
+    'NB_REPORT',
+    'NB_MESSAGE',
+    'NB_SEARCH_SORT',
+    'NB_FEEDBACK',
+    'NB_USER_INTEREST',
+    'NB_REFERRAL',
+  ];
 
   constructor(
     @Inject(forwardRef(() => ResourceService))
@@ -71,7 +96,11 @@ export class DBService {
     });
 
     if (!this.testing) {
-      this.initDB();
+      this.initDB({ populateStatic: true, prune: !this.testing });
+    } else {
+      this.wipeTestDB().then(() =>
+        this.initDB({ populateStatic: true, prune: !this.testing }),
+      );
     }
   }
 
@@ -314,40 +343,46 @@ export class DBService {
   /**
    * Initialize the database.
    */
-  private async initDB(): Promise<void> {
-    const tables = [
-      'NB_RESOURCE',
-      'NB_IMAGE',
-      'NB_USER',
-      'NB_SESSION',
-      'NB_VERIFY',
-      'NB_PASSWORD_RESET',
-      'NB_DEPARTMENT',
-      'NB_BOOK_CONDITION',
-      'NB_BOOK',
-      'NB_REPORT',
-      'NB_MESSAGE',
-      'NB_SEARCH_SORT',
-      'NB_FEEDBACK',
-      'NB_USER_INTEREST',
-      'NB_REFERRAL',
-    ];
-    await this.executeFiles(tables.map((table) => `init/${table}.sql`));
+  private async initDB(options: InitDBOptions = {}): Promise<void> {
+    await this.executeFiles(this.tables.map((table) => `init/${table}.sql`));
 
-    await this.populateStaticTable('NB_RESOURCE');
-    await this.populateStaticTable('NB_DEPARTMENT');
-    await this.populateStaticTable('NB_BOOK_CONDITION');
-    await this.populateStaticTable('NB_SEARCH_SORT');
+    if (options.populateStatic ?? true) {
+      await this.populateStaticTable('NB_RESOURCE');
+      await this.populateStaticTable('NB_DEPARTMENT');
+      await this.populateStaticTable('NB_BOOK_CONDITION');
+      await this.populateStaticTable('NB_SEARCH_SORT');
+    }
 
-    const pruneIntervalResource = await this.resourceService.getResource(
-      'PRUNE_INTERVAL',
-    );
-    const pruneInterval = parseInt(pruneIntervalResource);
+    if (options.prune ?? true) {
+      const pruneIntervalResource = await this.resourceService.getResource(
+        'PRUNE_INTERVAL',
+      );
+      const pruneInterval = parseInt(pruneIntervalResource);
 
-    await this.pruneRecords();
-    setInterval(async () => {
       await this.pruneRecords();
-    }, pruneInterval * 1000);
+      setInterval(async () => {
+        await this.pruneRecords();
+      }, pruneInterval * 1000);
+    }
+  }
+
+  /**
+   * Wipe the test database.
+   */
+  private async wipeTestDB(): Promise<void> {
+    const testPool = new Pool({
+      connectionString: process.env.HEROKU_POSTGRESQL_SILVER_URL,
+      ssl: { rejectUnauthorized: false },
+      max: 20,
+    });
+
+    const tablesReversed = [].concat(this.tables).reverse();
+
+    for (const table of tablesReversed) {
+      await testPool.query(`DROP TABLE IF EXISTS ${table};`);
+    }
+
+    await testPool.end();
   }
 
   /**

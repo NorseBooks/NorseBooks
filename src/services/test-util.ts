@@ -13,16 +13,25 @@ import { PasswordResetService } from './password-reset/password-reset.service';
 /**
  * Time in milliseconds to wait after each test.
  */
-const afterTestsWaitTime = 100;
+const testWaitTime = 1000;
+
+/**
+ * Wait asynchronously.
+ *
+ * @param ms The amount of time to wait in milliseconds.
+ */
+async function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * Get an instance of a service.
  *
- * @param service The service class.
+ * @param serviceType The service class.
  * @returns The instance of the service.
  */
 export async function getService<TInput = any, TResult = TInput>(
-  service: Type<TInput> | Abstract<TInput> | string | symbol,
+  serviceType: Type<TInput> | Abstract<TInput> | string | symbol,
 ): Promise<TResult> {
   const module: TestingModule = await Test.createTestingModule({
     imports: [ConfigModule.forRoot()],
@@ -37,12 +46,16 @@ export async function getService<TInput = any, TResult = TInput>(
     ],
   }).compile();
 
-  return module.get<TInput, TResult>(service);
+  const service = module.get<TInput, TResult>(serviceType);
+
+  await wait(testWaitTime);
+
+  return service;
 }
 
 /**
  * Wait after each test is done before jest teardown.
  */
 export async function afterTestsWait(): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, afterTestsWaitTime));
+  return wait(testWaitTime);
 }
