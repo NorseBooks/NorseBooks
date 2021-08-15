@@ -11,9 +11,9 @@ import { VerifyService } from './verify/verify.service';
 import { PasswordResetService } from './password-reset/password-reset.service';
 
 /**
- * Time in milliseconds to wait after each test.
+ * Time in milliseconds to wait before and after each test.
  */
-const testWaitTime = 1000;
+const testWaitTime = 100;
 
 /**
  * Wait asynchronously.
@@ -57,5 +57,5 @@ export async function getService<TInput = any, TResult = TInput>(
  * Wait after each test is done before jest teardown.
  */
 export async function afterTestsWait(): Promise<void> {
-  return wait(testWaitTime);
+  await wait(testWaitTime);
 }

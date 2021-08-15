@@ -96,11 +96,7 @@ export class DBService {
     });
 
     if (!this.testing) {
-      this.initDB({ populateStatic: true, prune: !this.testing });
-    } else {
-      this.wipeTestDB().then(() =>
-        this.initDB({ populateStatic: true, prune: !this.testing }),
-      );
+      this.initDB({ populateStatic: true, prune: true });
     }
   }
 
@@ -343,7 +339,7 @@ export class DBService {
   /**
    * Initialize the database.
    */
-  private async initDB(options: InitDBOptions = {}): Promise<void> {
+  public async initDB(options: InitDBOptions = {}): Promise<void> {
     await this.executeFiles(this.tables.map((table) => `init/${table}.sql`));
 
     if (options.populateStatic ?? true) {
@@ -369,7 +365,7 @@ export class DBService {
   /**
    * Wipe the test database.
    */
-  private async wipeTestDB(): Promise<void> {
+  public async wipeTestDB(): Promise<void> {
     const testPool = new Pool({
       connectionString: process.env.HEROKU_POSTGRESQL_SILVER_URL,
       ssl: { rejectUnauthorized: false },

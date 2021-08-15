@@ -2,15 +2,15 @@ import { SessionService } from '../session/session.service';
 import { getService, afterTestsWait } from '../test-util';
 
 describe('SessionService', () => {
-  let service: SessionService;
+  let sessionService: SessionService;
 
   beforeEach(async () => {
-    service = await getService(SessionService);
+    sessionService = await getService(SessionService);
   });
 
   afterAll(afterTestsWait);
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(sessionService).toBeDefined();
   });
 });
