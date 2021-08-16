@@ -100,13 +100,13 @@ describe('DBService', () => {
     // delete by fields
     await dbService.deleteByFields('NB_RESOURCE', {
       name: resourceName,
-      value: resourceValue,
+      value: newResourceValue,
     });
 
     // get by fields
     const resource6 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
       name: resourceName,
-      value: resourceValue,
+      value: newResourceValue,
     });
     expect(resource6).not.toBeDefined();
   });
