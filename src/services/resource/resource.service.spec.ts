@@ -1,14 +1,12 @@
 import { ResourceService } from '../resource/resource.service';
-import { getService, afterTestsWait } from '../test-util';
+import { getService } from '../test-util';
 
 describe('ResourceService', () => {
   let resourceService: ResourceService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     resourceService = await getService(ResourceService);
   });
-
-  afterAll(afterTestsWait);
 
   it('should be defined', () => {
     expect(resourceService).toBeDefined();

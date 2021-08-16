@@ -1,16 +1,14 @@
 import { DBService } from '../db/db.service';
-import { getService, afterTestsWait } from '../test-util';
+import { getService } from '../test-util';
 import { NBResource } from '../resource/resource.interface';
 import { NBImage } from '../image/image.interface';
 
 describe('DBService', () => {
   let dbService: DBService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     dbService = await getService(DBService);
   });
-
-  afterAll(afterTestsWait);
 
   it('should be defined', () => {
     expect(dbService).toBeDefined();
