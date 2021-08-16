@@ -375,7 +375,7 @@ export class DBService {
     const tablesReversed = [].concat(this.tables).reverse();
 
     for (const table of tablesReversed) {
-      await testPool.query(`DROP TABLE IF EXISTS ${table};`);
+      await testPool.query(`DROP TABLE IF EXISTS "${table}";`);
     }
 
     await testPool.end();
@@ -626,7 +626,7 @@ export class DBService {
       DELETE FROM "${tableName}" WHERE
       ${Object.keys(fields)
         .map((fieldName) => `"${fieldName}" = ?`)
-        .join(' AND ')}`;
+        .join(' AND ')};`;
     const params = Object.values(fields);
 
     await this.execute(sql, params);

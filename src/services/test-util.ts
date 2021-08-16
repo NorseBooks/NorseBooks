@@ -13,7 +13,7 @@ import { PasswordResetService } from './password-reset/password-reset.service';
 /**
  * Time in milliseconds to wait before and after each test.
  */
-const testWaitTime = 100;
+const testWaitTime = 0;
 
 /**
  * Wait asynchronously.
