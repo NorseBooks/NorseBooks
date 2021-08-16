@@ -26,7 +26,7 @@ describe('ResourceService', () => {
     expect(resource1).toBeDefined();
     expect(resource1).toBe('12');
     const resource2 = await resourceService.getResource('FAKE_RESOURCE');
-    expect(resource2).not.toBeDefined();
+    expect(resource2).toBeUndefined();
   });
 
   it('should get all resources', async () => {

@@ -47,7 +47,7 @@ describe('DBService', () => {
     // delete by ID
     await dbService.deleteByID('NB_IMAGE', image1.id);
     const image5 = await dbService.getByID<NBImage>('NB_IMAGE', image1.id);
-    expect(image5).not.toBeDefined();
+    expect(image5).toBeUndefined();
   });
 
   it('should create and get/update/delete by fields', async () => {
@@ -88,7 +88,7 @@ describe('DBService', () => {
       name: resourceName,
       value: resourceValue,
     });
-    expect(resource4).not.toBeDefined();
+    expect(resource4).toBeUndefined();
     const resource5 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
       name: resourceName,
       value: newResourceValue,
@@ -108,7 +108,7 @@ describe('DBService', () => {
       name: resourceName,
       value: newResourceValue,
     });
-    expect(resource6).not.toBeDefined();
+    expect(resource6).toBeUndefined();
   });
 
   it('should create and get/update/delete custom', async () => {
@@ -156,7 +156,7 @@ describe('DBService', () => {
     const image5 = await dbService.getCustom<NBImage>('NB_IMAGE', '"id" = ?', [
       image1.id,
     ]);
-    expect(image5).not.toBeDefined();
+    expect(image5).toBeUndefined();
   });
 
   it('should create, list, and delete', async () => {
