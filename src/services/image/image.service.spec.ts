@@ -13,7 +13,7 @@ describe('ImageService', () => {
     expect(imageService).toBeDefined();
   });
 
-  it('should create, check existance, and delete an image', async () => {
+  it('should create, check existence, and delete an image', async () => {
     // create
     const imageData = 'abc';
     const image = await imageService.createImage(imageData);
@@ -22,7 +22,7 @@ describe('ImageService', () => {
     expect(image).toHaveProperty('data');
     expect(image).toHaveProperty('createTime');
 
-    // check existance
+    // check existence
     const imageExists1 = await imageService.imageExists(image.id);
     expect(imageExists1).toBeTruthy();
 
