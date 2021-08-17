@@ -1,0 +1,40 @@
+# Action name
+name: Run tests and compile coverage reports and documentation
+
+# When the action will run
+on:
+  push: # On dev branch push
+    branches: [main, dev]
+  pull_request: # On dev branch pull request
+    branches: [main, dev]
+
+  # Allows the workflow to be run manually from the Actions tab
+  workflow_dispatch:
+
+# Jobs that can be run
+jobs:
+  # The test job
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Sequence of steps to be executed
+    steps:
+      # Clones the repository under $GITHUB_WORKSPACE so the job can access it
+      - name: Clone the repo and checkout the dev branch
+        uses: actions/checkout@v2
+
+      # Use Node.js
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.17.4'
+
+      # Run the tests
+      - name: Run tests
+        env:
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: |
+          printf "HEROKU_POSTGRESQL_SILVER_URL=${TEST_DATABASE_URL}\nTESTING=1\n" > .env  # Generate the .env file
+          npm install                                                                     # Install NPM packages
+          npm run test                                                                    # Run tests and generate coverage data
