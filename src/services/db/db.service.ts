@@ -1,60 +1,103 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Pool, types } from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'csv';
+import { ResourceService } from '../resource/resource.service';
+import { UserService } from '../user/user.service';
+import { VerifyService } from '../verify/verify.service';
+import { PasswordResetService } from '../password-reset/password-reset.service';
 
 /**
- * Database URL
- */
-const dbURL = process.env.DATABASE_URL;
-
-/**
- * Log database service errors
- */
-const logErrors = true;
-
-/**
- * Parse timestamps
+ * Parse timestamp type.
  */
 types.setTypeParser(1114, (timestamp) =>
   new Date(timestamp + '+0000').getTime(),
 );
 
 /**
- * Map of fields to values
+ * Parse money type.
+ */
+types.setTypeParser(790, (amount) => parseFloat(amount.slice(1)));
+
+/**
+ * Map of fields to values.
  */
 interface FieldMap {
   [fieldName: string]: any;
 }
 
 /**
- * Query sort order options
+ * Query sort order options.
  */
 type SortOrder = 'ASC' | 'DESC';
 
 /**
- * Order options
+ * Order options.
  */
 interface OrderOptions {
   fieldName: string;
   sortOrder: SortOrder;
 }
 
+/**
+ * Database initialization options
+ */
+interface InitDBOptions {
+  populateStatic?: boolean;
+  prune?: boolean;
+}
+
+/**
+ * Database service.
+ */
 @Injectable()
 export class DBService {
   private pool: Pool;
   private closed = false;
   private sqlPath = path.join('src', 'sql');
+  private testing = !!parseInt(process.env.TESTING);
+  private dbURL = !this.testing
+    ? process.env.DATABASE_URL
+    : process.env.HEROKU_POSTGRESQL_SILVER_URL;
+  private logErrors = true;
+  private tables = [
+    'NB_RESOURCE',
+    'NB_IMAGE',
+    'NB_USER',
+    'NB_SESSION',
+    'NB_VERIFY',
+    'NB_PASSWORD_RESET',
+    'NB_DEPARTMENT',
+    'NB_BOOK_CONDITION',
+    'NB_BOOK',
+    'NB_REPORT',
+    'NB_MESSAGE',
+    'NB_SEARCH_SORT',
+    'NB_FEEDBACK',
+    'NB_USER_INTEREST',
+    'NB_REFERRAL',
+  ];
 
-  constructor() {
+  constructor(
+    @Inject(forwardRef(() => ResourceService))
+    private readonly resourceService: ResourceService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => VerifyService))
+    private readonly verifyService: VerifyService,
+    @Inject(forwardRef(() => PasswordResetService))
+    private readonly passwordResetService: PasswordResetService,
+  ) {
     this.pool = new Pool({
-      connectionString: dbURL,
+      connectionString: this.dbURL,
       ssl: { rejectUnauthorized: false },
       max: 20,
     });
 
-    this.initDB();
+    if (!this.testing) {
+      this.initDB({ populateStatic: true, prune: true });
+    }
   }
 
   /**
@@ -104,7 +147,7 @@ export class DBService {
       conn.release();
       return res.rows;
     } catch (err) {
-      if (logErrors) {
+      if (this.logErrors) {
         this.logError(stmt, params, undefined, err);
       }
       conn.release();
@@ -133,7 +176,7 @@ export class DBService {
         const results = await conn.query(stmts[i], params[i] || []);
         res.push(results.rows);
       } catch (err) {
-        if (logErrors) {
+        if (this.logErrors) {
           this.logError(stmts[i], params[i], undefined, err);
         }
         conn.release();
@@ -212,7 +255,7 @@ export class DBService {
     const filenames = (await fs.promises.readdir(dirpath)).filter((filename) =>
       filename.endsWith(ext),
     );
-    return await this.executeFiles(filenames, [], dirpath);
+    return this.executeFiles(filenames, [], dirpath);
   }
 
   /**
@@ -265,7 +308,7 @@ export class DBService {
 
     if (rows.length === 0) {
       const data = await fs.promises.readFile(
-        path.join('src', 'tables', `${tableName}.csv`),
+        path.join('src', 'sql', 'tables', `${tableName}.csv`),
       );
       const parser = csv.parse(data, { columns: true });
 
@@ -285,31 +328,57 @@ export class DBService {
   }
 
   /**
+   * Prune records from the database.
+   */
+  private async pruneRecords(): Promise<void> {
+    await this.userService.pruneUnverifiedUsers();
+    await this.verifyService.pruneVerifications();
+    await this.passwordResetService.prunePasswordResets();
+  }
+
+  /**
    * Initialize the database.
    */
-  private async initDB(): Promise<void> {
-    const tables = [
-      'NB_IMAGE',
-      'NB_USER',
-      'NB_SESSION',
-      'NB_VERIFY',
-      'NB_PASSWORD_RESET',
-      'NB_DEPARTMENT',
-      'NB_BOOK_CONDITION',
-      'NB_BOOK',
-      'NB_REPORT',
-      'NB_MESSAGE',
-      'NB_SEARCH_SORT',
-      'NB_RESOURCE',
-      'NB_FEEDBACK',
-      'NB_USER_INTEREST',
-      'NB_REFERRAL',
-    ];
-    await this.executeFiles(tables.map((table) => `init/${table}.sql`));
+  public async initDB(options: InitDBOptions = {}): Promise<void> {
+    await this.executeFiles(this.tables.map((table) => `init/${table}.sql`));
 
-    await this.populateStaticTable('NB_DEPARTMENT');
-    await this.populateStaticTable('NB_BOOK_CONDITION');
-    await this.populateStaticTable('NB_SEARCH_SORT');
+    if (options.populateStatic ?? true) {
+      await this.populateStaticTable('NB_RESOURCE');
+      await this.populateStaticTable('NB_DEPARTMENT');
+      await this.populateStaticTable('NB_BOOK_CONDITION');
+      await this.populateStaticTable('NB_SEARCH_SORT');
+    }
+
+    if (options.prune ?? true) {
+      const pruneIntervalResource = await this.resourceService.getResource(
+        'PRUNE_INTERVAL',
+      );
+      const pruneInterval = parseInt(pruneIntervalResource);
+
+      await this.pruneRecords();
+      setInterval(async () => {
+        await this.pruneRecords();
+      }, pruneInterval * 1000);
+    }
+  }
+
+  /**
+   * Wipe the test database.
+   */
+  public async wipeTestDB(): Promise<void> {
+    const testPool = new Pool({
+      connectionString: process.env.HEROKU_POSTGRESQL_SILVER_URL,
+      ssl: { rejectUnauthorized: false },
+      max: 20,
+    });
+
+    const tablesReversed = [].concat(this.tables).reverse();
+
+    for (const table of tablesReversed) {
+      await testPool.query(`DROP TABLE IF EXISTS "${table}";`);
+    }
+
+    await testPool.end();
   }
 
   /**
@@ -557,7 +626,7 @@ export class DBService {
       DELETE FROM "${tableName}" WHERE
       ${Object.keys(fields)
         .map((fieldName) => `"${fieldName}" = ?`)
-        .join(' AND ')}`;
+        .join(' AND ')};`;
     const params = Object.values(fields);
 
     await this.execute(sql, params);
