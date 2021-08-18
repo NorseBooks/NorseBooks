@@ -12,6 +12,7 @@
     "build:backend": "nest build",
     "build:frontend": "cd app && npm run build && cd ..",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "document": "npx typedoc --options typedoc.json",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -64,6 +65,7 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
+    "typedoc": "^0.21.5",
     "typescript": "^4.3.5"
   },
   "jest": {

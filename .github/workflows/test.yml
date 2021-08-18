@@ -38,3 +38,45 @@ jobs:
           printf "HEROKU_POSTGRESQL_SILVER_URL=${TEST_DATABASE_URL}\nTESTING=1\n" > .env  # Generate the .env file
           npm install                                                                     # Install NPM packages
           npm run test                                                                    # Run tests and generate coverage data
+
+      # Generate documentation and coverage report
+      - name: Generate documentation and coverage report
+        env:
+          BOT_AUTH: ${{ secrets.GITHUB_TOKEN }}
+          BOT_EMAIL: ${{ secrets.BOT_EMAIL }}
+          BOT_USER: ${{ secrets.BOT_USER }}
+        run: |
+          # Generate documentation
+          npm run document
+
+          # Authenticate the bot
+          git config --global user.email "$BOT_EMAIL"
+          git config --global user.name "$BOT_USER"
+
+          # Clone the repo and update the docs
+          git clone "https://github.com/NorseBooks/docs.git"
+          mv documentation docs
+          cd docs
+          rm -rf docs
+          mv documentation docs
+          cd docs
+
+          # Include coverage numbers
+          cp -R ../../coverage .
+
+          # Add, commit, and push
+          git add .
+
+          # Exit with code 0 as no new additions means exit code 1
+          git commit -m "Update docs" || exit 0
+          git push "https://$BOT_AUTH@github.com/NorseBooks/docs.git"
+
+          # Clone the coverage repo and update the coverage report
+          cd ../..
+          git clone "https://github.com/NorseBooks/coverage.git" cvg
+          cd cvg
+          cp ../coverage/lcov-report/* .
+          cp ../coverage/lcov.info .
+          git add .
+          git commit -m "Update coverage" || exit 0
+          git push "https://$BOT_AUTH@github.com/NorseBooks/coverage.git"

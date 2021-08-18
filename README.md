@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/src/assets/img/logo.png" width="128" alt="NorseBooks logo" />
+  <img src="https://raw.githubusercontent.com/NorseBooks/NorseBooks/main/app/src/assets/img/logo.png" width="128" alt="NorseBooks logo" />
 </p>
 
 <h1 align="center">NorseBooks</h1>
