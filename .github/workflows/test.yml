@@ -75,7 +75,7 @@ jobs:
           cd ../..
           git clone "https://github.com/NorseBooks/coverage.git" cvg
           cd cvg
-          cp ../coverage/lcov-report/* .
+          cp -r ../coverage/lcov-report/* .
           cp ../coverage/lcov.info .
           git add .
           git commit -m "Update coverage" || exit 0
