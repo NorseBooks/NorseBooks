@@ -11,6 +11,7 @@ import { UserService } from './services/user/user.service';
 import { SessionService } from './services/session/session.service';
 import { VerifyService } from './services/verify/verify.service';
 import { PasswordResetService } from './services/password-reset/password-reset.service';
+import { DepartmentService } from './services/department/department.service';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PasswordResetService } from './services/password-reset/password-reset.s
     SessionService,
     VerifyService,
     PasswordResetService,
+    DepartmentService,
   ],
 })
 export class AppModule {}

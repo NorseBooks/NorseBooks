@@ -1,4 +1,4 @@
-import { ImageService } from '../image/image.service';
+import { ImageService } from './image.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 

@@ -1,4 +1,4 @@
-import { PasswordResetService } from '../password-reset/password-reset.service';
+import { PasswordResetService } from './password-reset.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 import { UserService } from '../user/user.service';
