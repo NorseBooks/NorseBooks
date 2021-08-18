@@ -33,8 +33,8 @@ describe('DepartmentService', () => {
 
   it("should get a department's name", async () => {
     // get department name
-    const department1 = await departmentService.getDepartmentName(36);
-    expect(department1).toBe('Music');
+    const department = await departmentService.getDepartmentName(36);
+    expect(department).toBe('Music');
     await expect(departmentService.getDepartmentName(-1)).rejects.toThrow(
       ServiceException,
     );

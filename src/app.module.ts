@@ -12,6 +12,7 @@ import { SessionService } from './services/session/session.service';
 import { VerifyService } from './services/verify/verify.service';
 import { PasswordResetService } from './services/password-reset/password-reset.service';
 import { DepartmentService } from './services/department/department.service';
+import { BookConditionService } from './services/book-condition/book-condition.service';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { DepartmentService } from './services/department/department.service';
     VerifyService,
     PasswordResetService,
     DepartmentService,
+    BookConditionService,
   ],
 })
 export class AppModule {}
