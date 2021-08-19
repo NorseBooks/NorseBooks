@@ -1,4 +1,4 @@
-import { UserService } from '../user/user.service';
+import { UserService } from './user.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 

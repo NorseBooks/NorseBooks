@@ -1,4 +1,4 @@
-import { VerifyService } from '../verify/verify.service';
+import { VerifyService } from './verify.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 import { UserService } from '../user/user.service';
