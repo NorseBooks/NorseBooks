@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS "NB_BOOK" (
   "price"        MONEY         NOT NULL,
   "conditionID"  INT           NOT NULL,
   "listTime"     TIMESTAMP     NOT NULL DEFAULT NOW(),
+  "editTime"     TIMESTAMP,
 
   PRIMARY KEY ("id"),
 
