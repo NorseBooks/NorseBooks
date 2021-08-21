@@ -13,6 +13,7 @@ import { DepartmentService } from './department/department.service';
 import { BookConditionService } from './book-condition/book-condition.service';
 import { MessageService } from './message/message.service';
 import { SearchSortService } from './search-sort/search-sort.service';
+import { FeedbackService } from './feedback/feedback.service';
 
 /**
  * Time in milliseconds to wait before and after each test.
@@ -51,6 +52,7 @@ export async function getService<TInput = any, TResult = TInput>(
       BookConditionService,
       MessageService,
       SearchSortService,
+      FeedbackService,
     ],
   }).compile();
 
