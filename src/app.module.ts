@@ -14,6 +14,7 @@ import { PasswordResetService } from './services/password-reset/password-reset.s
 import { DepartmentService } from './services/department/department.service';
 import { BookConditionService } from './services/book-condition/book-condition.service';
 import { MessageService } from './services/message/message.service';
+import { SearchSortService } from './services/search-sort/search-sort.service';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MessageService } from './services/message/message.service';
     DepartmentService,
     BookConditionService,
     MessageService,
+    SearchSortService,
   ],
 })
 export class AppModule {}
