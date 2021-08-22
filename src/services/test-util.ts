@@ -11,6 +11,8 @@ import { VerifyService } from './verify/verify.service';
 import { PasswordResetService } from './password-reset/password-reset.service';
 import { DepartmentService } from './department/department.service';
 import { BookConditionService } from './book-condition/book-condition.service';
+import { BookService } from './book/book.service';
+import { ReportService } from './report/report.service';
 
 /**
  * Time in milliseconds to wait before and after each test.
@@ -47,6 +49,8 @@ export async function getService<TInput = any, TResult = TInput>(
       PasswordResetService,
       DepartmentService,
       BookConditionService,
+      BookService,
+      ReportService,
     ],
   }).compile();
 
