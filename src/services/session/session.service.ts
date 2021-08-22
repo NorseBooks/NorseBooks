@@ -92,7 +92,7 @@ export class SessionService {
     if (res.length === 1) {
       return res[0];
     } else {
-      throw new ServiceException('User or session does not exist');
+      throw new ServiceException('Session does not exist');
     }
   }
 

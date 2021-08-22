@@ -4,7 +4,12 @@
 
 <h1 align="center">NorseBooks</h1>
 
-<p align="center">The NorseBooks project seeks to provide Luther College students a place to buy and sell textbooks to each other.</p>
+The NorseBooks project seeks to provide Luther College students a place to buy and sell textbooks to each other.
+
+![Coverage lines](./coverage/badge-lines.svg)
+![Coverage functions](./coverage/badge-functions.svg)
+![Coverage statements](./coverage/badge-statements.svg)
+![Coverage branches](./coverage/badge-branches.svg)
 
 ## Table of Contents
 

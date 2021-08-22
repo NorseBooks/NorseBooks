@@ -1,11 +1,11 @@
 id,name,query
-0,Newest,listTime DESC
-1,Oldest,listTime ASC
-2,Title (A-Z),title ASC
-3,Title (Z-A),title DESC
-4,Author (A-Z),author ASC
-5,Author (Z-A),author DESC
-6,Price (low-high),price ASC
-7,Price (high-low),price DESC
-8,Condition (good-poor),conditionID ASC
-9,Condition (poor-good),conditionID DESC
+0,Newest,"""listTime"" DESC"
+1,Oldest,"""listTime"" ASC"
+2,Title (A-Z),"""title"" ASC"
+3,Title (Z-A),"""title"" DESC"
+4,Author (A-Z),"""author"" ASC"
+5,Author (Z-A),"""author"" DESC"
+6,Price (low-high),"""price"" ASC"
+7,Price (high-low),"""price"" DESC"
+8,Condition (good-poor),"""conditionID"" ASC"
+9,Condition (poor-good),"""conditionID"" DESC"
