@@ -18,9 +18,9 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --runInBand --config ./jest.config.ts",
+    "test": "jest --runInBand --config ./jest.config.ts && npx jest-coverage-badges",
     "test:watch": "jest --watch --runInBand --config ./jest.config.ts",
-    "test:cov": "jest --coverage --runInBand --config ./jest.config.ts",
+    "test:cov": "jest --coverage --runInBand --config ./jest.config.ts && npx jest-coverage-badges",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
