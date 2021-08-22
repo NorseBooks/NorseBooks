@@ -16,6 +16,8 @@ import { ReportService } from './report/report.service';
 import { MessageService } from './message/message.service';
 import { SearchSortService } from './search-sort/search-sort.service';
 import { FeedbackService } from './feedback/feedback.service';
+import { UserInterestService } from './user-interest/user-interest.service';
+import { ReferralService } from './referral/referral.service';
 
 /**
  * Time in milliseconds to wait before and after each test.
@@ -57,6 +59,8 @@ export async function getService<TInput = any, TResult = TInput>(
       MessageService,
       SearchSortService,
       FeedbackService,
+      UserInterestService,
+      ReferralService,
     ],
   }).compile();
 
