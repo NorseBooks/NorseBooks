@@ -1,6 +1,6 @@
-import { ServiceException } from '../service.exception';
+import { SessionService } from './session.service';
 import { getService } from '../test-util';
-import { SessionService } from '../session/session.service';
+import { ServiceException } from '../service.exception';
 import { UserService } from '../user/user.service';
 
 describe('SessionService', () => {

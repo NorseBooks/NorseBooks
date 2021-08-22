@@ -1,4 +1,4 @@
-import { ResourceService } from '../resource/resource.service';
+import { ResourceService } from './resource.service';
 import { getService } from '../test-util';
 
 describe('ResourceService', () => {

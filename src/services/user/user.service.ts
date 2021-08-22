@@ -5,6 +5,7 @@ import { ImageService } from '../image/image.service';
 import { SessionService } from '../session/session.service';
 import { NBUser } from './user.interface';
 import { NBSession } from '../session/session.interface';
+import { NBBook } from '../book/book.interface';
 import { ServiceException } from '../service.exception';
 import * as bcrypt from 'bcrypt';
 
@@ -139,6 +140,26 @@ export class UserService {
   }
 
   /**
+   * Get the books currently listed by a user.
+   *
+   * @param userID The user's ID.
+   * @returns All books currently listed by the user.
+   */
+  public async getCurrentBooks(userID: string): Promise<NBBook[]> {
+    const userExists = await this.userExists(userID);
+
+    if (userExists) {
+      return this.dbService.listByFields<NBBook>(
+        'NB_BOOK',
+        { userID },
+        { fieldName: 'listTime', sortOrder: 'ASC' },
+      );
+    } else {
+      throw new ServiceException('User does not exist');
+    }
+  }
+
+  /**
    * Set a user's password.
    *
    * @param userID The user's ID.
@@ -238,6 +259,51 @@ export class UserService {
     } else {
       return user;
     }
+  }
+
+  /**
+   * Increment the number of books a user has listed.
+   *
+   * @param userID The user's ID.
+   * @param num The number to increment by.
+   * @returns The updated user record.
+   */
+  public async incrementBooksListed(userID: string, num = 1): Promise<NBUser> {
+    const user = await this.getUser(userID);
+
+    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      numBooksListed: user.numBooksListed + num,
+    });
+  }
+
+  /**
+   * Increment the number of books a user has sold.
+   *
+   * @param userID The user's ID.
+   * @param num The number to increment by.
+   * @returns The updated user record.
+   */
+  public async incrementBooksSold(userID: string, num = 1): Promise<NBUser> {
+    const user = await this.getUser(userID);
+
+    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      numBooksSold: user.numBooksSold + num,
+    });
+  }
+
+  /**
+   * Increment the amount of money a user has made.
+   *
+   * @param userID The user's ID.
+   * @param amount The amount of money to add.
+   * @returns The updated user record.
+   */
+  public async addMoneyMade(userID: string, amount: number): Promise<NBUser> {
+    const user = await this.getUser(userID);
+
+    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      moneyMade: user.moneyMade + amount,
+    });
   }
 
   /**
