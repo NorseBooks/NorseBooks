@@ -38,20 +38,20 @@ describe('VerifyService', () => {
     const verificationExists1 = await verifyService.verificationExists(
       verification.id,
     );
-    expect(verificationExists1).toBeTruthy();
+    expect(verificationExists1).toBe(true);
 
     // check existence by user
     const verificationExists2 = await verifyService.verificationExistsByUserID(
       user.id,
     );
-    expect(verificationExists2).toBeTruthy();
+    expect(verificationExists2).toBe(true);
 
     // delete
     await verifyService.deleteVerification(verification.id);
     const verificationExists3 = await verifyService.verificationExists(
       verification.id,
     );
-    expect(verificationExists3).toBeFalsy();
+    expect(verificationExists3).toBe(false);
     await userService.deleteUser(user.id);
   });
 
@@ -68,7 +68,7 @@ describe('VerifyService', () => {
       password,
     );
     expect(user1).toBeDefined();
-    expect(user1.verified).toBeFalsy();
+    expect(user1.verified).toBe(false);
     const verification1 = await verifyService.createVerification(user1.id);
     expect(verification1).toBeDefined();
     expect(verification1).toHaveProperty('id');
@@ -94,7 +94,7 @@ describe('VerifyService', () => {
     await verifyService.verifyUser(verification1.id);
     const user2 = await userService.getUser(user1.id);
     expect(user2).toBeDefined();
-    expect(user2.verified).toBeTruthy();
+    expect(user2.verified).toBe(true);
     await expect(verifyService.verifyUser(verification1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -140,8 +140,8 @@ describe('VerifyService', () => {
     const verificationExists = await verifyService.verificationExists(
       verification1.id,
     );
-    expect(verificationExists).toBeFalsy();
+    expect(verificationExists).toBe(false);
     const userExists = await userService.userExists(user1.id);
-    expect(userExists).toBeFalsy();
+    expect(userExists).toBe(false);
   });
 });

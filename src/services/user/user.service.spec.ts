@@ -42,11 +42,11 @@ describe('UserService', () => {
 
     // check existence
     const userExists1 = await userService.userExists(user1.id);
-    expect(userExists1).toBeTruthy();
+    expect(userExists1).toBe(true);
 
     // check existence by email
     const userExists2 = await userService.userExistsByEmail(email);
-    expect(userExists2).toBeTruthy();
+    expect(userExists2).toBe(true);
 
     // get
     const user2 = await userService.getUser(user1.id);
@@ -66,7 +66,7 @@ describe('UserService', () => {
     // delete
     await userService.deleteUser(user1.id);
     const userExists3 = await userService.userExists(user1.id);
-    expect(userExists3).toBeFalsy();
+    expect(userExists3).toBe(false);
     await expect(userService.getUser(user1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -113,7 +113,7 @@ describe('UserService', () => {
     const user4 = await userService.setVerified(user1.id);
     expect(user4).toBeDefined();
     expect(user4.id).toBe(user1.id);
-    expect(user4.verified).toBeTruthy();
+    expect(user4.verified).toBe(true);
     const user5 = await userService.getUser(user1.id);
     expect(user5).toBeDefined();
     expect(user5).toEqual(user4);
@@ -141,7 +141,7 @@ describe('UserService', () => {
     // delete
     await userService.deleteUser(user1.id);
     const userExists = await userService.userExists(user1.id);
-    expect(userExists).toBeFalsy();
+    expect(userExists).toBe(false);
     await expect(userService.getUser(user1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -207,7 +207,7 @@ describe('UserService', () => {
     // delete
     await userService.deleteUser(user1.id);
     const userExists = await userService.userExists(user1.id);
-    expect(userExists).toBeFalsy();
+    expect(userExists).toBe(false);
     await expect(userService.getUser(user1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -254,7 +254,7 @@ describe('UserService', () => {
     // delete
     await userService.deleteUser(user1.id);
     const userExists = await userService.userExists(user1.id);
-    expect(userExists).toBeFalsy();
+    expect(userExists).toBe(false);
     await expect(userService.getUser(user1.id)).rejects.toThrow(
       ServiceException,
     );

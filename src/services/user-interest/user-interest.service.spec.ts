@@ -65,9 +65,9 @@ describe('UserInterestService', () => {
       user.id,
       departmentID,
     );
-    expect(interested1).toBeTruthy();
+    expect(interested1).toBe(true);
     const interested2 = await userInterestService.isInterested(user.id, 41);
-    expect(interested2).toBeFalsy();
+    expect(interested2).toBe(false);
 
     // drop interest
     await userInterestService.dropInterest(user.id, departmentID);
@@ -75,7 +75,7 @@ describe('UserInterestService', () => {
       user.id,
       departmentID,
     );
-    expect(interested3).toBeFalsy();
+    expect(interested3).toBe(false);
   });
 
   it('should note interest, get user interests, and drop interest', async () => {

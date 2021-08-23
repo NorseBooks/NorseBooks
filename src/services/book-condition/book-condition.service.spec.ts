@@ -16,9 +16,9 @@ describe('BookConditionService', () => {
   it('should check if book conditions exist', async () => {
     // exists
     const exists1 = await bookConditionService.bookConditionExists(3);
-    expect(exists1).toBeTruthy();
+    expect(exists1).toBe(true);
     const exists2 = await bookConditionService.bookConditionExists(-1);
-    expect(exists2).toBeFalsy();
+    expect(exists2).toBe(false);
   });
 
   it('should check if book conditions exist by name', async () => {
@@ -26,11 +26,11 @@ describe('BookConditionService', () => {
     const exists1 = await bookConditionService.bookConditionExistsByName(
       'Poor',
     );
-    expect(exists1).toBeTruthy();
+    expect(exists1).toBe(true);
     const exists2 = await bookConditionService.bookConditionExistsByName(
       'Perfect',
     );
-    expect(exists2).toBeFalsy();
+    expect(exists2).toBe(false);
   });
 
   it("should get a book condition's name", async () => {

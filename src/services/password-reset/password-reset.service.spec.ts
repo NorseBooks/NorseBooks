@@ -40,19 +40,19 @@ describe('PasswordResetService', () => {
     const passwordResetExists1 = await passwordResetService.passwordResetExists(
       passwordReset.id,
     );
-    expect(passwordResetExists1).toBeTruthy();
+    expect(passwordResetExists1).toBe(true);
 
     // check existence by user
     const passwordResetExists2 =
       await passwordResetService.passwordResetExistsByUserID(user.id);
-    expect(passwordResetExists2).toBeTruthy();
+    expect(passwordResetExists2).toBe(true);
 
     // delete
     await passwordResetService.deletePasswordReset(passwordReset.id);
     const passwordResetExists3 = await passwordResetService.passwordResetExists(
       passwordReset.id,
     );
-    expect(passwordResetExists3).toBeFalsy();
+    expect(passwordResetExists3).toBe(false);
     await userService.deleteUser(user.id);
   });
 
@@ -156,7 +156,7 @@ describe('PasswordResetService', () => {
     const passwordResetExists = await passwordResetService.passwordResetExists(
       passwordReset1.id,
     );
-    expect(passwordResetExists).toBeFalsy();
+    expect(passwordResetExists).toBe(false);
     await userService.deleteUser(user1.id);
   });
 });

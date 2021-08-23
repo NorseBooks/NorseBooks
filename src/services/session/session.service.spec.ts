@@ -36,7 +36,7 @@ describe('SessionService', () => {
 
     // check existence
     const sessionExists1 = await sessionService.sessionExists(session1.id);
-    expect(sessionExists1).toBeTruthy();
+    expect(sessionExists1).toBe(true);
 
     // get
     const session2 = await sessionService.getSession(session1.id);
@@ -46,7 +46,7 @@ describe('SessionService', () => {
     // delete
     await sessionService.deleteSession(session1.id);
     const sessionExists2 = await sessionService.sessionExists(session1.id);
-    expect(sessionExists2).toBeFalsy();
+    expect(sessionExists2).toBe(false);
     await userService.deleteUser(user.id);
     await expect(sessionService.createSession(user.id)).rejects.toThrow(
       ServiceException,

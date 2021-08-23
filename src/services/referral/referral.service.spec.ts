@@ -114,15 +114,15 @@ describe('ReferralService', () => {
     const reachedThreshold1 = await referralService.reachedReferralThreshold(
       user1.id,
     );
-    expect(reachedThreshold1).toBeFalsy();
+    expect(reachedThreshold1).toBe(false);
     const reachedThreshold2 = await referralService.reachedReferralThreshold(
       user2.id,
     );
-    expect(reachedThreshold2).toBeFalsy();
+    expect(reachedThreshold2).toBe(false);
     const reachedThreshold3 = await referralService.reachedReferralThreshold(
       user3.id,
     );
-    expect(reachedThreshold3).toBeFalsy();
+    expect(reachedThreshold3).toBe(false);
 
     // delete user referrals
     const referrals1 = await referralService.getReferrals(user1.id);

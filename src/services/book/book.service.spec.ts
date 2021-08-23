@@ -218,7 +218,7 @@ describe('BookService', () => {
 
     // check existence
     const bookExists1 = await bookService.bookExists(book1.id);
-    expect(bookExists1).toBeTruthy();
+    expect(bookExists1).toBe(true);
 
     // get
     const book2 = await bookService.getBook(book1.id);
@@ -235,7 +235,7 @@ describe('BookService', () => {
     // delete
     await bookService.deleteBook(book1.id, false);
     const bookExists2 = await bookService.bookExists(book1.id);
-    expect(bookExists2).toBeFalsy();
+    expect(bookExists2).toBe(false);
     await expect(bookService.getBook(book1.id)).rejects.toThrow(
       ServiceException,
     );

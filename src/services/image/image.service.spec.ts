@@ -24,12 +24,12 @@ describe('ImageService', () => {
 
     // check existence
     const imageExists1 = await imageService.imageExists(image.id);
-    expect(imageExists1).toBeTruthy();
+    expect(imageExists1).toBe(true);
 
     // delete
     await imageService.deleteImage(image.id);
     const imageExists2 = await imageService.imageExists(image.id);
-    expect(imageExists2).toBeFalsy();
+    expect(imageExists2).toBe(false);
   });
 
   it('should create, get, set, and delete an image', async () => {

@@ -55,7 +55,7 @@ describe('MessageService', () => {
 
     // check existence
     const messageExists1 = await messageService.messageExists(message1.id);
-    expect(messageExists1).toBeTruthy();
+    expect(messageExists1).toBe(true);
 
     // get
     const message2 = await messageService.getMessage(message1.id);
@@ -65,7 +65,7 @@ describe('MessageService', () => {
     // delete
     await messageService.deleteMessage(message1.id);
     const messageExists2 = await messageService.messageExists(message1.id);
-    expect(messageExists2).toBeFalsy();
+    expect(messageExists2).toBe(false);
     await expect(messageService.getMessage(message1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -160,7 +160,7 @@ describe('MessageService', () => {
     expect(message2).toBeDefined();
     expect(message2).not.toEqual(message1);
     expect(message2.id).toEqual(message1.id);
-    expect(message2.read).toBeTruthy();
+    expect(message2.read).toBe(true);
     const message3 = await messageService.getMessage(message1.id);
     expect(message3).toBeDefined();
     expect(message3).toEqual(message2);
@@ -170,7 +170,7 @@ describe('MessageService', () => {
     expect(message4).toBeDefined();
     expect(message4).not.toEqual(message2);
     expect(message4).toEqual(message1);
-    expect(message4.read).toBeFalsy();
+    expect(message4.read).toBe(false);
 
     // delete
     await messageService.deleteMessage(message1.id);

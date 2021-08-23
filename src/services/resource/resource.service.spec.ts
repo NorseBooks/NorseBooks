@@ -15,9 +15,9 @@ describe('ResourceService', () => {
   it('should check if resources exist', async () => {
     // exists
     const exists1 = await resourceService.resourceExists('SALT_ROUNDS');
-    expect(exists1).toBeTruthy();
+    expect(exists1).toBe(true);
     const exists2 = await resourceService.resourceExists('FAKE_RESOURCE');
-    expect(exists2).toBeFalsy();
+    expect(exists2).toBe(false);
   });
 
   it('should get a resource', async () => {
