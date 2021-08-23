@@ -1,12 +1,15 @@
 import { UserService } from './user.service';
+import { ImageService } from '../image/image.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 
 describe('UserService', () => {
   let userService: UserService;
+  let imageService: ImageService;
 
   beforeAll(async () => {
     userService = await getService(UserService);
+    imageService = await getService(ImageService);
   });
 
   it('should be defined', () => {
@@ -128,6 +131,8 @@ describe('UserService', () => {
     const user7 = await userService.getUser(user1.id);
     expect(user7).toBeDefined();
     expect(user7).toEqual(user6);
+    const userImage = await imageService.getImage(user6.imageID);
+    expect(userImage).toBeDefined();
 
     // delete image
     const user8 = await userService.deleteUserImage(user1.id);
@@ -143,6 +148,9 @@ describe('UserService', () => {
     const userExists = await userService.userExists(user1.id);
     expect(userExists).toBeFalsy();
     await expect(userService.getUser(user1.id)).rejects.toThrow(
+      ServiceException,
+    );
+    await expect(imageService.getImage(user1.imageID)).rejects.toThrow(
       ServiceException,
     );
   });
