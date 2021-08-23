@@ -82,7 +82,7 @@ describe('ReportService', () => {
 
     // check existence
     const reportExists1 = await reportService.reportExists(report1.id);
-    expect(reportExists1).toBeTruthy();
+    expect(reportExists1).toBe(true);
 
     // get
     const report2 = await reportService.getReport(report1.id);
@@ -92,7 +92,7 @@ describe('ReportService', () => {
     // delete
     await reportService.deleteReport(report1.id);
     const reportExists2 = await reportService.reportExists(report1.id);
-    expect(reportExists2).toBeFalsy();
+    expect(reportExists2).toBe(false);
     await expect(reportService.getReport(report1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -146,11 +146,11 @@ describe('ReportService', () => {
       user.id,
       book.id,
     );
-    expect(reportedBook1).toBeFalsy();
+    expect(reportedBook1).toBe(false);
 
     // check if user reported recently
     const reportedRecently1 = await reportService.userReportedRecently(user.id);
-    expect(reportedRecently1).toBeFalsy();
+    expect(reportedRecently1).toBe(false);
 
     // get user reported books
     const reportedBooks1 = await reportService.getUserBookReports(user.id);
@@ -171,11 +171,11 @@ describe('ReportService', () => {
       user.id,
       book.id,
     );
-    expect(reportedBook2).toBeTruthy();
+    expect(reportedBook2).toBe(true);
 
     // check if user reported recently
     const reportedRecently2 = await reportService.userReportedRecently(user.id);
-    expect(reportedRecently2).toBeTruthy();
+    expect(reportedRecently2).toBe(true);
 
     // get user reported books
     const reportedBooks2 = await reportService.getUserBookReports(user.id);
@@ -189,9 +189,9 @@ describe('ReportService', () => {
       user.id,
       book.id,
     );
-    expect(reportedBook3).toBeFalsy();
+    expect(reportedBook3).toBe(false);
     const reportedRecently3 = await reportService.userReportedRecently(user.id);
-    expect(reportedRecently3).toBeFalsy();
+    expect(reportedRecently3).toBe(false);
     const reportedBooks3 = await reportService.getUserBookReports(user.id);
     expect(reportedBooks3).toBeDefined();
     expect(reportedBooks3.length).toBe(0);

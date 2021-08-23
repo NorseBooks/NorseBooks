@@ -63,7 +63,7 @@ describe('FeedbackService', () => {
 
     // check existence
     const feedbackExists1 = await feedbackService.feedbackExists(feedback1.id);
-    expect(feedbackExists1).toBeTruthy();
+    expect(feedbackExists1).toBe(true);
 
     // get
     const feedback2 = await feedbackService.getFeedback(feedback1.id);
@@ -73,7 +73,7 @@ describe('FeedbackService', () => {
     // delete
     await feedbackService.deleteFeedback(feedback1.id);
     const feedbackExists2 = await feedbackService.feedbackExists(feedback1.id);
-    expect(feedbackExists2).toBeFalsy();
+    expect(feedbackExists2).toBe(false);
     await expect(feedbackService.getFeedback(feedback1.id)).rejects.toThrow(
       ServiceException,
     );
