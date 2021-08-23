@@ -12,10 +12,6 @@ describe('SessionService', () => {
     userService = await getService(UserService);
   });
 
-  it('should be defined', () => {
-    expect(sessionService).toBeDefined();
-  });
-
   it('should create, check existence, get, and delete a session', async () => {
     // create
     const firstname = 'Martin';

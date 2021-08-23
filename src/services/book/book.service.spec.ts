@@ -42,10 +42,6 @@ describe('BookService', () => {
     await userService.deleteUser(user.id);
   });
 
-  it('should be defined', () => {
-    expect(bookService).toBeDefined();
-  });
-
   it('should create and delete books', async () => {
     // create
     const book1 = await bookService.createBook({

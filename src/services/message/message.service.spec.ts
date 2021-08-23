@@ -34,10 +34,6 @@ describe('MessageService', () => {
     await userService.deleteUser(user2.id);
   });
 
-  it('should be defined', () => {
-    expect(messageService).toBeDefined();
-  });
-
   it('should send, check existence, get, and delete messages', async () => {
     // send
     const message1 = await messageService.sendMessage(

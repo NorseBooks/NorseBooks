@@ -27,10 +27,6 @@ describe('UserInterestService', () => {
     await userService.deleteUser(user.id);
   });
 
-  it('should be defined', () => {
-    expect(userInterestService).toBeDefined();
-  });
-
   it('should note interest, check if interested, and drop interest', async () => {
     // note interest
     const departmentID = 15;

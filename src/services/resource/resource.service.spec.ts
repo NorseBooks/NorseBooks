@@ -8,10 +8,6 @@ describe('ResourceService', () => {
     resourceService = await getService(ResourceService);
   });
 
-  it('should be defined', () => {
-    expect(resourceService).toBeDefined();
-  });
-
   it('should check if resources exist', async () => {
     // exists
     const exists1 = await resourceService.resourceExists('SALT_ROUNDS');

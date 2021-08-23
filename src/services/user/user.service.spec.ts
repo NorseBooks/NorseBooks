@@ -12,10 +12,6 @@ describe('UserService', () => {
     imageService = await getService(ImageService);
   });
 
-  it('should be defined', () => {
-    expect(userService).toBeDefined();
-  });
-
   it('should create, check existence, get, get books, and delete a user', async () => {
     // create
     const firstname = 'Martin';

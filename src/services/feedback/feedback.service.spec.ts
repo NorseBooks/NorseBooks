@@ -29,10 +29,6 @@ describe('FeedbackService', () => {
     await userService.deleteUser(user.id);
   });
 
-  it('should be defined', () => {
-    expect(feedbackService).toBeDefined();
-  });
-
   it('should send and delete feedback', async () => {
     // send invalid feedback
     await expect(feedbackService.sendFeedback(user.id, '')).rejects.toThrow(
