@@ -5,6 +5,7 @@ import { ImageService } from '../image/image.service';
 import { UserService } from '../user/user.service';
 import { DepartmentService } from '../department/department.service';
 import { BookConditionService } from '../book-condition/book-condition.service';
+import { SearchSortService } from '../search-sort/search-sort.service';
 import { NBBook } from './book.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
@@ -71,6 +72,8 @@ export class BookService {
     private readonly departmentService: DepartmentService,
     @Inject(forwardRef(() => BookConditionService))
     private readonly bookConditionService: BookConditionService,
+    @Inject(forwardRef(() => SearchSortService))
+    private readonly searchSortService: SearchSortService,
   ) {}
 
   /**
@@ -435,7 +438,63 @@ export class BookService {
     options: SearchBooksOptions,
     sortID: number,
   ): Promise<NBBook[]> {
-    // TODO: implement book searching after search sort service is complete
-    return [];
+    const departmentExists =
+      options.departmentID === undefined
+        ? true
+        : await this.departmentService.departmentExists(options.departmentID);
+
+    if (departmentExists) {
+      if (
+        options.courseNumber === undefined ||
+        (options.courseNumber >= 101 && options.courseNumber <= 499)
+      ) {
+        const sortOptionExists = await this.searchSortService.sortOptionExists(
+          sortID,
+        );
+
+        if (sortOptionExists) {
+          const query = options.query ?? '';
+          const searchLike = `%${query}%`;
+          const isbnSearch =
+            options.query === undefined ? '' : options.query.replace(/-/g, '');
+          const departmentQuery =
+            options.departmentID === undefined
+              ? ''
+              : ' "departmentID" = ? AND ';
+          const courseNumberQuery =
+            options.courseNumber === undefined
+              ? ''
+              : ' "courseNumber" = ? AND ';
+          const sortQuery = await this.searchSortService.getSortOption(sortID);
+
+          const sql = `
+            SELECT *
+            FROM "${this.tableName}"
+            WHERE
+              ${departmentQuery} ${courseNumberQuery} (
+                   LOWER("title")       LIKE LOWER(?)
+                OR LOWER("author")      LIKE LOWER(?)
+                OR LOWER("description") LIKE LOWER(?)
+                OR "ISBN10"             LIKE ?
+                OR "ISBN13"             LIKE ?
+              )
+            ORDER BY ${sortQuery.query};
+          `;
+          const params = [].concat(
+            options.departmentID ?? [],
+            options.courseNumber ?? [],
+            Array(3).fill(searchLike),
+            Array(2).fill(isbnSearch),
+          );
+          return this.dbService.execute<NBBook>(sql, params);
+        } else {
+          throw new ServiceException('Search sort option does not exist');
+        }
+      } else {
+        throw new ServiceException('Course number must be between 101 and 499');
+      }
+    } else {
+      throw new ServiceException('Department does not exist');
+    }
   }
 }
