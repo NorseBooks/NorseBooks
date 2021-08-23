@@ -1,4 +1,5 @@
 import { BookService } from './book.service';
+import { ImageService } from '../image/image.service';
 import { UserService } from '../user/user.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
@@ -6,6 +7,7 @@ import { NBUser } from '../user/user.interface';
 
 describe('BookService', () => {
   let bookService: BookService;
+  let imageService: ImageService;
   let userService: UserService;
   let user: NBUser;
 
@@ -28,6 +30,7 @@ describe('BookService', () => {
 
   beforeAll(async () => {
     bookService = await getService(BookService);
+    imageService = await getService(ImageService);
     userService = await getService(UserService);
   });
 
@@ -73,6 +76,8 @@ describe('BookService', () => {
     expect(book1).toHaveProperty('conditionID', conditionID);
     expect(book1).toHaveProperty('listTime');
     expect(book1).toHaveProperty('editTime', null);
+    const bookImage1 = await imageService.getImage(book1.imageID);
+    expect(bookImage1).toBeDefined();
 
     // create minimal
     const book2 = await bookService.createBook({
@@ -100,6 +105,8 @@ describe('BookService', () => {
     expect(book2).toHaveProperty('conditionID', conditionID);
     expect(book2).toHaveProperty('listTime');
     expect(book2).toHaveProperty('editTime', null);
+    const bookImage2 = await imageService.getImage(book2.imageID);
+    expect(bookImage2).toBeDefined();
 
     // check current books
     const currentBooks1 = await userService.getCurrentBooks(user.id);
@@ -122,6 +129,12 @@ describe('BookService', () => {
     expect(user2.numBooksListed).toBe(2);
     expect(user2.numBooksSold).toBe(1);
     expect(user2.moneyMade).toBe(price);
+    await expect(imageService.getImage(book1.id)).rejects.toThrow(
+      ServiceException,
+    );
+    await expect(imageService.getImage(book2.id)).rejects.toThrow(
+      ServiceException,
+    );
   });
 
   it('should create, edit, and delete books', async () => {
