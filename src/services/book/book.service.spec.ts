@@ -242,6 +242,68 @@ describe('BookService', () => {
   });
 
   it('should search books', async () => {
-    // TODO: search books
+    // search
+    const book1 = await bookService.createBook({
+      userID: user.id,
+      title,
+      author,
+      description,
+      ISBN10,
+      ISBN13,
+      imageData,
+      departmentID,
+      courseNumber,
+      price,
+      conditionID,
+    });
+    const book2 = await bookService.createBook({
+      userID: user.id,
+      title,
+      author,
+      description,
+      imageData,
+      departmentID,
+      price,
+      conditionID,
+    });
+    const books1 = await bookService.searchBooks({}, 0);
+    expect(books1).toBeDefined();
+    expect(books1.length).toBe(2);
+    expect(books1).toEqual([book2, book1]);
+    const books2 = await bookService.searchBooks({}, 1);
+    expect(books2).toBeDefined();
+    expect(books2.length).toBe(2);
+    expect(books2).toEqual([book1, book2]);
+    const books3 = await bookService.searchBooks({ query: ISBN10 }, 0);
+    expect(books3).toBeDefined();
+    expect(books3.length).toBe(1);
+    expect(books3).toEqual([book1]);
+    const books4 = await bookService.searchBooks({ departmentID }, 0);
+    expect(books4).toBeDefined();
+    expect(books4.length).toBe(2);
+    expect(books4).toEqual([book2, book1]);
+    const books5 = await bookService.searchBooks({ courseNumber }, 0);
+    expect(books5).toBeDefined();
+    expect(books5.length).toBe(1);
+    expect(books5).toEqual([book1]);
+
+    // search with invalid department
+    await expect(
+      bookService.searchBooks({ departmentID: -1 }, 0),
+    ).rejects.toThrow(ServiceException);
+
+    // search with invalid course number
+    await expect(
+      bookService.searchBooks({ courseNumber: 11 }, 0),
+    ).rejects.toThrow(ServiceException);
+
+    // search with invalid sort ID
+    await expect(bookService.searchBooks({}, -1)).rejects.toThrow(
+      ServiceException,
+    );
+
+    // delete books
+    await bookService.deleteBook(book1.id, false);
+    await bookService.deleteBook(book2.id, false);
   });
 });
