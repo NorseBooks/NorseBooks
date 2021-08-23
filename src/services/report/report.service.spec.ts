@@ -65,10 +65,6 @@ describe('ReportService', () => {
     await userService.deleteUser(user.id);
   });
 
-  it('should be defined', () => {
-    expect(reportService).toBeDefined();
-  });
-
   it('should create, check existence, get, and delete a report', async () => {
     // create with error
     await expect(

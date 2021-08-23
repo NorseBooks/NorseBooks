@@ -9,10 +9,6 @@ describe('SearchSortService', () => {
     searchSortService = await getService(SearchSortService);
   });
 
-  it('should be defined', () => {
-    expect(searchSortService).toBeDefined();
-  });
-
   it('should check if a search sort option exists', async () => {
     // check existence
     const exists1 = await searchSortService.sortOptionExists(2);

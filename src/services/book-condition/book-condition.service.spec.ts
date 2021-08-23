@@ -9,10 +9,6 @@ describe('BookConditionService', () => {
     bookConditionService = await getService(BookConditionService);
   });
 
-  it('should be defined', () => {
-    expect(bookConditionService).toBeDefined();
-  });
-
   it('should check if book conditions exist', async () => {
     // exists
     const exists1 = await bookConditionService.bookConditionExists(3);

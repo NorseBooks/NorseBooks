@@ -9,10 +9,6 @@ describe('ImageService', () => {
     imageService = await getService(ImageService);
   });
 
-  it('should be defined', () => {
-    expect(imageService).toBeDefined();
-  });
-
   it('should create, check existence, and delete an image', async () => {
     // create
     const imageData = 'abc';

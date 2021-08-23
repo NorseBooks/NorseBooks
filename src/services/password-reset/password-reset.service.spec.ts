@@ -12,10 +12,6 @@ describe('PasswordResetService', () => {
     userService = await getService(UserService);
   });
 
-  it('should be defined', () => {
-    expect(passwordResetService).toBeDefined();
-  });
-
   it('should create, check existence, and delete password resets', async () => {
     // create
     const firstname = 'Martin';

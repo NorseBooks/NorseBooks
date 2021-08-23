@@ -12,10 +12,6 @@ describe('VerifyService', () => {
     userService = await getService(UserService);
   });
 
-  it('should be defined', () => {
-    expect(verifyService).toBeDefined();
-  });
-
   it('should create, check existence, and delete verifications', async () => {
     // create
     const firstname = 'Martin';

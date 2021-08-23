@@ -10,10 +10,6 @@ describe('DBService', () => {
     dbService = await getService(DBService);
   });
 
-  it('should be defined', () => {
-    expect(dbService).toBeDefined();
-  });
-
   it('should create and get/update/delete by ID', async () => {
     // create
     const imageData = 'abcde';

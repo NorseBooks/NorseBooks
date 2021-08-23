@@ -35,10 +35,6 @@ describe('ReferralService', () => {
     await userService.deleteUser(user3.id);
   });
 
-  it('should be defined', () => {
-    expect(referralService).toBeDefined();
-  });
-
   it('should refer, get referral, get referrals, and delete referrals', async () => {
     // refer
     const referral1 = await referralService.referUser(user1.id, user2.id);

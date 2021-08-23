@@ -9,10 +9,6 @@ describe('DepartmentService', () => {
     departmentService = await getService(DepartmentService);
   });
 
-  it('should be defined', () => {
-    expect(departmentService).toBeDefined();
-  });
-
   it('should check if departments exist', async () => {
     // exists
     const exists1 = await departmentService.departmentExists(17);
