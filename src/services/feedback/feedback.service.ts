@@ -35,10 +35,9 @@ export class FeedbackService {
     userID: string,
     feedback: string,
   ): Promise<NBFeedback> {
-    const feedbackMaxLengthResource = await this.resourceService.getResource(
+    const feedbackMaxLength = await this.resourceService.getResource<number>(
       'FEEDBACK_MAX_LENGTH',
     );
-    const feedbackMaxLength = parseInt(feedbackMaxLengthResource);
 
     const userExists = await this.userService.userExists(userID);
 

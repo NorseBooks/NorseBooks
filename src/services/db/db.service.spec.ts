@@ -53,10 +53,12 @@ describe('DBService', () => {
     const resource1 = await dbService.create<NBResource>('NB_RESOURCE', {
       name: resourceName,
       value: resourceValue,
+      type: 'STRING',
     });
     expect(resource1).toBeDefined();
     expect(resource1).toHaveProperty('name', resourceName);
     expect(resource1).toHaveProperty('value', resourceValue);
+    expect(resource1).toHaveProperty('type', 'STRING');
 
     // get by fields
     const resource2 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
@@ -66,6 +68,7 @@ describe('DBService', () => {
     expect(resource2).toBeDefined();
     expect(resource2).toHaveProperty('name', resourceName);
     expect(resource2).toHaveProperty('value', resourceValue);
+    expect(resource2).toHaveProperty('type', 'STRING');
 
     // update by fields
     const newResourceValue = 'Hello, resource!';
@@ -80,6 +83,7 @@ describe('DBService', () => {
     expect(resource3).toBeDefined();
     expect(resource3).toHaveProperty('name', resourceName);
     expect(resource3).toHaveProperty('value', newResourceValue);
+    expect(resource3).toHaveProperty('type', 'STRING');
     const resource4 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
       name: resourceName,
       value: resourceValue,
@@ -92,6 +96,7 @@ describe('DBService', () => {
     expect(resource5).toBeDefined();
     expect(resource5).toHaveProperty('name', resourceName);
     expect(resource5).toHaveProperty('value', newResourceValue);
+    expect(resource5).toHaveProperty('type', 'STRING');
 
     // delete by fields
     await dbService.deleteByFields('NB_RESOURCE', {

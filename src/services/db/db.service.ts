@@ -350,10 +350,9 @@ export class DBService {
     }
 
     if (options.prune ?? true) {
-      const pruneIntervalResource = await this.resourceService.getResource(
+      const pruneInterval = await this.resourceService.getResource<number>(
         'PRUNE_INTERVAL',
       );
-      const pruneInterval = parseInt(pruneIntervalResource);
 
       await this.pruneRecords();
       setInterval(async () => {

@@ -37,9 +37,10 @@ export class MessageService {
     toUserID: string,
     content: string,
   ): Promise<NBMessage> {
-    const messageContentMaxLengthResource =
-      await this.resourceService.getResource('MESSAGE_CONTENT_MAX_LENGTH');
-    const messageContentMaxLength = parseInt(messageContentMaxLengthResource);
+    const messageContentMaxLength =
+      await this.resourceService.getResource<number>(
+        'MESSAGE_CONTENT_MAX_LENGTH',
+      );
 
     const fromUserExists = await this.userService.userExists(fromUserID);
     const toUserExists = await this.userService.userExists(toUserID);
@@ -212,10 +213,9 @@ export class MessageService {
     fromUserID: string,
     toUserID: string,
   ): Promise<void> {
-    const maxMessagesResource = await this.resourceService.getResource(
+    const maxMessages = await this.resourceService.getResource<number>(
       'MAX_MESSAGES',
     );
-    const maxMessages = parseInt(maxMessagesResource);
 
     const fromUserExists = await this.userService.userExists(fromUserID);
     const toUserExists = await this.userService.userExists(toUserID);

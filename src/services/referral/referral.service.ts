@@ -99,10 +99,9 @@ export class ReferralService {
    * @returns Whether or not the user has reachhed the referral threshold.
    */
   public async reachedReferralThreshold(userID: string): Promise<boolean> {
-    const referralThresholdResource = await this.resourceService.getResource(
+    const referralThreshold = await this.resourceService.getResource<number>(
       'REFERRAL_THRESHOLD',
     );
-    const referralThreshold = parseInt(referralThresholdResource);
 
     const userExists = await this.userService.userExists(userID);
 

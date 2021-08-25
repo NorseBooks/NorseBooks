@@ -202,10 +202,9 @@ export class VerifyService {
    * Prune all old verification records.
    */
   public async pruneVerifications(): Promise<void> {
-    const verificationAgeResource = await this.resourceService.getResource(
+    const verificationAge = await this.resourceService.getResource<number>(
       'VERIFICATION_AGE',
     );
-    const verificationAge = parseInt(verificationAgeResource);
 
     const sql = `DELETE FROM "${verifyTableName}" WHERE EXTRACT(EPOCH FROM NOW() - "createTime") >= ${verificationAge};`;
     await this.dbService.execute(sql);

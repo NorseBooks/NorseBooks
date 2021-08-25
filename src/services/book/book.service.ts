@@ -86,13 +86,19 @@ export class BookService {
    * @returns The new book record.
    */
   public async createBook(options: CreateBookOptions): Promise<NBBook> {
-    const resources = await this.resourceService.getResources();
-    const userMaxBooks = parseInt(resources.USER_MAX_BOOKS);
-    const bookTitleMaxLength = parseInt(resources.BOOK_TITLE_MAX_LENGTH);
-    const bookAuthorMaxLength = parseInt(resources.BOOK_AUTHOR_MAX_LENGTH);
-    const bookDescriptionMaxLength = parseInt(
-      resources.BOOK_DESCRIPTION_MAX_LENGTH,
+    const userMaxBooks = await this.resourceService.getResource<number>(
+      'USER_MAX_BOOKS',
     );
+    const bookTitleMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_TITLE_MAX_LENGTH',
+    );
+    const bookAuthorMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_AUTHOR_MAX_LENGTH',
+    );
+    const bookDescriptionMaxLength =
+      await this.resourceService.getResource<number>(
+        'BOOK_DESCRIPTION_MAX_LENGTH',
+      );
 
     const ISBN10 =
       options.ISBN10 === undefined
@@ -231,12 +237,16 @@ export class BookService {
     bookID: string,
     options: EditBookOptions,
   ): Promise<NBBook> {
-    const resources = await this.resourceService.getResources();
-    const bookTitleMaxLength = parseInt(resources.BOOK_TITLE_MAX_LENGTH);
-    const bookAuthorMaxLength = parseInt(resources.BOOK_AUTHOR_MAX_LENGTH);
-    const bookDescriptionMaxLength = parseInt(
-      resources.BOOK_DESCRIPTION_MAX_LENGTH,
+    const bookTitleMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_TITLE_MAX_LENGTH',
     );
+    const bookAuthorMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_AUTHOR_MAX_LENGTH',
+    );
+    const bookDescriptionMaxLength =
+      await this.resourceService.getResource<number>(
+        'BOOK_DESCRIPTION_MAX_LENGTH',
+      );
 
     const ISBN10 =
       options.ISBN10 === undefined
