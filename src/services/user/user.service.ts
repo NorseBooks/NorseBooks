@@ -3,6 +3,7 @@ import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { ImageService } from '../image/image.service';
 import { SessionService } from '../session/session.service';
+import { bookTableName } from '../book/book.service';
 import { NBUser } from './user.interface';
 import { NBSession } from '../session/session.interface';
 import { NBBook } from '../book/book.interface';
@@ -10,12 +11,15 @@ import { ServiceException } from '../service.exception';
 import * as bcrypt from 'bcrypt';
 
 /**
+ * User table name.
+ */
+export const userTableName = 'NB_USER';
+
+/**
  * User table service.
  */
 @Injectable()
 export class UserService {
-  private readonly tableName = 'NB_USER';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -61,7 +65,7 @@ export class UserService {
         if (!emailExists) {
           const passwordHash = await this.hashPassword(password);
 
-          return this.dbService.create<NBUser>(this.tableName, {
+          return this.dbService.create<NBUser>(userTableName, {
             firstname,
             lastname,
             email,
@@ -89,7 +93,7 @@ export class UserService {
    * @returns Whether or not the user exists.
    */
   public async userExists(userID: string): Promise<boolean> {
-    const user = await this.dbService.getByID<NBUser>(this.tableName, userID);
+    const user = await this.dbService.getByID<NBUser>(userTableName, userID);
     return !!user;
   }
 
@@ -99,7 +103,7 @@ export class UserService {
    * @returns Whether or not a user with the given email address exists.
    */
   public async userExistsByEmail(email: string): Promise<boolean> {
-    const user = await this.dbService.getByFields<NBUser>(this.tableName, {
+    const user = await this.dbService.getByFields<NBUser>(userTableName, {
       email,
     });
     return !!user;
@@ -112,7 +116,7 @@ export class UserService {
    * @returns The user record.
    */
   public async getUser(userID: string): Promise<NBUser> {
-    const user = await this.dbService.getByID<NBUser>(this.tableName, userID);
+    const user = await this.dbService.getByID<NBUser>(userTableName, userID);
 
     if (user) {
       return user;
@@ -128,7 +132,7 @@ export class UserService {
    * @returns The user record.
    */
   public async getUserByEmail(email: string): Promise<NBUser> {
-    const user = await this.dbService.getByFields<NBUser>(this.tableName, {
+    const user = await this.dbService.getByFields<NBUser>(userTableName, {
       email,
     });
 
@@ -150,7 +154,7 @@ export class UserService {
 
     if (userExists) {
       return this.dbService.listByFields<NBBook>(
-        'NB_BOOK',
+        bookTableName,
         { userID },
         { fieldName: 'listTime', sortOrder: 'ASC' },
       );
@@ -183,7 +187,7 @@ export class UserService {
       if (userExists) {
         const passwordHash = await this.hashPassword(newPassword);
 
-        return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+        return this.dbService.updateByID<NBUser>(userTableName, userID, {
           passwordHash,
         });
       } else {
@@ -207,7 +211,7 @@ export class UserService {
     const userExists = await this.userExists(userID);
 
     if (userExists) {
-      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(userTableName, userID, {
         verified,
       });
     } else {
@@ -235,7 +239,7 @@ export class UserService {
     } else {
       const image = await this.imageService.createImage(imageData);
 
-      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(userTableName, userID, {
         imageID: image.id,
       });
     }
@@ -253,7 +257,7 @@ export class UserService {
     if (user.imageID) {
       await this.imageService.deleteImage(user.imageID);
 
-      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(userTableName, userID, {
         imageID: null,
       });
     } else {
@@ -271,7 +275,7 @@ export class UserService {
   public async incrementBooksListed(userID: string, num = 1): Promise<NBUser> {
     const user = await this.getUser(userID);
 
-    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+    return this.dbService.updateByID<NBUser>(userTableName, userID, {
       numBooksListed: user.numBooksListed + num,
     });
   }
@@ -286,7 +290,7 @@ export class UserService {
   public async incrementBooksSold(userID: string, num = 1): Promise<NBUser> {
     const user = await this.getUser(userID);
 
-    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+    return this.dbService.updateByID<NBUser>(userTableName, userID, {
       numBooksSold: user.numBooksSold + num,
     });
   }
@@ -301,7 +305,7 @@ export class UserService {
   public async addMoneyMade(userID: string, amount: number): Promise<NBUser> {
     const user = await this.getUser(userID);
 
-    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+    return this.dbService.updateByID<NBUser>(userTableName, userID, {
       moneyMade: user.moneyMade + amount,
     });
   }
@@ -324,7 +328,7 @@ export class UserService {
       );
 
       if (passwordMatch) {
-        const sql = `UPDATE "${this.tableName}" SET "lastLoginTime" = NOW() WHERE id = ?;`;
+        const sql = `UPDATE "${userTableName}" SET "lastLoginTime" = NOW() WHERE id = ?;`;
         const params = [user.id];
         await this.dbService.execute(sql, params);
 
@@ -345,7 +349,7 @@ export class UserService {
    */
   public async deleteUser(userID: string): Promise<void> {
     await this.deleteUserImage(userID);
-    await this.dbService.deleteByID(this.tableName, userID);
+    await this.dbService.deleteByID(userTableName, userID);
   }
 
   /**
@@ -357,7 +361,7 @@ export class UserService {
     );
     const unverifiedUserAge = parseInt(unverifiedUserAgeResource);
 
-    const sql = `DELETE FROM "${this.tableName}" WHERE "verified" = FALSE AND EXTRACT(EPOCH FROM NOW() - "joinTime") >= ${unverifiedUserAge};`;
+    const sql = `DELETE FROM "${userTableName}" WHERE "verified" = FALSE AND EXTRACT(EPOCH FROM NOW() - "joinTime") >= ${unverifiedUserAge};`;
     await this.dbService.execute(sql);
   }
 

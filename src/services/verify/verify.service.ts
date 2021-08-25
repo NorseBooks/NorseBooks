@@ -1,18 +1,21 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
-import { UserService } from '../user/user.service';
+import { UserService, userTableName } from '../user/user.service';
 import { NBVerify } from './verify.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
+
+/**
+ * Verify table name.
+ */
+export const verifyTableName = 'NB_VERIFY';
 
 /**
  * Verify table service.
  */
 @Injectable()
 export class VerifyService {
-  private readonly tableName = 'NB_VERIFY';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -35,7 +38,7 @@ export class VerifyService {
       const verificationExists = await this.verificationExistsByUserID(userID);
 
       if (!verificationExists) {
-        return this.dbService.create<NBVerify>(this.tableName, { userID });
+        return this.dbService.create<NBVerify>(verifyTableName, { userID });
       } else {
         return this.getVerificationByUserID(userID);
       }
@@ -52,7 +55,7 @@ export class VerifyService {
    */
   public async verificationExists(verifyID: string): Promise<boolean> {
     const verification = await this.dbService.getByID<NBVerify>(
-      this.tableName,
+      verifyTableName,
       verifyID,
     );
     return !!verification;
@@ -66,7 +69,7 @@ export class VerifyService {
    */
   public async verificationExistsByUserID(userID: string): Promise<boolean> {
     const verification = await this.dbService.getByFields<NBVerify>(
-      this.tableName,
+      verifyTableName,
       { userID },
     );
     return !!verification;
@@ -80,7 +83,7 @@ export class VerifyService {
    */
   public async getVerification(verifyID: string): Promise<NBVerify> {
     const verification = await this.dbService.getByID<NBVerify>(
-      this.tableName,
+      verifyTableName,
       verifyID,
     );
 
@@ -99,7 +102,7 @@ export class VerifyService {
    */
   public async getVerificationByUserID(userID: string): Promise<NBVerify> {
     const verification = await this.dbService.getByFields<NBVerify>(
-      this.tableName,
+      verifyTableName,
       { userID },
     );
 
@@ -118,7 +121,7 @@ export class VerifyService {
    * @returns All verification records.
    */
   public async getVerifications(): Promise<NBVerify[]> {
-    return this.dbService.list<NBVerify>(this.tableName, {
+    return this.dbService.list<NBVerify>(verifyTableName, {
       fieldName: 'createTime',
       sortOrder: 'ASC',
     });
@@ -132,8 +135,8 @@ export class VerifyService {
    */
   public async getUserByVerification(verifyID: string): Promise<NBUser> {
     const sql = `
-      SELECT * FROM "NB_USER" WHERE "id" = (
-        SELECT "userID" FROM "${this.tableName}" WHERE "id" = ?
+      SELECT * FROM "${userTableName}" WHERE "id" = (
+        SELECT "userID" FROM "${verifyTableName}" WHERE "id" = ?
       );`;
     const params = [verifyID];
     const res = await this.dbService.execute<NBUser>(sql, params);
@@ -151,7 +154,7 @@ export class VerifyService {
    * @param verifyID The verification record's ID.
    */
   public async deleteVerification(verifyID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, verifyID);
+    await this.dbService.deleteByID(verifyTableName, verifyID);
   }
 
   /**
@@ -204,7 +207,7 @@ export class VerifyService {
     );
     const verificationAge = parseInt(verificationAgeResource);
 
-    const sql = `DELETE FROM "${this.tableName}" WHERE EXTRACT(EPOCH FROM NOW() - "createTime") >= ${verificationAge};`;
+    const sql = `DELETE FROM "${verifyTableName}" WHERE EXTRACT(EPOCH FROM NOW() - "createTime") >= ${verificationAge};`;
     await this.dbService.execute(sql);
   }
 }

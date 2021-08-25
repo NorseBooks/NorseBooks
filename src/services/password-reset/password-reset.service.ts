@@ -1,18 +1,21 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
-import { UserService } from '../user/user.service';
+import { UserService, userTableName } from '../user/user.service';
 import { NBPasswordReset } from './password-reset.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
+
+/**
+ * Password reset table name.
+ */
+export const passwordResetTableName = 'NB_PASSWORD_RESET';
 
 /**
  * Password reset table service.
  */
 @Injectable()
 export class PasswordResetService {
-  private readonly tableName = 'NB_PASSWORD_RESET';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -37,7 +40,7 @@ export class PasswordResetService {
       );
 
       if (!passwordResetExists) {
-        return this.dbService.create<NBPasswordReset>(this.tableName, {
+        return this.dbService.create<NBPasswordReset>(passwordResetTableName, {
           userID,
         });
       } else {
@@ -53,7 +56,7 @@ export class PasswordResetService {
    */
   public async passwordResetExists(passwordResetID: string): Promise<boolean> {
     const passwordReset = await this.dbService.getByID<NBPasswordReset>(
-      this.tableName,
+      passwordResetTableName,
       passwordResetID,
     );
     return !!passwordReset;
@@ -67,7 +70,7 @@ export class PasswordResetService {
    */
   public async passwordResetExistsByUserID(userID: string): Promise<boolean> {
     const passwordReset = await this.dbService.getByFields<NBPasswordReset>(
-      this.tableName,
+      passwordResetTableName,
       { userID },
     );
     return !!passwordReset;
@@ -83,7 +86,7 @@ export class PasswordResetService {
     passwordResetID: string,
   ): Promise<NBPasswordReset> {
     const passwordReset = await this.dbService.getByID<NBPasswordReset>(
-      this.tableName,
+      passwordResetTableName,
       passwordResetID,
     );
 
@@ -104,7 +107,7 @@ export class PasswordResetService {
     userID: string,
   ): Promise<NBPasswordReset> {
     const passwordReset = await this.dbService.getByFields<NBPasswordReset>(
-      this.tableName,
+      passwordResetTableName,
       { userID },
     );
 
@@ -123,7 +126,7 @@ export class PasswordResetService {
    * @returns All password reset records.
    */
   public async getPasswordResets(): Promise<NBPasswordReset[]> {
-    return this.dbService.list<NBPasswordReset>(this.tableName, {
+    return this.dbService.list<NBPasswordReset>(passwordResetTableName, {
       fieldName: 'createTime',
       sortOrder: 'ASC',
     });
@@ -139,8 +142,8 @@ export class PasswordResetService {
     passwordResetID: string,
   ): Promise<NBUser> {
     const sql = `
-      SELECT * FROM "NB_USER" WHERE "id" = (
-        SELECT "userID" FROM "${this.tableName}" WHERE id = ?
+      SELECT * FROM "${userTableName}" WHERE "id" = (
+        SELECT "userID" FROM "${passwordResetTableName}" WHERE id = ?
       );`;
     const params = [passwordResetID];
     const res = await this.dbService.execute<NBUser>(sql, params);
@@ -160,7 +163,7 @@ export class PasswordResetService {
    * @param passwordResetID The password reset record's ID.
    */
   public async deletePasswordReset(passwordResetID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, passwordResetID);
+    await this.dbService.deleteByID(passwordResetTableName, passwordResetID);
   }
 
   /**
@@ -208,7 +211,7 @@ export class PasswordResetService {
     );
     const passwordResetAge = parseInt(passwordResetAgeResource);
 
-    const sql = `DELETE FROM "${this.tableName}" WHERE EXTRACT(EPOCH FROM NOW() - "createTime") >= ${passwordResetAge};`;
+    const sql = `DELETE FROM "${passwordResetTableName}" WHERE EXTRACT(EPOCH FROM NOW() - "createTime") >= ${passwordResetAge};`;
     await this.dbService.execute(sql);
   }
 }
