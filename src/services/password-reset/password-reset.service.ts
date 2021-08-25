@@ -173,9 +173,14 @@ export class PasswordResetService {
     passwordResetID: string,
     newPassword: string,
   ): Promise<void> {
-    const resources = await this.resourceService.getResources();
-    const userPasswordMinLength = parseInt(resources.USER_PASSWORD_MIN_LENGTH);
-    const userPasswordMaxLength = parseInt(resources.USER_PASSWORD_MAX_LENGTH);
+    const userPasswordMinLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MIN_LENGTH',
+      );
+    const userPasswordMaxLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MAX_LENGTH',
+      );
 
     if (
       newPassword.length >= userPasswordMinLength &&
@@ -203,10 +208,9 @@ export class PasswordResetService {
    * Prune all old password reset records.
    */
   public async prunePasswordResets(): Promise<void> {
-    const passwordResetAgeResource = await this.resourceService.getResource(
+    const passwordResetAge = await this.resourceService.getResource<number>(
       'PASSWORD_RESET_AGE',
     );
-    const passwordResetAge = parseInt(passwordResetAgeResource);
 
     const sql = `DELETE FROM "${this.tableName}" WHERE EXTRACT(EPOCH FROM NOW() - "createTime") >= ${passwordResetAge};`;
     await this.dbService.execute(sql);

@@ -42,11 +42,20 @@ export class UserService {
     email: string,
     password: string,
   ): Promise<NBUser> {
-    const resources = await this.resourceService.getResources();
-    const userEmailMinLength = parseInt(resources.USER_EMAIL_MIN_LENGTH);
-    const userEmailMaxLength = parseInt(resources.USER_EMAIL_MAX_LENGTH);
-    const userPasswordMinLength = parseInt(resources.USER_PASSWORD_MIN_LENGTH);
-    const userPasswordMaxLength = parseInt(resources.USER_PASSWORD_MAX_LENGTH);
+    const userEmailMinLength = await this.resourceService.getResource<number>(
+      'USER_EMAIL_MIN_LENGTH',
+    );
+    const userEmailMaxLength = await this.resourceService.getResource<number>(
+      'USER_EMAIL_MAX_LENGTH',
+    );
+    const userPasswordMinLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MIN_LENGTH',
+      );
+    const userPasswordMaxLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MAX_LENGTH',
+      );
 
     if (
       email.length >= userEmailMinLength &&
@@ -170,9 +179,14 @@ export class UserService {
     userID: string,
     newPassword: string,
   ): Promise<NBUser> {
-    const resources = await this.resourceService.getResources();
-    const userPasswordMinLength = parseInt(resources.USER_PASSWORD_MIN_LENGTH);
-    const userPasswordMaxLength = parseInt(resources.USER_PASSWORD_MAX_LENGTH);
+    const userPasswordMinLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MIN_LENGTH',
+      );
+    const userPasswordMaxLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MAX_LENGTH',
+      );
 
     if (
       newPassword.length >= userPasswordMinLength &&
@@ -352,10 +366,9 @@ export class UserService {
    * Prune all old unverified accounts.
    */
   public async pruneUnverifiedUsers(): Promise<void> {
-    const unverifiedUserAgeResource = await this.resourceService.getResource(
+    const unverifiedUserAge = await this.resourceService.getResource<number>(
       'UNVERIFIED_USER_AGE',
     );
-    const unverifiedUserAge = parseInt(unverifiedUserAgeResource);
 
     const sql = `DELETE FROM "${this.tableName}" WHERE "verified" = FALSE AND EXTRACT(EPOCH FROM NOW() - "joinTime") >= ${unverifiedUserAge};`;
     await this.dbService.execute(sql);
@@ -369,10 +382,9 @@ export class UserService {
    * @returns The hashed password.
    */
   private async hashPassword(password: string): Promise<string> {
-    const saltRoundsResource = await this.resourceService.getResource(
+    const saltRounds = await this.resourceService.getResource<number>(
       'SALT_ROUNDS',
     );
-    const saltRounds = parseInt(saltRoundsResource);
 
     return bcrypt.hash(password, saltRounds);
   }

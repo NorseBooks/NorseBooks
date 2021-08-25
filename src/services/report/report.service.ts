@@ -37,9 +37,10 @@ export class ReportService {
     bookID: string,
     reason: string,
   ): Promise<NBReport> {
-    const reportReasonMaxLengthResource =
-      await this.resourceService.getResource('REPORT_REASON_MAX_LENGTH');
-    const reportReasonMaxLength = parseInt(reportReasonMaxLengthResource);
+    const reportReasonMaxLength =
+      await this.resourceService.getResource<number>(
+        'REPORT_REASON_MAX_LENGTH',
+      );
 
     const userExists = await this.userService.userExists(userID);
 
@@ -136,10 +137,9 @@ export class ReportService {
    * @returns Whether or not the user has recently reported a book.
    */
   public async userReportedRecently(userID: string): Promise<boolean> {
-    const userReportCooldownResource = await this.resourceService.getResource(
+    const userReportCooldown = await this.resourceService.getResource<number>(
       'USER_REPORT_COOLDOWN',
     );
-    const userReportCooldown = parseInt(userReportCooldownResource);
 
     const report = await this.dbService.getCustom<NBReport>(
       this.tableName,

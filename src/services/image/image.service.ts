@@ -28,10 +28,9 @@ export class ImageService {
   public async createImage(data: string): Promise<NBImage> {
     const imageData = await this.shrinkImageBase64(data);
 
-    const maxImageSizeResource = await this.resourceService.getResource(
+    const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
-    const maxImageSize = parseInt(maxImageSizeResource);
 
     if (imageData.length < maxImageSize) {
       return this.dbService.create<NBImage>(this.tableName, {
@@ -88,10 +87,9 @@ export class ImageService {
   ): Promise<NBImage> {
     const imageData = await this.shrinkImageBase64(newData);
 
-    const maxImageSizeResource = await this.resourceService.getResource(
+    const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
-    const maxImageSize = parseInt(maxImageSizeResource);
 
     if (imageData.length < maxImageSize) {
       const imageExists = await this.imageExists(imageID);
@@ -223,10 +221,9 @@ export class ImageService {
    * @returns The shrunk base64 image.
    */
   private async shrinkImageBase64(imageB64: string): Promise<string> {
-    const maxImageSizeResource = await this.resourceService.getResource(
+    const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
-    const maxImageSize = parseInt(maxImageSizeResource);
 
     const image = Buffer.from(imageB64, 'base64');
     const shrunk = await this.shrinkImageAuto(image, maxImageSize);
