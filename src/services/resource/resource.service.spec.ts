@@ -1,5 +1,6 @@
 import { ResourceService } from './resource.service';
 import { getService } from '../test-util';
+import { ServiceException } from '../service.exception';
 
 describe('ResourceService', () => {
   let resourceService: ResourceService;
@@ -18,11 +19,12 @@ describe('ResourceService', () => {
 
   it('should get a resource', async () => {
     // get resource
-    const resource1 = await resourceService.getResource('SALT_ROUNDS');
+    const resource1 = await resourceService.getResource<number>('SALT_ROUNDS');
     expect(resource1).toBeDefined();
-    expect(resource1).toBe('12');
-    const resource2 = await resourceService.getResource('FAKE_RESOURCE');
-    expect(resource2).toBeUndefined();
+    expect(resource1).toBe(12);
+    await expect(
+      resourceService.getResource<string>('FAKE_RESOURCE'),
+    ).rejects.toThrow(ServiceException);
   });
 
   it('should get all resources', async () => {
@@ -30,6 +32,6 @@ describe('ResourceService', () => {
     const resources = await resourceService.getResources();
     expect(resources).toBeDefined();
     expect(Object.keys(resources).length).toBeGreaterThan(0);
-    expect(resources).toHaveProperty('SALT_ROUNDS', '12');
+    expect(resources).toHaveProperty('SALT_ROUNDS', 12);
   });
 });

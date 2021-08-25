@@ -4,4 +4,5 @@
 export interface NBResource {
   name: string;
   value: string;
+  type: string;
 }

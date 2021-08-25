@@ -143,10 +143,9 @@ export class SessionService {
     const userExists = await this.userService.userExists(userID);
 
     if (userExists) {
-      const userMaxSessionsResource = await this.resourceService.getResource(
+      const userMaxSessions = await this.resourceService.getResource<number>(
         'USER_MAX_SESSIONS',
       );
-      const userMaxSessions = parseInt(userMaxSessionsResource);
 
       const sql = `
         DELETE FROM "${this.tableName}"
