@@ -2,7 +2,7 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { ImageService } from '../image/image.service';
-import { UserService } from '../user/user.service';
+import { UserService, userTableName } from '../user/user.service';
 import { DepartmentService } from '../department/department.service';
 import { BookConditionService } from '../book-condition/book-condition.service';
 import { SearchSortService } from '../search-sort/search-sort.service';
@@ -53,12 +53,15 @@ interface SearchBooksOptions {
 }
 
 /**
+ * Book table name.
+ */
+export const bookTableName = 'NB_BOOK';
+
+/**
  * Book table service.
  */
 @Injectable()
 export class BookService {
-  private readonly tableName = 'NB_BOOK';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -151,7 +154,7 @@ export class BookService {
                           );
 
                           const book = await this.dbService.create<NBBook>(
-                            this.tableName,
+                            bookTableName,
                             {
                               userID: options.userID,
                               title: options.title,
@@ -293,7 +296,7 @@ export class BookService {
                           );
 
                     if (bookConditionExists) {
-                      const sql = `UPDATE "${this.tableName}" SET "editTime" = NOW() WHERE id = ?;`;
+                      const sql = `UPDATE "${bookTableName}" SET "editTime" = NOW() WHERE id = ?;`;
                       const params = [book.id];
                       await this.dbService.execute(sql, params);
 
@@ -324,7 +327,7 @@ export class BookService {
                         }, {});
 
                       return this.dbService.updateByID<NBBook>(
-                        this.tableName,
+                        bookTableName,
                         bookID,
                         updateFields,
                       );
@@ -378,7 +381,7 @@ export class BookService {
    * @returns Whether or not the book exists.
    */
   public async bookExists(bookID: string): Promise<boolean> {
-    const book = await this.dbService.getByID<NBBook>(this.tableName, bookID);
+    const book = await this.dbService.getByID<NBBook>(bookTableName, bookID);
     return !!book;
   }
 
@@ -389,7 +392,7 @@ export class BookService {
    * @returns The book record.
    */
   public async getBook(bookID: string): Promise<NBBook> {
-    const book = await this.dbService.getByID<NBBook>(this.tableName, bookID);
+    const book = await this.dbService.getByID<NBBook>(bookTableName, bookID);
 
     if (book) {
       return book;
@@ -406,8 +409,8 @@ export class BookService {
    */
   public async getBookUser(bookID: string): Promise<NBUser> {
     const sql = `
-      SELECT * FROM "NB_USER" WHERE id = (
-        SELECT "userID" FROM "${this.tableName}" WHERE id = ?
+      SELECT * FROM "${userTableName}" WHERE id = (
+        SELECT "userID" FROM "${bookTableName}" WHERE id = ?
       );`;
     const params = [bookID];
     const res = await this.dbService.execute<NBUser>(sql, params);
@@ -434,7 +437,7 @@ export class BookService {
     }
 
     await this.imageService.deleteImage(book.imageID);
-    await this.dbService.deleteByID(this.tableName, book.id);
+    await this.dbService.deleteByID(bookTableName, book.id);
   }
 
   /**
@@ -479,7 +482,7 @@ export class BookService {
 
           const sql = `
             SELECT *
-            FROM "${this.tableName}"
+            FROM "${bookTableName}"
             WHERE
               ${departmentQuery} ${courseNumberQuery} (
                    LOWER("title")       LIKE LOWER(?)

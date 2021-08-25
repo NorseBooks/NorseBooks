@@ -6,12 +6,15 @@ import { NBUserInterest } from './user-interest.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * User interest table name.
+ */
+export const userInterestTableName = 'NB_USER_INTEREST';
+
+/**
  * User interest table service.
  */
 @Injectable()
 export class UserInterestService {
-  private readonly tableName = 'NB_USER_INTEREST';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -42,7 +45,7 @@ export class UserInterestService {
       if (departmentExists) {
         await this.dropInterest(userID, departmentID);
 
-        return this.dbService.create<NBUserInterest>(this.tableName, {
+        return this.dbService.create<NBUserInterest>(userInterestTableName, {
           userID,
           departmentID,
         });
@@ -66,7 +69,7 @@ export class UserInterestService {
     departmentID: number,
   ): Promise<boolean> {
     const userInterest = await this.dbService.getByFields<NBUserInterest>(
-      this.tableName,
+      userInterestTableName,
       { userID, departmentID },
     );
     return !!userInterest;
@@ -80,7 +83,7 @@ export class UserInterestService {
    */
   public async getUserInterests(userID: string): Promise<NBUserInterest[]> {
     return this.dbService.listByFields<NBUserInterest>(
-      this.tableName,
+      userInterestTableName,
       { userID },
       { fieldName: 'interestTime', sortOrder: 'ASC' },
     );
@@ -96,7 +99,7 @@ export class UserInterestService {
     userID: string,
     departmentID: number,
   ): Promise<void> {
-    await this.dbService.deleteByFields(this.tableName, {
+    await this.dbService.deleteByFields(userInterestTableName, {
       userID,
       departmentID,
     });

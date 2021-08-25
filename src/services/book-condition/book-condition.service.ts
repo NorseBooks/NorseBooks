@@ -4,12 +4,15 @@ import { NBBookCondition } from './book-condition.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Book condition table name.
+ */
+export const bookConditionTableName = 'NB_BOOK_CONDITION';
+
+/**
  * Book condition table service.
  */
 @Injectable()
 export class BookConditionService {
-  private readonly tableName = 'NB_BOOK_CONDITION';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -23,7 +26,7 @@ export class BookConditionService {
    */
   public async bookConditionExists(conditionID: number): Promise<boolean> {
     const bookCondition = await this.dbService.getByID<NBBookCondition>(
-      this.tableName,
+      bookConditionTableName,
       conditionID,
     );
     return !!bookCondition;
@@ -39,7 +42,7 @@ export class BookConditionService {
     conditionName: string,
   ): Promise<boolean> {
     const bookCondition = await this.dbService.getByFields<NBBookCondition>(
-      this.tableName,
+      bookConditionTableName,
       { name: conditionName },
     );
     return !!bookCondition;
@@ -53,7 +56,7 @@ export class BookConditionService {
    */
   public async getBookConditionName(conditionID: number): Promise<string> {
     const bookCondition = await this.dbService.getByID<NBBookCondition>(
-      this.tableName,
+      bookConditionTableName,
       conditionID,
     );
 
@@ -71,7 +74,7 @@ export class BookConditionService {
    */
   public async getBookConditions(): Promise<NBBookCondition[]> {
     const bookConditions = await this.dbService.list<NBBookCondition>(
-      this.tableName,
+      bookConditionTableName,
       { fieldName: 'id', sortOrder: 'ASC' },
     );
     return bookConditions;

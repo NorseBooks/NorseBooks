@@ -4,12 +4,15 @@ import { NBSearchSort } from './search-sort.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Search sort table name.
+ */
+export const searchSortTableName = 'NB_SEARCH_SORT';
+
+/**
  * Search sort table service.
  */
 @Injectable()
 export class SearchSortService {
-  private readonly tableName = 'NB_SEARCH_SORT';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -23,7 +26,7 @@ export class SearchSortService {
    */
   public async sortOptionExists(sortID: number): Promise<boolean> {
     const sortOption = await this.dbService.getByID<NBSearchSort>(
-      this.tableName,
+      searchSortTableName,
       sortID,
     );
     return !!sortOption;
@@ -37,7 +40,7 @@ export class SearchSortService {
    */
   public async getSortOption(sortID: number): Promise<NBSearchSort> {
     const sortOption = await this.dbService.getByID<NBSearchSort>(
-      this.tableName,
+      searchSortTableName,
       sortID,
     );
 
@@ -52,7 +55,7 @@ export class SearchSortService {
    * Get all search sort options.
    */
   public async getSortOptions(): Promise<NBSearchSort[]> {
-    return this.dbService.list<NBSearchSort>(this.tableName, {
+    return this.dbService.list<NBSearchSort>(searchSortTableName, {
       fieldName: 'id',
       sortOrder: 'ASC',
     });

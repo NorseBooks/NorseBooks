@@ -7,12 +7,15 @@ import { NBReport } from './report.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Report table name.
+ */
+export const reportTableName = 'NB_REPORT';
+
+/**
  * Report table service.
  */
 @Injectable()
 export class ReportService {
-  private readonly tableName = 'NB_REPORT';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -49,7 +52,7 @@ export class ReportService {
 
       if (bookExists) {
         if (reason.length >= 1 && reason.length <= reportReasonMaxLength) {
-          return this.dbService.create<NBReport>(this.tableName, {
+          return this.dbService.create<NBReport>(reportTableName, {
             bookID,
             userID,
             reason,
@@ -75,7 +78,7 @@ export class ReportService {
    */
   public async reportExists(reportID: string): Promise<boolean> {
     const report = await this.dbService.getByID<NBReport>(
-      this.tableName,
+      reportTableName,
       reportID,
     );
     return !!report;
@@ -89,7 +92,7 @@ export class ReportService {
    */
   public async getReport(reportID: string): Promise<NBReport> {
     const report = await this.dbService.getByID<NBReport>(
-      this.tableName,
+      reportTableName,
       reportID,
     );
 
@@ -106,7 +109,7 @@ export class ReportService {
    * @returns All reports.
    */
   public async getReports(): Promise<NBReport[]> {
-    return this.dbService.list<NBReport>(this.tableName, {
+    return this.dbService.list<NBReport>(reportTableName, {
       fieldName: 'reportTime',
       sortOrder: 'ASC',
     });
@@ -123,7 +126,7 @@ export class ReportService {
     userID: string,
     bookID: string,
   ): Promise<boolean> {
-    const report = await this.dbService.getByFields<NBReport>(this.tableName, {
+    const report = await this.dbService.getByFields<NBReport>(reportTableName, {
       userID,
       bookID,
     });
@@ -142,7 +145,7 @@ export class ReportService {
     );
 
     const report = await this.dbService.getCustom<NBReport>(
-      this.tableName,
+      reportTableName,
       '"userID" = ? AND EXTRACT(EPOCH FROM NOW() - "reportTime") <= ?',
       [userID, userReportCooldown],
     );
@@ -159,7 +162,7 @@ export class ReportService {
     const userExists = await this.userService.userExists(userID);
 
     if (userExists) {
-      return this.dbService.listByFields<NBReport>(this.tableName, { userID });
+      return this.dbService.listByFields<NBReport>(reportTableName, { userID });
     } else {
       throw new ServiceException('User does not exist');
     }
@@ -175,7 +178,7 @@ export class ReportService {
     const bookExists = await this.bookService.bookExists(bookID);
 
     if (bookExists) {
-      return this.dbService.listByFields<NBReport>(this.tableName, { bookID });
+      return this.dbService.listByFields<NBReport>(reportTableName, { bookID });
     } else {
       throw new ServiceException('Book does not exist');
     }
@@ -187,7 +190,7 @@ export class ReportService {
    * @param reportID The report's ID.
    */
   public async deleteReport(reportID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, reportID);
+    await this.dbService.deleteByID(reportTableName, reportID);
   }
 
   /**

@@ -4,12 +4,15 @@ import { NBDepartment } from './department.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Department table name.
+ */
+export const departmentTableName = 'NB_DEPARTMENT';
+
+/**
  * Department table service.
  */
 @Injectable()
 export class DepartmentService {
-  private readonly tableName = 'NB_DEPARTMENT';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -23,7 +26,7 @@ export class DepartmentService {
    */
   public async departmentExists(departmentID: number): Promise<boolean> {
     const department = await this.dbService.getByID<NBDepartment>(
-      this.tableName,
+      departmentTableName,
       departmentID,
     );
     return !!department;
@@ -39,7 +42,7 @@ export class DepartmentService {
     departmentName: string,
   ): Promise<boolean> {
     const department = await this.dbService.getByFields<NBDepartment>(
-      this.tableName,
+      departmentTableName,
       { name: departmentName },
     );
     return !!department;
@@ -53,7 +56,7 @@ export class DepartmentService {
    */
   public async getDepartmentName(departmentID: number): Promise<string> {
     const department = await this.dbService.getByID<NBDepartment>(
-      this.tableName,
+      departmentTableName,
       departmentID,
     );
 
@@ -71,7 +74,7 @@ export class DepartmentService {
    */
   public async getDepartments(): Promise<NBDepartment[]> {
     const departments = await this.dbService.list<NBDepartment>(
-      this.tableName,
+      departmentTableName,
       { fieldName: 'id', sortOrder: 'ASC' },
     );
     return departments;

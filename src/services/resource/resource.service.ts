@@ -4,12 +4,15 @@ import { NBResource } from './resource.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Resource table name.
+ */
+export const resourceTableName = 'NB_RESOURCE';
+
+/**
  * Resource table service.
  */
 @Injectable()
 export class ResourceService {
-  private readonly tableName = 'NB_RESOURCE';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -23,7 +26,7 @@ export class ResourceService {
    */
   public async resourceExists(name: string): Promise<boolean> {
     const resource = await this.dbService.getByFields<NBResource>(
-      this.tableName,
+      resourceTableName,
       { name },
     );
     return !!resource;
@@ -39,7 +42,7 @@ export class ResourceService {
     name: string,
   ): Promise<T> {
     const resource = await this.dbService.getByFields<NBResource>(
-      this.tableName,
+      resourceTableName,
       { name },
     );
 
@@ -87,7 +90,7 @@ export class ResourceService {
     value: T,
   ): Promise<NBResource> {
     const resource = await this.dbService.getByFields<NBResource>(
-      this.tableName,
+      resourceTableName,
       { name },
     );
 
@@ -111,7 +114,7 @@ export class ResourceService {
       }
 
       const resources = await this.dbService.updateByFields<NBResource>(
-        this.tableName,
+        resourceTableName,
         { name },
         { value: value.toString() },
       );
@@ -129,7 +132,7 @@ export class ResourceService {
   public async getResources(): Promise<{
     [name: string]: boolean | number | string;
   }> {
-    const resources = await this.dbService.list<NBResource>(this.tableName, {
+    const resources = await this.dbService.list<NBResource>(resourceTableName, {
       fieldName: 'name',
       sortOrder: 'ASC',
     });
