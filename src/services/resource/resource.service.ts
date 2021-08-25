@@ -90,7 +90,7 @@ export class ResourceService {
     value: T,
   ): Promise<NBResource> {
     const resource = await this.dbService.getByFields<NBResource>(
-      this.tableName,
+      resourceTableName,
       { name },
     );
 
@@ -114,7 +114,7 @@ export class ResourceService {
       }
 
       const resources = await this.dbService.updateByFields<NBResource>(
-        this.tableName,
+        resourceTableName,
         { name },
         { value: value.toString() },
       );
