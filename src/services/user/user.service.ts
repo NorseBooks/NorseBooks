@@ -4,6 +4,7 @@ import { ResourceService } from '../resource/resource.service';
 import { ImageService } from '../image/image.service';
 import { SessionService } from '../session/session.service';
 import { bookTableName } from '../book/book.service';
+import { userInterestTableName } from '../user-interest/user-interest.service';
 import { NBUser } from './user.interface';
 import { NBSession } from '../session/session.interface';
 import { NBBook } from '../book/book.interface';
@@ -322,6 +323,36 @@ export class UserService {
     return this.dbService.updateByID<NBUser>(userTableName, userID, {
       moneyMade: user.moneyMade + amount,
     });
+  }
+
+  /**
+   * Get a list of books recommended to the user.
+   *
+   * @param userID The user's ID.
+   * @returns The list of recommended books.
+   */
+  public async recommendations(userID: string): Promise<NBBook[]> {
+    const sql = `
+      (
+        SELECT "${bookTableName}".*
+          FROM "${bookTableName}"
+          JOIN "${userInterestTableName}"
+            ON "${bookTableName}"."departmentID" = "${userInterestTableName}"."departmentID"
+        WHERE "${userInterestTableName}"."userID" = ?
+          AND "${bookTableName}"."userID" != ?
+      ) UNION (
+        SELECT "${bookTableName}".*
+          FROM "${bookTableName}"
+          JOIN (
+            SELECT *
+              FROM "${bookTableName}"
+              WHERE "userID" = ?
+          ) AS "USER_BOOKS"
+            ON "${bookTableName}"."departmentID" = "USER_BOOKS"."departmentID"
+        WHERE "${bookTableName}"."userID" != ?
+      ) ORDER BY "listTime" ASC;`;
+    const params = [userID, userID, userID, userID];
+    return this.dbService.execute<NBBook>(sql, params);
   }
 
   /**
