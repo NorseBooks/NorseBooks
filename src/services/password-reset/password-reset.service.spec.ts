@@ -24,6 +24,7 @@ describe('PasswordResetService', () => {
       email,
       password,
     );
+    await userService.setVerified(user.id);
     const passwordReset = await passwordResetService.createPasswordReset(
       user.id,
     );
@@ -64,6 +65,7 @@ describe('PasswordResetService', () => {
       email,
       password,
     );
+    await userService.setVerified(user1.id);
     const passwordReset1 = await passwordResetService.createPasswordReset(
       user1.id,
     );
@@ -125,6 +127,7 @@ describe('PasswordResetService', () => {
       email,
       password,
     );
+    await userService.setVerified(user1.id);
     const passwordReset1 = await passwordResetService.createPasswordReset(
       user1.id,
     );
@@ -145,7 +148,8 @@ describe('PasswordResetService', () => {
       passwordReset1.id,
     );
     expect(user2).toBeDefined();
-    expect(user2).toEqual(user1);
+    expect(user2).not.toEqual(user1);
+    expect(user2.verified).toBe(true);
 
     // delete
     await passwordResetService.deletePasswordReset(passwordReset1.id);
