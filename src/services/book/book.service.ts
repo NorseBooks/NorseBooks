@@ -103,11 +103,11 @@ export class BookService {
     const ISBN10 =
       options.ISBN10 === undefined
         ? undefined
-        : options.ISBN10.replace(/-/g, '');
+        : options.ISBN10.replace(/[- ]/g, '');
     const ISBN13 =
       options.ISBN13 === undefined
         ? undefined
-        : options.ISBN13.replace(/-/g, '');
+        : options.ISBN13.replace(/[- ]/g, '');
 
     const userExists = await this.userService.userExists(options.userID);
 
@@ -251,11 +251,11 @@ export class BookService {
     const ISBN10 =
       options.ISBN10 === undefined
         ? undefined
-        : options.ISBN10.replace(/-/g, '');
+        : options.ISBN10.replace(/[- ]/g, '');
     const ISBN13 =
       options.ISBN13 === undefined
         ? undefined
-        : options.ISBN13.replace(/-/g, '');
+        : options.ISBN13.replace(/[- ]/g, '');
 
     const book = await this.getBook(bookID);
 
@@ -287,7 +287,10 @@ export class BookService {
                   options.courseNumber === undefined ||
                   (options.courseNumber >= 101 && options.courseNumber <= 499)
                 ) {
-                  if (options.price >= 0 && options.price <= 999.99) {
+                  if (
+                    options.price === undefined ||
+                    (options.price >= 0 && options.price <= 999.99)
+                  ) {
                     const bookConditionExists =
                       options.conditionID === undefined
                         ? true
@@ -322,15 +325,26 @@ export class BookService {
                       const updateFields = editOptions
                         .filter((option) => options[option] !== undefined)
                         .reduce((acc, current) => {
-                          acc[current] = options[current];
+                          if (current === 'ISBN10') {
+                            acc['ISBN10'] = ISBN10;
+                          } else if (current === 'ISBN13') {
+                            acc['ISBN13'] = ISBN13;
+                          } else {
+                            acc[current] = options[current];
+                          }
+
                           return acc;
                         }, {});
 
-                      return this.dbService.updateByID<NBBook>(
-                        bookTableName,
-                        bookID,
-                        updateFields,
-                      );
+                      if (Object.keys(updateFields).length > 0) {
+                        return this.dbService.updateByID<NBBook>(
+                          bookTableName,
+                          bookID,
+                          updateFields,
+                        );
+                      } else {
+                        return this.getBook(bookID);
+                      }
                     } else {
                       throw new ServiceException(
                         'Book condition does not exist',
@@ -469,7 +483,9 @@ export class BookService {
           const query = options.query ?? '';
           const searchLike = `%${query}%`;
           const isbnSearch =
-            options.query === undefined ? '' : options.query.replace(/-/g, '');
+            options.query === undefined
+              ? ''
+              : options.query.replace(/[- ]/g, '');
           const departmentQuery =
             options.departmentID === undefined
               ? ''
