@@ -48,6 +48,15 @@ describe('MessageService', () => {
     expect(message1).toHaveProperty('content', content1);
     expect(message1).toHaveProperty('read', false);
     expect(message1).toHaveProperty('sendTime');
+    await expect(
+      messageService.sendMessage('', user2.id, content1),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      messageService.sendMessage(user1.id, '', content1),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      messageService.sendMessage(user1.id, user2.id, ''),
+    ).rejects.toThrow(ServiceException);
 
     // check existence
     const messageExists1 = await messageService.messageExists(message1.id);
@@ -103,12 +112,21 @@ describe('MessageService', () => {
     expect(threads2).toBeDefined();
     expect(threads2.length).toBe(1);
     expect(threads2[0]).toEqual(message2);
+    await expect(messageService.getMessageThreads('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // get messages
     const messages1 = await messageService.getMessages(user1.id, user2.id);
     expect(messages1).toBeDefined();
     expect(messages1.length).toBe(2);
     expect(messages1).toEqual([message1, message2]);
+    await expect(messageService.getMessages('', user2.id)).rejects.toThrow(
+      ServiceException,
+    );
+    await expect(messageService.getMessages(user1.id, '')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete
     await messageService.deleteMessage(message1.id);
@@ -136,7 +154,7 @@ describe('MessageService', () => {
     expect(messages3.length).toBe(0);
   });
 
-  it('should send, mark read, mark unread, and delete messages', async () => {
+  it('should send, mark read, mark unread, delete, and delete old messages', async () => {
     // send
     const message1 = await messageService.sendMessage(
       user1.id,
@@ -160,6 +178,7 @@ describe('MessageService', () => {
     const message3 = await messageService.getMessage(message1.id);
     expect(message3).toBeDefined();
     expect(message3).toEqual(message2);
+    await expect(messageService.markRead('')).rejects.toThrow(ServiceException);
 
     // mark unread
     const message4 = await messageService.markUnread(message1.id);
@@ -167,8 +186,20 @@ describe('MessageService', () => {
     expect(message4).not.toEqual(message2);
     expect(message4).toEqual(message1);
     expect(message4.read).toBe(false);
+    await expect(messageService.markUnread('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete
     await messageService.deleteMessage(message1.id);
+
+    // delete old
+    await messageService.deleteOldMessages(user1.id, user2.id);
+    await expect(
+      messageService.deleteOldMessages('', user2.id),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      messageService.deleteOldMessages(user1.id, ''),
+    ).rejects.toThrow(ServiceException);
   });
 });
