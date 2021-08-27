@@ -1,15 +1,21 @@
 import { UserService } from './user.service';
 import { ImageService } from '../image/image.service';
+import { BookService } from '../book/book.service';
+import { UserInterestService } from '../user-interest/user-interest.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 
 describe('UserService', () => {
   let userService: UserService;
   let imageService: ImageService;
+  let bookService: BookService;
+  let userInterestService: UserInterestService;
 
   beforeAll(async () => {
     userService = await getService(UserService);
     imageService = await getService(ImageService);
+    bookService = await getService(BookService);
+    userInterestService = await getService(UserInterestService);
   });
 
   it('should create, check existence, get, get books, and delete a user', async () => {
@@ -215,6 +221,122 @@ describe('UserService', () => {
     await expect(userService.getUser(user1.id)).rejects.toThrow(
       ServiceException,
     );
+  });
+
+  it('should create, get book recommendations, and delete a user', async () => {
+    // create
+    const firstname = 'Martin';
+    const lastname = 'Luther';
+    const email1 = 'luthma01@luther.edu';
+    const email2 = 'luthma02@luther.edu';
+    const email3 = 'luthma03@luther.edu';
+    const password = 'password123';
+    const user1 = await userService.createUser(
+      firstname,
+      lastname,
+      email1,
+      password,
+    );
+    expect(user1).toBeDefined();
+    const user2 = await userService.createUser(
+      firstname,
+      lastname,
+      email2,
+      password,
+    );
+    expect(user2).toBeDefined();
+    const user3 = await userService.createUser(
+      firstname,
+      lastname,
+      email3,
+      password,
+    );
+    expect(user3).toBeDefined();
+    const title = 'The C Programming Language';
+    const author = 'Dennis Ritchie';
+    const description =
+      'The C Programming Language is a computer programming book written by Brian Kernighan and Dennis Ritchie, the latter of whom originally designed and implemented the language, as well as co-designed the Unix operating system with which development of the language was closely intertwined.';
+    const ISBN10 = '0131103628';
+    const ISBN13 = '978-0131103627';
+    const imageData = 'abc';
+    const departmentID = 15;
+    const courseNumber = 253;
+    const price = 48.99;
+    const conditionID = 1;
+    const book1 = await bookService.createBook({
+      userID: user1.id,
+      title,
+      author,
+      description,
+      ISBN10,
+      ISBN13,
+      imageData,
+      departmentID,
+      courseNumber,
+      price,
+      conditionID,
+    });
+    expect(book1).toBeDefined();
+
+    // get book recommendations
+    const recommendations1 = await userService.recommendations(user1.id);
+    expect(recommendations1).toBeDefined();
+    expect(recommendations1).toEqual([]);
+    const recommendations2 = await userService.recommendations(user2.id);
+    expect(recommendations2).toBeDefined();
+    expect(recommendations2).toEqual([]);
+    const userInterest1 = await userInterestService.noteInterest(
+      user2.id,
+      departmentID,
+    );
+    expect(userInterest1).toBeDefined();
+    const recommendations3 = await userService.recommendations(user1.id);
+    expect(recommendations3).toBeDefined();
+    expect(recommendations3).toEqual([]);
+    const recommendations4 = await userService.recommendations(user2.id);
+    expect(recommendations4).toBeDefined();
+    expect(recommendations4).toEqual([book1]);
+    await userInterestService.dropInterest(user2.id, departmentID);
+    const book2 = await bookService.createBook({
+      userID: user2.id,
+      title,
+      author,
+      description,
+      ISBN10,
+      ISBN13,
+      imageData,
+      departmentID,
+      courseNumber,
+      price,
+      conditionID,
+    });
+    expect(book2).toBeDefined();
+    const recommendations5 = await userService.recommendations(user1.id);
+    expect(recommendations5).toBeDefined();
+    expect(recommendations5).toEqual([book2]);
+    const recommendations6 = await userService.recommendations(user2.id);
+    expect(recommendations6).toBeDefined();
+    expect(recommendations6).toEqual([book1]);
+    const recommendations7 = await userService.recommendations(user3.id);
+    expect(recommendations7).toBeDefined();
+    expect(recommendations7).toEqual([]);
+    const userInterest2 = await userInterestService.noteInterest(
+      user3.id,
+      departmentID,
+    );
+    expect(userInterest2).toBeDefined();
+    const recommendations8 = await userService.recommendations(user3.id);
+    expect(recommendations8).toBeDefined();
+    expect(recommendations8).toEqual([book1, book2]);
+    await userInterestService.dropInterest(user3.id, departmentID);
+
+    // delete
+    await userInterestService.dropInterest(user2.id, departmentID);
+    await bookService.deleteBook(book1.id, false);
+    await bookService.deleteBook(book2.id, false);
+    await userService.deleteUser(user1.id);
+    await userService.deleteUser(user2.id);
+    await userService.deleteUser(user3.id);
   });
 
   it('should create, login, and delete a user', async () => {
