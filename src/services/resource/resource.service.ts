@@ -25,10 +25,9 @@ export class ResourceService {
    * @returns Whether or not the resource exists.
    */
   public async resourceExists(name: string): Promise<boolean> {
-    const resource = await this.dbService.getByFields<NBResource>(
-      resourceTableName,
-      { name },
-    );
+    const resource = await this.dbService.getByFields<
+      NBResource<boolean | number | string>
+    >(resourceTableName, { name });
     return !!resource;
   }
 
@@ -41,7 +40,7 @@ export class ResourceService {
   public async getResource<T extends boolean | number | string>(
     name: string,
   ): Promise<T> {
-    const resource = await this.dbService.getByFields<NBResource>(
+    const resource = await this.dbService.getByFields<NBResource<T>>(
       resourceTableName,
       { name },
     );
@@ -59,7 +58,7 @@ export class ResourceService {
           }
 
         case 'NUMBER':
-          const value = parseFloat(resource.value);
+          const value = parseFloat(resource.value as string);
 
           if (!isNaN(value)) {
             return value as T;
@@ -88,8 +87,8 @@ export class ResourceService {
   public async setResource<T extends boolean | number | string>(
     name: string,
     value: T,
-  ): Promise<NBResource> {
-    const resource = await this.dbService.getByFields<NBResource>(
+  ): Promise<NBResource<T>> {
+    const resource = await this.dbService.getByFields<NBResource<T>>(
       resourceTableName,
       { name },
     );
@@ -113,12 +112,26 @@ export class ResourceService {
           }
       }
 
-      const resources = await this.dbService.updateByFields<NBResource>(
+      const resources = await this.dbService.updateByFields<NBResource<T>>(
         resourceTableName,
         { name },
         { value: value.toString() },
       );
-      return resources[0];
+
+      switch (resources[0].type) {
+        case 'BOOLEAN':
+          return {
+            ...resources[0],
+            value: (resources[0].value === 'true' ? true : false) as T,
+          };
+        case 'NUMBER':
+          return {
+            ...resources[0],
+            value: parseFloat(resources[0].value as string) as T,
+          };
+        case 'STRING':
+          return resources[0];
+      }
     } else {
       throw new ServiceException('Resource does not exist');
     }
@@ -132,10 +145,9 @@ export class ResourceService {
   public async getResources(): Promise<{
     [name: string]: boolean | number | string;
   }> {
-    const resources = await this.dbService.list<NBResource>(resourceTableName, {
-      fieldName: 'name',
-      sortOrder: 'ASC',
-    });
+    const resources = await this.dbService.list<
+      NBResource<boolean | number | string>
+    >(resourceTableName, { fieldName: 'name', sortOrder: 'ASC' });
 
     return resources.reduce((acc, resource) => {
       switch (resource.type) {
@@ -143,7 +155,7 @@ export class ResourceService {
           acc[resource.name] = resource.value === 'true' ? true : false;
           break;
         case 'NUMBER':
-          acc[resource.name] = parseFloat(resource.value);
+          acc[resource.name] = parseFloat(resource.value as string);
           break;
         case 'STRING':
           acc[resource.name] = resource.value;
