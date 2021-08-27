@@ -38,6 +38,9 @@ describe('UserInterestService', () => {
     expect(userInterest1).toHaveProperty('userID', user.id);
     expect(userInterest1).toHaveProperty('departmentID', departmentID);
     expect(userInterest1).toHaveProperty('interestTime');
+    await expect(
+      userInterestService.noteInterest('', departmentID),
+    ).rejects.toThrow(ServiceException);
 
     // note same interest
     const userInterest2 = await userInterestService.noteInterest(

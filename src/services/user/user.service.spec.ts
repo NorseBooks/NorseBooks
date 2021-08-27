@@ -45,6 +45,23 @@ describe('UserService', () => {
     expect(user1).toHaveProperty('joinTime');
     expect(user1).toHaveProperty('lastLoginTime', null);
 
+    // create invalid
+    await expect(
+      userService.createUser('', lastname, email, password),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      userService.createUser(firstname, '', email, password),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      userService.createUser(firstname, lastname, 'fake', password),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      userService.createUser(firstname, lastname, email, 'bad_pw'),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      userService.createUser(firstname, lastname, email, password),
+    ).rejects.toThrow(ServiceException);
+
     // check existence
     const userExists1 = await userService.userExists(user1.id);
     expect(userExists1).toBe(true);
@@ -62,11 +79,17 @@ describe('UserService', () => {
     const user3 = await userService.getUserByEmail(email);
     expect(user3).toBeDefined();
     expect(user3).toEqual(user1);
+    await expect(userService.getUserByEmail('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // get books
     const books = await userService.getCurrentBooks(user1.id);
     expect(books).toBeDefined();
     expect(books.length).toBe(0);
+    await expect(userService.getCurrentBooks('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete
     await userService.deleteUser(user1.id);
@@ -113,6 +136,12 @@ describe('UserService', () => {
     const user3 = await userService.getUser(user1.id);
     expect(user3).toBeDefined();
     expect(user3).toEqual(user2);
+    await expect(userService.setPassword('', newPassword)).rejects.toThrow(
+      ServiceException,
+    );
+    await expect(userService.setPassword(user1.id, 'bad_pw')).rejects.toThrow(
+      ServiceException,
+    );
 
     // set verified
     const user4 = await userService.setVerified(user1.id);
@@ -122,6 +151,7 @@ describe('UserService', () => {
     const user5 = await userService.getUser(user1.id);
     expect(user5).toBeDefined();
     expect(user5).toEqual(user4);
+    await expect(userService.setVerified('')).rejects.toThrow(ServiceException);
 
     // set image
     const imageData = 'abc';
@@ -135,15 +165,19 @@ describe('UserService', () => {
     expect(user7).toEqual(user6);
     const userImage = await imageService.getImage(user6.imageID);
     expect(userImage).toBeDefined();
+    const newImageData = 'def';
+    const user8 = await userService.setUserImage(user1.id, newImageData);
+    expect(user8).toBeDefined();
+    expect(user8).toEqual(user6);
 
     // delete image
-    const user8 = await userService.deleteUserImage(user1.id);
-    expect(user8).toBeDefined();
-    expect(user8.id).toBe(user1.id);
-    expect(user8.imageID).toBeNull();
-    const user9 = await userService.getUser(user1.id);
+    const user9 = await userService.deleteUserImage(user1.id);
     expect(user9).toBeDefined();
-    expect(user9).toEqual(user8);
+    expect(user9.id).toBe(user1.id);
+    expect(user9.imageID).toBeNull();
+    const user10 = await userService.getUser(user1.id);
+    expect(user10).toBeDefined();
+    expect(user10).toEqual(user9);
 
     // delete
     await userService.deleteUser(user1.id);
@@ -339,7 +373,7 @@ describe('UserService', () => {
     await userService.deleteUser(user3.id);
   });
 
-  it('should create, login, and delete a user', async () => {
+  it('should create, login, prune, and delete a user', async () => {
     // create
     const firstname = 'Martin';
     const lastname = 'Luther';
@@ -366,6 +400,12 @@ describe('UserService', () => {
     expect(user1).toHaveProperty('joinTime');
     expect(user1).toHaveProperty('lastLoginTime', null);
 
+    // login unverified
+    await expect(userService.login(email, password)).rejects.toThrow(
+      ServiceException,
+    );
+    await userService.setVerified(user1.id);
+
     // login
     const session = await userService.login(email, password);
     expect(session).toBeDefined();
@@ -376,6 +416,14 @@ describe('UserService', () => {
     await expect(userService.login(email, 'wrong-password')).rejects.toThrow(
       ServiceException,
     );
+    await expect(userService.login('wrong-email', password)).rejects.toThrow(
+      ServiceException,
+    );
+
+    // prune
+    await userService.pruneUnverifiedUsers();
+    const user3 = await userService.getUser(user1.id);
+    expect(user3).toBeDefined();
 
     // delete
     await userService.deleteUser(user1.id);

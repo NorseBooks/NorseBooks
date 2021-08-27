@@ -79,6 +79,12 @@ describe('ReportService', () => {
     expect(report1).toHaveProperty('userID', user.id);
     expect(report1).toHaveProperty('reason', reason);
     expect(report1).toHaveProperty('reportTime');
+    await expect(reportService.reportBook('', book.id, reason)).rejects.toThrow(
+      ServiceException,
+    );
+    await expect(reportService.reportBook(user.id, '', reason)).rejects.toThrow(
+      ServiceException,
+    );
 
     // check existence
     const reportExists1 = await reportService.reportExists(report1.id);
@@ -156,6 +162,9 @@ describe('ReportService', () => {
     const reportedBooks1 = await reportService.getUserBookReports(user.id);
     expect(reportedBooks1).toBeDefined();
     expect(reportedBooks1.length).toBe(0);
+    await expect(reportService.getUserBookReports('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // create
     const report = await reportService.reportBook(user.id, book.id, reason);

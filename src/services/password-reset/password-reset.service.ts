@@ -46,6 +46,8 @@ export class PasswordResetService {
       } else {
         return this.getPasswordResetByUserID(userID);
       }
+    } else {
+      throw new ServiceException('User does not exist');
     }
   }
 

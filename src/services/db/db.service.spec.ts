@@ -50,21 +50,20 @@ describe('DBService', () => {
     // create
     const resourceName = 'message';
     const resourceValue = 'Hello, world!';
-    const resource1 = await dbService.create<NBResource>('NB_RESOURCE', {
-      name: resourceName,
-      value: resourceValue,
-      type: 'STRING',
-    });
+    const resource1 = await dbService.create<NBResource<string>>(
+      'NB_RESOURCE',
+      { name: resourceName, value: resourceValue, type: 'STRING' },
+    );
     expect(resource1).toBeDefined();
     expect(resource1).toHaveProperty('name', resourceName);
     expect(resource1).toHaveProperty('value', resourceValue);
     expect(resource1).toHaveProperty('type', 'STRING');
 
     // get by fields
-    const resource2 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
-      name: resourceName,
-      value: resourceValue,
-    });
+    const resource2 = await dbService.getByFields<NBResource<string>>(
+      'NB_RESOURCE',
+      { name: resourceName, value: resourceValue },
+    );
     expect(resource2).toBeDefined();
     expect(resource2).toHaveProperty('name', resourceName);
     expect(resource2).toHaveProperty('value', resourceValue);
@@ -72,7 +71,7 @@ describe('DBService', () => {
 
     // update by fields
     const newResourceValue = 'Hello, resource!';
-    const resources = await dbService.updateByFields<NBResource>(
+    const resources = await dbService.updateByFields<NBResource<string>>(
       'NB_RESOURCE',
       { name: resourceName },
       { value: newResourceValue },
@@ -84,15 +83,15 @@ describe('DBService', () => {
     expect(resource3).toHaveProperty('name', resourceName);
     expect(resource3).toHaveProperty('value', newResourceValue);
     expect(resource3).toHaveProperty('type', 'STRING');
-    const resource4 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
-      name: resourceName,
-      value: resourceValue,
-    });
+    const resource4 = await dbService.getByFields<NBResource<string>>(
+      'NB_RESOURCE',
+      { name: resourceName, value: resourceValue },
+    );
     expect(resource4).toBeUndefined();
-    const resource5 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
-      name: resourceName,
-      value: newResourceValue,
-    });
+    const resource5 = await dbService.getByFields<NBResource<string>>(
+      'NB_RESOURCE',
+      { name: resourceName, value: newResourceValue },
+    );
     expect(resource5).toBeDefined();
     expect(resource5).toHaveProperty('name', resourceName);
     expect(resource5).toHaveProperty('value', newResourceValue);
@@ -105,10 +104,10 @@ describe('DBService', () => {
     });
 
     // get by fields
-    const resource6 = await dbService.getByFields<NBResource>('NB_RESOURCE', {
-      name: resourceName,
-      value: newResourceValue,
-    });
+    const resource6 = await dbService.getByFields<NBResource<string>>(
+      'NB_RESOURCE',
+      { name: resourceName, value: newResourceValue },
+    );
     expect(resource6).toBeUndefined();
   });
 

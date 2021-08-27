@@ -47,6 +47,9 @@ export class UserService {
     email: string,
     password: string,
   ): Promise<NBUser> {
+    const userNameMaxLength = await this.resourceService.getResource<number>(
+      'USER_NAME_MAX_LENGTH',
+    );
     const userEmailMinLength = await this.resourceService.getResource<number>(
       'USER_EMAIL_MIN_LENGTH',
     );
@@ -62,36 +65,48 @@ export class UserService {
         'USER_PASSWORD_MAX_LENGTH',
       );
 
-    if (
-      email.length >= userEmailMinLength &&
-      email.length <= userEmailMaxLength
-    ) {
-      if (
-        password.length >= userPasswordMinLength &&
-        password.length <= userPasswordMaxLength
-      ) {
-        const emailExists = await this.userExistsByEmail(email);
+    if (firstname.length > 0 && firstname.length <= userNameMaxLength) {
+      if (lastname.length > 0 && lastname.length <= userNameMaxLength) {
+        if (
+          email.length >= userEmailMinLength &&
+          email.length <= userEmailMaxLength
+        ) {
+          if (
+            password.length >= userPasswordMinLength &&
+            password.length <= userPasswordMaxLength
+          ) {
+            const emailExists = await this.userExistsByEmail(email);
 
-        if (!emailExists) {
-          const passwordHash = await this.hashPassword(password);
+            if (!emailExists) {
+              const passwordHash = await this.hashPassword(password);
 
-          return this.dbService.create<NBUser>(userTableName, {
-            firstname,
-            lastname,
-            email,
-            passwordHash,
-          });
+              return this.dbService.create<NBUser>(userTableName, {
+                firstname,
+                lastname,
+                email,
+                passwordHash,
+              });
+            } else {
+              throw new ServiceException('Email is already in use');
+            }
+          } else {
+            throw new ServiceException(
+              `Password must be between ${userPasswordMinLength} and ${userPasswordMaxLength} characters`,
+            );
+          }
         } else {
-          throw new ServiceException('Email is already in use');
+          throw new ServiceException(
+            `Email must be between ${userEmailMinLength} and ${userEmailMaxLength} characters`,
+          );
         }
       } else {
         throw new ServiceException(
-          `Password must be between ${userPasswordMinLength} and ${userPasswordMaxLength} characters`,
+          `First name must be between 1 and ${userNameMaxLength} characters`,
         );
       }
     } else {
       throw new ServiceException(
-        `Email must be between ${userEmailMinLength} and ${userEmailMaxLength} characters`,
+        `Last name must be between 1 and ${userNameMaxLength} characters`,
       );
     }
   }
@@ -372,7 +387,7 @@ export class UserService {
         user.passwordHash,
       );
 
-      if (passwordMatch) {
+      if (passwordMatch && user.verified) {
         const sql = `UPDATE "${userTableName}" SET "lastLoginTime" = NOW() WHERE id = ?;`;
         const params = [user.id];
         await this.dbService.execute(sql, params);

@@ -31,6 +31,9 @@ describe('FeedbackService', () => {
 
   it('should send and delete feedback', async () => {
     // send invalid feedback
+    await expect(
+      feedbackService.sendFeedback('', userFeedback),
+    ).rejects.toThrow(ServiceException);
     await expect(feedbackService.sendFeedback(user.id, '')).rejects.toThrow(
       ServiceException,
     );

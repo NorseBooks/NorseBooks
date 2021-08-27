@@ -50,6 +50,9 @@ describe('ReferralService', () => {
     await expect(referralService.referUser(user2.id, user3.id)).rejects.toThrow(
       ServiceException,
     );
+    await expect(referralService.referUser('', '')).rejects.toThrow(
+      ServiceException,
+    );
 
     // get referral
     const referral3 = await referralService.getReferral(user1.id);
@@ -60,6 +63,9 @@ describe('ReferralService', () => {
     const referral5 = await referralService.getReferral(user3.id);
     expect(referral5).toBeDefined();
     expect(referral5).toEqual(referral2);
+    await expect(referralService.getReferral('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // get referrals
     const referrals1 = await referralService.getReferrals(user1.id);
@@ -72,6 +78,9 @@ describe('ReferralService', () => {
     const referrals3 = await referralService.getReferrals(user3.id);
     expect(referrals3).toBeDefined();
     expect(referrals3.length).toBe(0);
+    await expect(referralService.getReferrals('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete
     await referralService.deleteReferral(user1.id, user2.id);
@@ -119,6 +128,9 @@ describe('ReferralService', () => {
       user3.id,
     );
     expect(reachedThreshold3).toBe(false);
+    await expect(referralService.reachedReferralThreshold('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete user referrals
     const referrals1 = await referralService.getReferrals(user1.id);
