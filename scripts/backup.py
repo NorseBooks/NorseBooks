@@ -73,8 +73,8 @@ def getTableData(db: cursor, table: str, columns: List[str]) -> List[Tuple]:
     return tableData
 
 
-def fixDecimalValues(tableData: Any) -> Any:
-    """Convert Decimal objects to strings."""
+def fixValues(tableData: Any) -> Any:
+    """Convert non-serializable objects to strings."""
 
     fixedData = []
 
@@ -82,10 +82,10 @@ def fixDecimalValues(tableData: Any) -> Any:
         fixedRow = []
 
         for value in row:
-            if type(value) != decimal.Decimal:
-                fixedRow.append(value)
-            else:
+            if type(value) in [decimal.Decimal, datetime]:
                 fixedRow.append(str(value))
+            else:
+                fixedRow.append(value)
 
         fixedData.append(tuple(fixedRow))
 
@@ -112,7 +112,7 @@ def backup(db: cursor, backupDir: str) -> str:
 
         dbData[table] = {}
         dbData[table]["columns"] = tableColumns
-        dbData[table]["data"] = fixDecimalValues(tableData)
+        dbData[table]["data"] = fixValues(tableData)
 
     saveBackup(dbPath, dbData)
 
@@ -146,7 +146,7 @@ def main() -> None:
     backupPath = getBackupPath()
     dbPath = backupDB(dbUrl, backupPath)
 
-    print(f"Successfully backed up to {dbPath}")
+    print(dbPath)
 
 
 if __name__ == "__main__":
