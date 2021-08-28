@@ -6,12 +6,15 @@ import { ServiceException } from '../service.exception';
 import * as jimp from 'jimp';
 
 /**
+ * Image table name.
+ */
+export const imageTableName = 'NB_IMAGE';
+
+/**
  * Image table service.
  */
 @Injectable()
 export class ImageService {
-  private readonly tableName = 'NB_IMAGE';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -28,13 +31,12 @@ export class ImageService {
   public async createImage(data: string): Promise<NBImage> {
     const imageData = await this.shrinkImageBase64(data);
 
-    const maxImageSizeResource = await this.resourceService.getResource(
+    const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
-    const maxImageSize = parseInt(maxImageSizeResource);
 
     if (imageData.length < maxImageSize) {
-      return this.dbService.create<NBImage>(this.tableName, {
+      return this.dbService.create<NBImage>(imageTableName, {
         data: imageData,
       });
     } else {
@@ -50,7 +52,7 @@ export class ImageService {
    */
   public async imageExists(imageID: string): Promise<boolean> {
     const image = await this.dbService.getByID<NBImage>(
-      this.tableName,
+      imageTableName,
       imageID,
     );
     return !!image;
@@ -64,7 +66,7 @@ export class ImageService {
    */
   public async getImage(imageID: string): Promise<NBImage> {
     const image = await this.dbService.getByID<NBImage>(
-      this.tableName,
+      imageTableName,
       imageID,
     );
 
@@ -88,16 +90,15 @@ export class ImageService {
   ): Promise<NBImage> {
     const imageData = await this.shrinkImageBase64(newData);
 
-    const maxImageSizeResource = await this.resourceService.getResource(
+    const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
-    const maxImageSize = parseInt(maxImageSizeResource);
 
     if (imageData.length < maxImageSize) {
       const imageExists = await this.imageExists(imageID);
 
       if (imageExists) {
-        return this.dbService.updateByID<NBImage>(this.tableName, imageID, {
+        return this.dbService.updateByID<NBImage>(imageTableName, imageID, {
           data: imageData,
         });
       } else {
@@ -114,7 +115,7 @@ export class ImageService {
    * @param imageID The ID of the image.
    */
   public async deleteImage(imageID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, imageID);
+    await this.dbService.deleteByID(imageTableName, imageID);
   }
 
   /**
@@ -223,10 +224,9 @@ export class ImageService {
    * @returns The shrunk base64 image.
    */
   private async shrinkImageBase64(imageB64: string): Promise<string> {
-    const maxImageSizeResource = await this.resourceService.getResource(
+    const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
-    const maxImageSize = parseInt(maxImageSizeResource);
 
     const image = Buffer.from(imageB64, 'base64');
     const shrunk = await this.shrinkImageAuto(image, maxImageSize);

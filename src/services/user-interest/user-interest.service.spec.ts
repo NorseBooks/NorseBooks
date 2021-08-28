@@ -27,10 +27,6 @@ describe('UserInterestService', () => {
     await userService.deleteUser(user.id);
   });
 
-  it('should be defined', () => {
-    expect(userInterestService).toBeDefined();
-  });
-
   it('should note interest, check if interested, and drop interest', async () => {
     // note interest
     const departmentID = 15;
@@ -42,6 +38,9 @@ describe('UserInterestService', () => {
     expect(userInterest1).toHaveProperty('userID', user.id);
     expect(userInterest1).toHaveProperty('departmentID', departmentID);
     expect(userInterest1).toHaveProperty('interestTime');
+    await expect(
+      userInterestService.noteInterest('', departmentID),
+    ).rejects.toThrow(ServiceException);
 
     // note same interest
     const userInterest2 = await userInterestService.noteInterest(
@@ -65,9 +64,9 @@ describe('UserInterestService', () => {
       user.id,
       departmentID,
     );
-    expect(interested1).toBeTruthy();
+    expect(interested1).toBe(true);
     const interested2 = await userInterestService.isInterested(user.id, 41);
-    expect(interested2).toBeFalsy();
+    expect(interested2).toBe(false);
 
     // drop interest
     await userInterestService.dropInterest(user.id, departmentID);
@@ -75,7 +74,7 @@ describe('UserInterestService', () => {
       user.id,
       departmentID,
     );
-    expect(interested3).toBeFalsy();
+    expect(interested3).toBe(false);
   });
 
   it('should note interest, get user interests, and drop interest', async () => {

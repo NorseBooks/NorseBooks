@@ -6,12 +6,15 @@ import { NBReferral } from './referral.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Referral table name.
+ */
+export const referralTableName = 'NB_REFERRAL';
+
+/**
  * Referral table service.
  */
 @Injectable()
 export class ReferralService {
-  private readonly tableName = 'NB_REFERRAL';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -39,7 +42,7 @@ export class ReferralService {
       const referral = await this.getReferral(newUserID);
 
       if (!referral) {
-        return this.dbService.create<NBReferral>(this.tableName, {
+        return this.dbService.create<NBReferral>(referralTableName, {
           userID,
           newUserID,
         });
@@ -61,7 +64,7 @@ export class ReferralService {
     const newUserExists = await this.userService.userExists(newUserID);
 
     if (newUserExists) {
-      return this.dbService.getByFields<NBReferral>(this.tableName, {
+      return this.dbService.getByFields<NBReferral>(referralTableName, {
         newUserID,
       });
     } else {
@@ -80,7 +83,7 @@ export class ReferralService {
 
     if (userExists) {
       return this.dbService.listByFields<NBReferral>(
-        this.tableName,
+        referralTableName,
         { userID },
         { fieldName: 'referTime', sortOrder: 'ASC' },
       );
@@ -96,10 +99,9 @@ export class ReferralService {
    * @returns Whether or not the user has reachhed the referral threshold.
    */
   public async reachedReferralThreshold(userID: string): Promise<boolean> {
-    const referralThresholdResource = await this.resourceService.getResource(
+    const referralThreshold = await this.resourceService.getResource<number>(
       'REFERRAL_THRESHOLD',
     );
-    const referralThreshold = parseInt(referralThresholdResource);
 
     const userExists = await this.userService.userExists(userID);
 
@@ -122,7 +124,10 @@ export class ReferralService {
     userID: string,
     newUserID: string,
   ): Promise<void> {
-    await this.dbService.deleteByFields(this.tableName, { userID, newUserID });
+    await this.dbService.deleteByFields(referralTableName, {
+      userID,
+      newUserID,
+    });
   }
 
   /**
@@ -131,6 +136,6 @@ export class ReferralService {
    * @param userID The user's ID.
    */
   public async deleteUserReferrals(userID: string): Promise<void> {
-    await this.dbService.deleteByFields(this.tableName, { userID });
+    await this.dbService.deleteByFields(referralTableName, { userID });
   }
 }

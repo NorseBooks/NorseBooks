@@ -12,10 +12,6 @@ describe('PasswordResetService', () => {
     userService = await getService(UserService);
   });
 
-  it('should be defined', () => {
-    expect(passwordResetService).toBeDefined();
-  });
-
   it('should create, check existence, and delete password resets', async () => {
     // create
     const firstname = 'Martin';
@@ -28,6 +24,7 @@ describe('PasswordResetService', () => {
       email,
       password,
     );
+    await userService.setVerified(user.id);
     const passwordReset = await passwordResetService.createPasswordReset(
       user.id,
     );
@@ -40,19 +37,19 @@ describe('PasswordResetService', () => {
     const passwordResetExists1 = await passwordResetService.passwordResetExists(
       passwordReset.id,
     );
-    expect(passwordResetExists1).toBeTruthy();
+    expect(passwordResetExists1).toBe(true);
 
     // check existence by user
     const passwordResetExists2 =
       await passwordResetService.passwordResetExistsByUserID(user.id);
-    expect(passwordResetExists2).toBeTruthy();
+    expect(passwordResetExists2).toBe(true);
 
     // delete
     await passwordResetService.deletePasswordReset(passwordReset.id);
     const passwordResetExists3 = await passwordResetService.passwordResetExists(
       passwordReset.id,
     );
-    expect(passwordResetExists3).toBeFalsy();
+    expect(passwordResetExists3).toBe(false);
     await userService.deleteUser(user.id);
   });
 
@@ -68,6 +65,7 @@ describe('PasswordResetService', () => {
       email,
       password,
     );
+    await userService.setVerified(user1.id);
     const passwordReset1 = await passwordResetService.createPasswordReset(
       user1.id,
     );
@@ -89,6 +87,9 @@ describe('PasswordResetService', () => {
     );
     expect(passwordReset3).toBeDefined();
     expect(passwordReset3).toEqual(passwordReset1);
+    await expect(
+      passwordResetService.getPasswordResetByUserID(''),
+    ).rejects.toThrow(ServiceException);
 
     // get all
     const passwordResets = await passwordResetService.getPasswordResets();
@@ -108,6 +109,9 @@ describe('PasswordResetService', () => {
     await expect(
       passwordResetService.resetPassword(passwordReset1.id, newPassword),
     ).rejects.toThrow(ServiceException);
+    await expect(
+      passwordResetService.resetPassword(passwordReset1.id, 'bad_pw'),
+    ).rejects.toThrow(ServiceException);
 
     // delete
     await passwordResetService.deletePasswordReset(passwordReset1.id);
@@ -117,7 +121,7 @@ describe('PasswordResetService', () => {
     await userService.deleteUser(user1.id);
   });
 
-  it('should create, get reset by user, get user by reset, and delete password resets', async () => {
+  it('should create, get reset by user, get user by reset, prune, and delete password resets', async () => {
     // create
     const firstname = 'Martin';
     const lastname = 'Luther';
@@ -129,6 +133,7 @@ describe('PasswordResetService', () => {
       email,
       password,
     );
+    await userService.setVerified(user1.id);
     const passwordReset1 = await passwordResetService.createPasswordReset(
       user1.id,
     );
@@ -136,27 +141,47 @@ describe('PasswordResetService', () => {
     expect(passwordReset1).toHaveProperty('id');
     expect(passwordReset1).toHaveProperty('userID', user1.id);
     expect(passwordReset1).toHaveProperty('createTime');
-
-    // get reset by user
-    const passwordReset2 = await passwordResetService.getPasswordResetByUserID(
+    await expect(passwordResetService.createPasswordReset('')).rejects.toThrow(
+      ServiceException,
+    );
+    const passwordReset2 = await passwordResetService.createPasswordReset(
       user1.id,
     );
     expect(passwordReset2).toBeDefined();
     expect(passwordReset2).toEqual(passwordReset1);
+
+    // get reset by user
+    const passwordReset3 = await passwordResetService.getPasswordResetByUserID(
+      user1.id,
+    );
+    expect(passwordReset3).toBeDefined();
+    expect(passwordReset3).toEqual(passwordReset1);
 
     // get user by reset
     const user2 = await passwordResetService.getUserByPasswordReset(
       passwordReset1.id,
     );
     expect(user2).toBeDefined();
-    expect(user2).toEqual(user1);
+    expect(user2).not.toEqual(user1);
+    expect(user2.verified).toBe(true);
+    await expect(
+      passwordResetService.getUserByPasswordReset(''),
+    ).rejects.toThrow(ServiceException);
+
+    // prune
+    await passwordResetService.prunePasswordResets();
+    const passwordReset4 = await passwordResetService.getPasswordReset(
+      passwordReset1.id,
+    );
+    expect(passwordReset4).toBeDefined();
+    expect(passwordReset4).toEqual(passwordReset1);
 
     // delete
     await passwordResetService.deletePasswordReset(passwordReset1.id);
     const passwordResetExists = await passwordResetService.passwordResetExists(
       passwordReset1.id,
     );
-    expect(passwordResetExists).toBeFalsy();
+    expect(passwordResetExists).toBe(false);
     await userService.deleteUser(user1.id);
   });
 });

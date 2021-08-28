@@ -1,16 +1,22 @@
 import { ImageService } from './image.service';
+import { ResourceService } from '../resource/resource.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 
 describe('ImageService', () => {
   let imageService: ImageService;
+  let resourceService: ResourceService;
+
+  let largeImage: string;
 
   beforeAll(async () => {
     imageService = await getService(ImageService);
-  });
+    resourceService = await getService(ResourceService);
 
-  it('should be defined', () => {
-    expect(imageService).toBeDefined();
+    const maxImageSize = await resourceService.getResource<number>(
+      'MAX_IMAGE_SIZE',
+    );
+    largeImage = '0'.repeat(maxImageSize * 1.1);
   });
 
   it('should create, check existence, and delete an image', async () => {
@@ -22,14 +28,19 @@ describe('ImageService', () => {
     expect(image).toHaveProperty('data');
     expect(image).toHaveProperty('createTime');
 
+    // create too large
+    await expect(imageService.createImage(largeImage)).rejects.toThrow(
+      ServiceException,
+    );
+
     // check existence
     const imageExists1 = await imageService.imageExists(image.id);
-    expect(imageExists1).toBeTruthy();
+    expect(imageExists1).toBe(true);
 
     // delete
     await imageService.deleteImage(image.id);
     const imageExists2 = await imageService.imageExists(image.id);
-    expect(imageExists2).toBeFalsy();
+    expect(imageExists2).toBe(false);
   });
 
   it('should create, get, set, and delete an image', async () => {
@@ -57,6 +68,14 @@ describe('ImageService', () => {
     const image4 = await imageService.getImage(image1.id);
     expect(image4).toBeDefined();
     expect(image4).toEqual(image3);
+
+    // set invalid
+    await expect(
+      imageService.setImageData(image1.id, largeImage),
+    ).rejects.toThrow(ServiceException);
+    await expect(imageService.setImageData('', newImageData)).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete
     await imageService.deleteImage(image1.id);

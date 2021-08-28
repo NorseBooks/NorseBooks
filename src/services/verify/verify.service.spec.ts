@@ -12,10 +12,6 @@ describe('VerifyService', () => {
     userService = await getService(UserService);
   });
 
-  it('should be defined', () => {
-    expect(verifyService).toBeDefined();
-  });
-
   it('should create, check existence, and delete verifications', async () => {
     // create
     const firstname = 'Martin';
@@ -28,30 +24,36 @@ describe('VerifyService', () => {
       email,
       password,
     );
-    const verification = await verifyService.createVerification(user.id);
-    expect(verification).toBeDefined();
-    expect(verification).toHaveProperty('id');
-    expect(verification).toHaveProperty('userID', user.id);
-    expect(verification).toHaveProperty('createTime');
+    const verification1 = await verifyService.createVerification(user.id);
+    expect(verification1).toBeDefined();
+    expect(verification1).toHaveProperty('id');
+    expect(verification1).toHaveProperty('userID', user.id);
+    expect(verification1).toHaveProperty('createTime');
+    await expect(verifyService.createVerification('')).rejects.toThrow(
+      ServiceException,
+    );
+    const verification2 = await verifyService.createVerification(user.id);
+    expect(verification2).toBeDefined();
+    expect(verification2).toEqual(verification1);
 
     // check existence
     const verificationExists1 = await verifyService.verificationExists(
-      verification.id,
+      verification1.id,
     );
-    expect(verificationExists1).toBeTruthy();
+    expect(verificationExists1).toBe(true);
 
     // check existence by user
     const verificationExists2 = await verifyService.verificationExistsByUserID(
       user.id,
     );
-    expect(verificationExists2).toBeTruthy();
+    expect(verificationExists2).toBe(true);
 
     // delete
-    await verifyService.deleteVerification(verification.id);
+    await verifyService.deleteVerification(verification1.id);
     const verificationExists3 = await verifyService.verificationExists(
-      verification.id,
+      verification1.id,
     );
-    expect(verificationExists3).toBeFalsy();
+    expect(verificationExists3).toBe(false);
     await userService.deleteUser(user.id);
   });
 
@@ -68,7 +70,7 @@ describe('VerifyService', () => {
       password,
     );
     expect(user1).toBeDefined();
-    expect(user1.verified).toBeFalsy();
+    expect(user1.verified).toBe(false);
     const verification1 = await verifyService.createVerification(user1.id);
     expect(verification1).toBeDefined();
     expect(verification1).toHaveProperty('id');
@@ -94,7 +96,7 @@ describe('VerifyService', () => {
     await verifyService.verifyUser(verification1.id);
     const user2 = await userService.getUser(user1.id);
     expect(user2).toBeDefined();
-    expect(user2.verified).toBeTruthy();
+    expect(user2.verified).toBe(true);
     await expect(verifyService.verifyUser(verification1.id)).rejects.toThrow(
       ServiceException,
     );
@@ -107,7 +109,7 @@ describe('VerifyService', () => {
     await userService.deleteUser(user1.id);
   });
 
-  it('should create, get verification by user, get user by verification, and delete unverified users', async () => {
+  it('should create, get verification by user, get user by verification, prune, and delete unverified users', async () => {
     // create
     const firstname = 'Martin';
     const lastname = 'Luther';
@@ -119,6 +121,9 @@ describe('VerifyService', () => {
       email,
       password,
     );
+    await expect(
+      verifyService.getVerificationByUserID(user1.id),
+    ).rejects.toThrow(ServiceException);
     const verification1 = await verifyService.createVerification(user1.id);
     expect(verification1).toBeDefined();
     expect(verification1).toHaveProperty('id');
@@ -134,14 +139,24 @@ describe('VerifyService', () => {
     const user2 = await verifyService.getUserByVerification(verification1.id);
     expect(user2).toBeDefined();
     expect(user2).toEqual(user1);
+    await expect(verifyService.getUserByVerification('')).rejects.toThrow(
+      ServiceException,
+    );
+
+    // prune
+    await verifyService.pruneVerifications();
+    const verification3 = await verifyService.getVerification(verification1.id);
+    expect(verification3).toBeDefined();
+    expect(verification3).toEqual(verification1);
 
     // delete unverified
     await verifyService.deleteUnverifiedUser(verification1.id);
     const verificationExists = await verifyService.verificationExists(
       verification1.id,
     );
-    expect(verificationExists).toBeFalsy();
+    expect(verificationExists).toBe(false);
     const userExists = await userService.userExists(user1.id);
-    expect(userExists).toBeFalsy();
+    expect(userExists).toBe(false);
+    await verifyService.deleteUnverifiedUser('');
   });
 });

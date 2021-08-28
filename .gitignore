@@ -40,5 +40,6 @@ lerna-debug.log*
 # Misc
 .env
 todo.txt
-.vscode
-.metals
+/.vscode
+/.metals
+/backups

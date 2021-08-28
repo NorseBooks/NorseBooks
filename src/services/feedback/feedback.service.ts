@@ -6,12 +6,15 @@ import { NBFeedback } from './feedback.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Feedback table name.
+ */
+export const feedbackTableName = 'NB_FEEDBACK';
+
+/**
  * Feedback table service.
  */
 @Injectable()
 export class FeedbackService {
-  private readonly tableName = 'NB_FEEDBACK';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -32,10 +35,9 @@ export class FeedbackService {
     userID: string,
     feedback: string,
   ): Promise<NBFeedback> {
-    const feedbackMaxLengthResource = await this.resourceService.getResource(
+    const feedbackMaxLength = await this.resourceService.getResource<number>(
       'FEEDBACK_MAX_LENGTH',
     );
-    const feedbackMaxLength = parseInt(feedbackMaxLengthResource);
 
     const userExists = await this.userService.userExists(userID);
 
@@ -44,7 +46,7 @@ export class FeedbackService {
 
       if (userFeedback === undefined) {
         if (feedback.length >= 1 && feedback.length <= feedbackMaxLength) {
-          return this.dbService.create<NBFeedback>(this.tableName, {
+          return this.dbService.create<NBFeedback>(feedbackTableName, {
             userID,
             feedback,
           });
@@ -69,7 +71,7 @@ export class FeedbackService {
    */
   public async feedbackExists(feedbackID: string): Promise<boolean> {
     const feedback = await this.dbService.getByID<NBFeedback>(
-      this.tableName,
+      feedbackTableName,
       feedbackID,
     );
     return !!feedback;
@@ -83,7 +85,7 @@ export class FeedbackService {
    */
   public async getFeedback(feedbackID: string): Promise<NBFeedback> {
     const feedback = await this.dbService.getByID<NBFeedback>(
-      this.tableName,
+      feedbackTableName,
       feedbackID,
     );
 
@@ -103,7 +105,9 @@ export class FeedbackService {
   public async getUserFeedback(
     userID: string,
   ): Promise<NBFeedback | undefined> {
-    return this.dbService.getByFields<NBFeedback>(this.tableName, { userID });
+    return this.dbService.getByFields<NBFeedback>(feedbackTableName, {
+      userID,
+    });
   }
 
   /**
@@ -112,6 +116,6 @@ export class FeedbackService {
    * @param feedbackID The feedback ID.
    */
   public async deleteFeedback(feedbackID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, feedbackID);
+    await this.dbService.deleteByID(feedbackTableName, feedbackID);
   }
 }

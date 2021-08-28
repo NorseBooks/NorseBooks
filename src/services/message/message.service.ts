@@ -6,12 +6,15 @@ import { NBMessage } from './message.interface';
 import { ServiceException } from '../service.exception';
 
 /**
+ * Message table name.
+ */
+export const messageTableName = 'NB_MESSAGE';
+
+/**
  * Message table service.
  */
 @Injectable()
 export class MessageService {
-  private readonly tableName = 'NB_MESSAGE';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -34,20 +37,24 @@ export class MessageService {
     toUserID: string,
     content: string,
   ): Promise<NBMessage> {
-    const messageContentMaxLengthResource =
-      await this.resourceService.getResource('MESSAGE_CONTENT_MAX_LENGTH');
-    const messageContentMaxLength = parseInt(messageContentMaxLengthResource);
+    const messageContentMaxLength =
+      await this.resourceService.getResource<number>(
+        'MESSAGE_CONTENT_MAX_LENGTH',
+      );
 
     const fromUserExists = await this.userService.userExists(fromUserID);
     const toUserExists = await this.userService.userExists(toUserID);
 
     if (fromUserExists && toUserExists) {
       if (content.length >= 1 && content.length <= messageContentMaxLength) {
-        const message = await this.dbService.create<NBMessage>(this.tableName, {
-          fromUserID,
-          toUserID,
-          content,
-        });
+        const message = await this.dbService.create<NBMessage>(
+          messageTableName,
+          {
+            fromUserID,
+            toUserID,
+            content,
+          },
+        );
         await this.deleteOldMessages(fromUserID, toUserID);
         return message;
       } else {
@@ -68,7 +75,7 @@ export class MessageService {
    */
   public async messageExists(messageID: string): Promise<boolean> {
     const message = await this.dbService.getByID<NBMessage>(
-      this.tableName,
+      messageTableName,
       messageID,
     );
     return !!message;
@@ -82,7 +89,7 @@ export class MessageService {
    */
   public async getMessage(messageID: string): Promise<NBMessage> {
     const message = await this.dbService.getByID<NBMessage>(
-      this.tableName,
+      messageTableName,
       messageID,
     );
 
@@ -109,15 +116,15 @@ export class MessageService {
               MAX("sendTime") "sendTime",
               least("fromUserID", "toUserID") "userID1",
               greatest("fromUserID", "toUserID") "userID2"
-            FROM "NB_MESSAGE"
+            FROM "${messageTableName}"
             GROUP BY
               least("fromUserID", "toUserID"),
               greatest("fromUserID", "toUserID")
         )
-        SELECT "NB_MESSAGE".*
-          FROM "NB_MESSAGE"
+        SELECT "${messageTableName}".*
+          FROM "${messageTableName}"
           JOIN x
-            ON "NB_MESSAGE"."sendTime" = x."sendTime"
+            ON "${messageTableName}"."sendTime" = x."sendTime"
           WHERE "fromUserID" = ? OR "toUserID" = ?
           ORDER BY "sendTime" DESC;
       `;
@@ -144,7 +151,7 @@ export class MessageService {
 
     if (user1Exists && user2Exists) {
       return this.dbService.listCustom<NBMessage>(
-        this.tableName,
+        messageTableName,
         '("fromUserID" = ? AND "toUserID" = ?) OR ("fromUserID" = ? AND "toUserID" = ?)',
         { fieldName: 'sendTime', sortOrder: 'ASC' },
         [userID1, userID2, userID2, userID1],
@@ -164,7 +171,7 @@ export class MessageService {
     const messageExists = await this.messageExists(messageID);
 
     if (messageExists) {
-      return this.dbService.updateByID<NBMessage>(this.tableName, messageID, {
+      return this.dbService.updateByID<NBMessage>(messageTableName, messageID, {
         read: true,
       });
     } else {
@@ -182,7 +189,7 @@ export class MessageService {
     const messageExists = await this.messageExists(messageID);
 
     if (messageExists) {
-      return this.dbService.updateByID<NBMessage>(this.tableName, messageID, {
+      return this.dbService.updateByID<NBMessage>(messageTableName, messageID, {
         read: false,
       });
     } else {
@@ -196,7 +203,7 @@ export class MessageService {
    * @param messageID The message's ID.
    */
   public async deleteMessage(messageID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, messageID);
+    await this.dbService.deleteByID(messageTableName, messageID);
   }
 
   /**
@@ -206,20 +213,19 @@ export class MessageService {
     fromUserID: string,
     toUserID: string,
   ): Promise<void> {
-    const maxMessagesResource = await this.resourceService.getResource(
+    const maxMessages = await this.resourceService.getResource<number>(
       'MAX_MESSAGES',
     );
-    const maxMessages = parseInt(maxMessagesResource);
 
     const fromUserExists = await this.userService.userExists(fromUserID);
     const toUserExists = await this.userService.userExists(toUserID);
 
     if (fromUserExists && toUserExists) {
       const sql = `
-        DELETE FROM "${this.tableName}"
+        DELETE FROM "${messageTableName}"
           WHERE "fromUserID" = ? AND "toUserID" = ?
           AND "id" NOT IN (
-            SELECT "id" FROM "${this.tableName}"
+            SELECT "id" FROM "${messageTableName}"
               WHERE "fromUserID" = ? AND "toUserID" = ?
               ORDER BY "sendTime" DESC
               LIMIT ?

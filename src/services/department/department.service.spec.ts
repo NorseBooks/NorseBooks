@@ -9,16 +9,12 @@ describe('DepartmentService', () => {
     departmentService = await getService(DepartmentService);
   });
 
-  it('should be defined', () => {
-    expect(departmentService).toBeDefined();
-  });
-
   it('should check if departments exist', async () => {
     // exists
     const exists1 = await departmentService.departmentExists(17);
-    expect(exists1).toBeTruthy();
+    expect(exists1).toBe(true);
     const exists2 = await departmentService.departmentExists(-1);
-    expect(exists2).toBeFalsy();
+    expect(exists2).toBe(false);
   });
 
   it('should check if departments exist by name', async () => {
@@ -26,9 +22,9 @@ describe('DepartmentService', () => {
     const exists1 = await departmentService.departmentExistsByName(
       'Computer Science',
     );
-    expect(exists1).toBeTruthy();
+    expect(exists1).toBe(true);
     const exists2 = await departmentService.departmentExistsByName('Astrology');
-    expect(exists2).toBeFalsy();
+    expect(exists2).toBe(false);
   });
 
   it("should get a department's name", async () => {

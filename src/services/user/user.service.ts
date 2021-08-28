@@ -3,6 +3,8 @@ import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { ImageService } from '../image/image.service';
 import { SessionService } from '../session/session.service';
+import { bookTableName } from '../book/book.service';
+import { userInterestTableName } from '../user-interest/user-interest.service';
 import { NBUser } from './user.interface';
 import { NBSession } from '../session/session.interface';
 import { NBBook } from '../book/book.interface';
@@ -10,12 +12,15 @@ import { ServiceException } from '../service.exception';
 import * as bcrypt from 'bcrypt';
 
 /**
+ * User table name.
+ */
+export const userTableName = 'NB_USER';
+
+/**
  * User table service.
  */
 @Injectable()
 export class UserService {
-  private readonly tableName = 'NB_USER';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -42,42 +47,66 @@ export class UserService {
     email: string,
     password: string,
   ): Promise<NBUser> {
-    const resources = await this.resourceService.getResources();
-    const userEmailMinLength = parseInt(resources.USER_EMAIL_MIN_LENGTH);
-    const userEmailMaxLength = parseInt(resources.USER_EMAIL_MAX_LENGTH);
-    const userPasswordMinLength = parseInt(resources.USER_PASSWORD_MIN_LENGTH);
-    const userPasswordMaxLength = parseInt(resources.USER_PASSWORD_MAX_LENGTH);
+    const userNameMaxLength = await this.resourceService.getResource<number>(
+      'USER_NAME_MAX_LENGTH',
+    );
+    const userEmailMinLength = await this.resourceService.getResource<number>(
+      'USER_EMAIL_MIN_LENGTH',
+    );
+    const userEmailMaxLength = await this.resourceService.getResource<number>(
+      'USER_EMAIL_MAX_LENGTH',
+    );
+    const userPasswordMinLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MIN_LENGTH',
+      );
+    const userPasswordMaxLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MAX_LENGTH',
+      );
 
-    if (
-      email.length >= userEmailMinLength &&
-      email.length <= userEmailMaxLength
-    ) {
-      if (
-        password.length >= userPasswordMinLength &&
-        password.length <= userPasswordMaxLength
-      ) {
-        const emailExists = await this.userExistsByEmail(email);
+    if (firstname.length > 0 && firstname.length <= userNameMaxLength) {
+      if (lastname.length > 0 && lastname.length <= userNameMaxLength) {
+        if (
+          email.length >= userEmailMinLength &&
+          email.length <= userEmailMaxLength
+        ) {
+          if (
+            password.length >= userPasswordMinLength &&
+            password.length <= userPasswordMaxLength
+          ) {
+            const emailExists = await this.userExistsByEmail(email);
 
-        if (!emailExists) {
-          const passwordHash = await this.hashPassword(password);
+            if (!emailExists) {
+              const passwordHash = await this.hashPassword(password);
 
-          return this.dbService.create<NBUser>(this.tableName, {
-            firstname,
-            lastname,
-            email,
-            passwordHash,
-          });
+              return this.dbService.create<NBUser>(userTableName, {
+                firstname,
+                lastname,
+                email,
+                passwordHash,
+              });
+            } else {
+              throw new ServiceException('Email is already in use');
+            }
+          } else {
+            throw new ServiceException(
+              `Password must be between ${userPasswordMinLength} and ${userPasswordMaxLength} characters`,
+            );
+          }
         } else {
-          throw new ServiceException('Email is already in use');
+          throw new ServiceException(
+            `Email must be between ${userEmailMinLength} and ${userEmailMaxLength} characters`,
+          );
         }
       } else {
         throw new ServiceException(
-          `Password must be between ${userPasswordMinLength} and ${userPasswordMaxLength} characters`,
+          `First name must be between 1 and ${userNameMaxLength} characters`,
         );
       }
     } else {
       throw new ServiceException(
-        `Email must be between ${userEmailMinLength} and ${userEmailMaxLength} characters`,
+        `Last name must be between 1 and ${userNameMaxLength} characters`,
       );
     }
   }
@@ -89,7 +118,7 @@ export class UserService {
    * @returns Whether or not the user exists.
    */
   public async userExists(userID: string): Promise<boolean> {
-    const user = await this.dbService.getByID<NBUser>(this.tableName, userID);
+    const user = await this.dbService.getByID<NBUser>(userTableName, userID);
     return !!user;
   }
 
@@ -99,7 +128,7 @@ export class UserService {
    * @returns Whether or not a user with the given email address exists.
    */
   public async userExistsByEmail(email: string): Promise<boolean> {
-    const user = await this.dbService.getByFields<NBUser>(this.tableName, {
+    const user = await this.dbService.getByFields<NBUser>(userTableName, {
       email,
     });
     return !!user;
@@ -112,7 +141,7 @@ export class UserService {
    * @returns The user record.
    */
   public async getUser(userID: string): Promise<NBUser> {
-    const user = await this.dbService.getByID<NBUser>(this.tableName, userID);
+    const user = await this.dbService.getByID<NBUser>(userTableName, userID);
 
     if (user) {
       return user;
@@ -128,7 +157,7 @@ export class UserService {
    * @returns The user record.
    */
   public async getUserByEmail(email: string): Promise<NBUser> {
-    const user = await this.dbService.getByFields<NBUser>(this.tableName, {
+    const user = await this.dbService.getByFields<NBUser>(userTableName, {
       email,
     });
 
@@ -150,7 +179,7 @@ export class UserService {
 
     if (userExists) {
       return this.dbService.listByFields<NBBook>(
-        'NB_BOOK',
+        bookTableName,
         { userID },
         { fieldName: 'listTime', sortOrder: 'ASC' },
       );
@@ -170,9 +199,14 @@ export class UserService {
     userID: string,
     newPassword: string,
   ): Promise<NBUser> {
-    const resources = await this.resourceService.getResources();
-    const userPasswordMinLength = parseInt(resources.USER_PASSWORD_MIN_LENGTH);
-    const userPasswordMaxLength = parseInt(resources.USER_PASSWORD_MAX_LENGTH);
+    const userPasswordMinLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MIN_LENGTH',
+      );
+    const userPasswordMaxLength =
+      await this.resourceService.getResource<number>(
+        'USER_PASSWORD_MAX_LENGTH',
+      );
 
     if (
       newPassword.length >= userPasswordMinLength &&
@@ -183,7 +217,7 @@ export class UserService {
       if (userExists) {
         const passwordHash = await this.hashPassword(newPassword);
 
-        return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+        return this.dbService.updateByID<NBUser>(userTableName, userID, {
           passwordHash,
         });
       } else {
@@ -207,7 +241,7 @@ export class UserService {
     const userExists = await this.userExists(userID);
 
     if (userExists) {
-      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(userTableName, userID, {
         verified,
       });
     } else {
@@ -235,7 +269,7 @@ export class UserService {
     } else {
       const image = await this.imageService.createImage(imageData);
 
-      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(userTableName, userID, {
         imageID: image.id,
       });
     }
@@ -253,7 +287,7 @@ export class UserService {
     if (user.imageID) {
       await this.imageService.deleteImage(user.imageID);
 
-      return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+      return this.dbService.updateByID<NBUser>(userTableName, userID, {
         imageID: null,
       });
     } else {
@@ -271,7 +305,7 @@ export class UserService {
   public async incrementBooksListed(userID: string, num = 1): Promise<NBUser> {
     const user = await this.getUser(userID);
 
-    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+    return this.dbService.updateByID<NBUser>(userTableName, userID, {
       numBooksListed: user.numBooksListed + num,
     });
   }
@@ -286,7 +320,7 @@ export class UserService {
   public async incrementBooksSold(userID: string, num = 1): Promise<NBUser> {
     const user = await this.getUser(userID);
 
-    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+    return this.dbService.updateByID<NBUser>(userTableName, userID, {
       numBooksSold: user.numBooksSold + num,
     });
   }
@@ -301,9 +335,39 @@ export class UserService {
   public async addMoneyMade(userID: string, amount: number): Promise<NBUser> {
     const user = await this.getUser(userID);
 
-    return this.dbService.updateByID<NBUser>(this.tableName, userID, {
+    return this.dbService.updateByID<NBUser>(userTableName, userID, {
       moneyMade: user.moneyMade + amount,
     });
+  }
+
+  /**
+   * Get a list of books recommended to the user.
+   *
+   * @param userID The user's ID.
+   * @returns The list of recommended books.
+   */
+  public async recommendations(userID: string): Promise<NBBook[]> {
+    const sql = `
+      (
+        SELECT "${bookTableName}".*
+          FROM "${bookTableName}"
+          JOIN "${userInterestTableName}"
+            ON "${bookTableName}"."departmentID" = "${userInterestTableName}"."departmentID"
+        WHERE "${userInterestTableName}"."userID" = ?
+          AND "${bookTableName}"."userID" != ?
+      ) UNION (
+        SELECT "${bookTableName}".*
+          FROM "${bookTableName}"
+          JOIN (
+            SELECT *
+              FROM "${bookTableName}"
+              WHERE "userID" = ?
+          ) AS "USER_BOOKS"
+            ON "${bookTableName}"."departmentID" = "USER_BOOKS"."departmentID"
+        WHERE "${bookTableName}"."userID" != ?
+      ) ORDER BY "listTime" ASC;`;
+    const params = [userID, userID, userID, userID];
+    return this.dbService.execute<NBBook>(sql, params);
   }
 
   /**
@@ -323,8 +387,8 @@ export class UserService {
         user.passwordHash,
       );
 
-      if (passwordMatch) {
-        const sql = `UPDATE "${this.tableName}" SET "lastLoginTime" = NOW() WHERE id = ?;`;
+      if (passwordMatch && user.verified) {
+        const sql = `UPDATE "${userTableName}" SET "lastLoginTime" = NOW() WHERE id = ?;`;
         const params = [user.id];
         await this.dbService.execute(sql, params);
 
@@ -345,19 +409,18 @@ export class UserService {
    */
   public async deleteUser(userID: string): Promise<void> {
     await this.deleteUserImage(userID);
-    await this.dbService.deleteByID(this.tableName, userID);
+    await this.dbService.deleteByID(userTableName, userID);
   }
 
   /**
    * Prune all old unverified accounts.
    */
   public async pruneUnverifiedUsers(): Promise<void> {
-    const unverifiedUserAgeResource = await this.resourceService.getResource(
+    const unverifiedUserAge = await this.resourceService.getResource<number>(
       'UNVERIFIED_USER_AGE',
     );
-    const unverifiedUserAge = parseInt(unverifiedUserAgeResource);
 
-    const sql = `DELETE FROM "${this.tableName}" WHERE "verified" = FALSE AND EXTRACT(EPOCH FROM NOW() - "joinTime") >= ${unverifiedUserAge};`;
+    const sql = `DELETE FROM "${userTableName}" WHERE "verified" = FALSE AND EXTRACT(EPOCH FROM NOW() - "joinTime") >= ${unverifiedUserAge};`;
     await this.dbService.execute(sql);
   }
 
@@ -369,10 +432,9 @@ export class UserService {
    * @returns The hashed password.
    */
   private async hashPassword(password: string): Promise<string> {
-    const saltRoundsResource = await this.resourceService.getResource(
+    const saltRounds = await this.resourceService.getResource<number>(
       'SALT_ROUNDS',
     );
-    const saltRounds = parseInt(saltRoundsResource);
 
     return bcrypt.hash(password, saltRounds);
   }

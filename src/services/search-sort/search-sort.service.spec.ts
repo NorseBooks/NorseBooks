@@ -9,16 +9,12 @@ describe('SearchSortService', () => {
     searchSortService = await getService(SearchSortService);
   });
 
-  it('should be defined', () => {
-    expect(searchSortService).toBeDefined();
-  });
-
   it('should check if a search sort option exists', async () => {
     // check existence
     const exists1 = await searchSortService.sortOptionExists(2);
-    expect(exists1).toBeTruthy();
+    expect(exists1).toBe(true);
     const exists2 = await searchSortService.sortOptionExists(-1);
-    expect(exists2).toBeFalsy();
+    expect(exists2).toBe(false);
   });
 
   it('should get a search sort option', async () => {

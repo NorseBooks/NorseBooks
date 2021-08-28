@@ -2,9 +2,10 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { ImageService } from '../image/image.service';
-import { UserService } from '../user/user.service';
+import { UserService, userTableName } from '../user/user.service';
 import { DepartmentService } from '../department/department.service';
 import { BookConditionService } from '../book-condition/book-condition.service';
+import { SearchSortService } from '../search-sort/search-sort.service';
 import { NBBook } from './book.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
@@ -52,12 +53,15 @@ interface SearchBooksOptions {
 }
 
 /**
+ * Book table name.
+ */
+export const bookTableName = 'NB_BOOK';
+
+/**
  * Book table service.
  */
 @Injectable()
 export class BookService {
-  private readonly tableName = 'NB_BOOK';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -71,6 +75,8 @@ export class BookService {
     private readonly departmentService: DepartmentService,
     @Inject(forwardRef(() => BookConditionService))
     private readonly bookConditionService: BookConditionService,
+    @Inject(forwardRef(() => SearchSortService))
+    private readonly searchSortService: SearchSortService,
   ) {}
 
   /**
@@ -80,22 +86,28 @@ export class BookService {
    * @returns The new book record.
    */
   public async createBook(options: CreateBookOptions): Promise<NBBook> {
-    const resources = await this.resourceService.getResources();
-    const userMaxBooks = parseInt(resources.USER_MAX_BOOKS);
-    const bookTitleMaxLength = parseInt(resources.BOOK_TITLE_MAX_LENGTH);
-    const bookAuthorMaxLength = parseInt(resources.BOOK_AUTHOR_MAX_LENGTH);
-    const bookDescriptionMaxLength = parseInt(
-      resources.BOOK_DESCRIPTION_MAX_LENGTH,
+    const userMaxBooks = await this.resourceService.getResource<number>(
+      'USER_MAX_BOOKS',
     );
+    const bookTitleMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_TITLE_MAX_LENGTH',
+    );
+    const bookAuthorMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_AUTHOR_MAX_LENGTH',
+    );
+    const bookDescriptionMaxLength =
+      await this.resourceService.getResource<number>(
+        'BOOK_DESCRIPTION_MAX_LENGTH',
+      );
 
     const ISBN10 =
       options.ISBN10 === undefined
         ? undefined
-        : options.ISBN10.replace(/-/g, '');
+        : options.ISBN10.replace(/[- ]/g, '');
     const ISBN13 =
       options.ISBN13 === undefined
         ? undefined
-        : options.ISBN13.replace(/-/g, '');
+        : options.ISBN13.replace(/[- ]/g, '');
 
     const userExists = await this.userService.userExists(options.userID);
 
@@ -142,7 +154,7 @@ export class BookService {
                           );
 
                           const book = await this.dbService.create<NBBook>(
-                            this.tableName,
+                            bookTableName,
                             {
                               userID: options.userID,
                               title: options.title,
@@ -225,21 +237,25 @@ export class BookService {
     bookID: string,
     options: EditBookOptions,
   ): Promise<NBBook> {
-    const resources = await this.resourceService.getResources();
-    const bookTitleMaxLength = parseInt(resources.BOOK_TITLE_MAX_LENGTH);
-    const bookAuthorMaxLength = parseInt(resources.BOOK_AUTHOR_MAX_LENGTH);
-    const bookDescriptionMaxLength = parseInt(
-      resources.BOOK_DESCRIPTION_MAX_LENGTH,
+    const bookTitleMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_TITLE_MAX_LENGTH',
     );
+    const bookAuthorMaxLength = await this.resourceService.getResource<number>(
+      'BOOK_AUTHOR_MAX_LENGTH',
+    );
+    const bookDescriptionMaxLength =
+      await this.resourceService.getResource<number>(
+        'BOOK_DESCRIPTION_MAX_LENGTH',
+      );
 
     const ISBN10 =
       options.ISBN10 === undefined
         ? undefined
-        : options.ISBN10.replace(/-/g, '');
+        : options.ISBN10.replace(/[- ]/g, '');
     const ISBN13 =
       options.ISBN13 === undefined
         ? undefined
-        : options.ISBN13.replace(/-/g, '');
+        : options.ISBN13.replace(/[- ]/g, '');
 
     const book = await this.getBook(bookID);
 
@@ -271,7 +287,10 @@ export class BookService {
                   options.courseNumber === undefined ||
                   (options.courseNumber >= 101 && options.courseNumber <= 499)
                 ) {
-                  if (options.price >= 0 && options.price <= 999.99) {
+                  if (
+                    options.price === undefined ||
+                    (options.price >= 0 && options.price <= 999.99)
+                  ) {
                     const bookConditionExists =
                       options.conditionID === undefined
                         ? true
@@ -280,7 +299,7 @@ export class BookService {
                           );
 
                     if (bookConditionExists) {
-                      const sql = `UPDATE "${this.tableName}" SET "editTime" = NOW() WHERE id = ?;`;
+                      const sql = `UPDATE "${bookTableName}" SET "editTime" = NOW() WHERE id = ?;`;
                       const params = [book.id];
                       await this.dbService.execute(sql, params);
 
@@ -306,15 +325,26 @@ export class BookService {
                       const updateFields = editOptions
                         .filter((option) => options[option] !== undefined)
                         .reduce((acc, current) => {
-                          acc[current] = options[current];
+                          if (current === 'ISBN10') {
+                            acc['ISBN10'] = ISBN10;
+                          } else if (current === 'ISBN13') {
+                            acc['ISBN13'] = ISBN13;
+                          } else {
+                            acc[current] = options[current];
+                          }
+
                           return acc;
                         }, {});
 
-                      return this.dbService.updateByID<NBBook>(
-                        this.tableName,
-                        bookID,
-                        updateFields,
-                      );
+                      if (Object.keys(updateFields).length > 0) {
+                        return this.dbService.updateByID<NBBook>(
+                          bookTableName,
+                          bookID,
+                          updateFields,
+                        );
+                      } else {
+                        return this.getBook(bookID);
+                      }
                     } else {
                       throw new ServiceException(
                         'Book condition does not exist',
@@ -365,7 +395,7 @@ export class BookService {
    * @returns Whether or not the book exists.
    */
   public async bookExists(bookID: string): Promise<boolean> {
-    const book = await this.dbService.getByID<NBBook>(this.tableName, bookID);
+    const book = await this.dbService.getByID<NBBook>(bookTableName, bookID);
     return !!book;
   }
 
@@ -376,7 +406,7 @@ export class BookService {
    * @returns The book record.
    */
   public async getBook(bookID: string): Promise<NBBook> {
-    const book = await this.dbService.getByID<NBBook>(this.tableName, bookID);
+    const book = await this.dbService.getByID<NBBook>(bookTableName, bookID);
 
     if (book) {
       return book;
@@ -393,8 +423,8 @@ export class BookService {
    */
   public async getBookUser(bookID: string): Promise<NBUser> {
     const sql = `
-      SELECT * FROM "NB_USER" WHERE id = (
-        SELECT "userID" FROM "${this.tableName}" WHERE id = ?
+      SELECT * FROM "${userTableName}" WHERE id = (
+        SELECT "userID" FROM "${bookTableName}" WHERE id = ?
       );`;
     const params = [bookID];
     const res = await this.dbService.execute<NBUser>(sql, params);
@@ -421,7 +451,7 @@ export class BookService {
     }
 
     await this.imageService.deleteImage(book.imageID);
-    await this.dbService.deleteByID(this.tableName, book.id);
+    await this.dbService.deleteByID(bookTableName, book.id);
   }
 
   /**
@@ -435,7 +465,65 @@ export class BookService {
     options: SearchBooksOptions,
     sortID: number,
   ): Promise<NBBook[]> {
-    // TODO: implement book searching after search sort service is complete
-    return [];
+    const departmentExists =
+      options.departmentID === undefined
+        ? true
+        : await this.departmentService.departmentExists(options.departmentID);
+
+    if (departmentExists) {
+      if (
+        options.courseNumber === undefined ||
+        (options.courseNumber >= 101 && options.courseNumber <= 499)
+      ) {
+        const sortOptionExists = await this.searchSortService.sortOptionExists(
+          sortID,
+        );
+
+        if (sortOptionExists) {
+          const query = options.query ?? '';
+          const searchLike = `%${query}%`;
+          const isbnSearch =
+            options.query === undefined
+              ? ''
+              : options.query.replace(/[- ]/g, '');
+          const departmentQuery =
+            options.departmentID === undefined
+              ? ''
+              : ' "departmentID" = ? AND ';
+          const courseNumberQuery =
+            options.courseNumber === undefined
+              ? ''
+              : ' "courseNumber" = ? AND ';
+          const sortQuery = await this.searchSortService.getSortOption(sortID);
+
+          const sql = `
+            SELECT *
+            FROM "${bookTableName}"
+            WHERE
+              ${departmentQuery} ${courseNumberQuery} (
+                   LOWER("title")       LIKE LOWER(?)
+                OR LOWER("author")      LIKE LOWER(?)
+                OR LOWER("description") LIKE LOWER(?)
+                OR "ISBN10"             LIKE ?
+                OR "ISBN13"             LIKE ?
+              )
+            ORDER BY ${sortQuery.query};
+          `;
+          const params = [].concat(
+            options.departmentID ?? [],
+            options.courseNumber ?? [],
+            Array(3).fill(searchLike),
+            Array(2).fill(isbnSearch),
+          );
+          return this.dbService.execute<NBBook>(sql, params);
+        } else {
+          throw new ServiceException('Search sort option does not exist');
+        }
+      } else {
+        throw new ServiceException('Course number must be between 101 and 499');
+      }
+    } else {
+      throw new ServiceException('Department does not exist');
+    }
   }
 }

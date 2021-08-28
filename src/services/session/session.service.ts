@@ -1,18 +1,21 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
-import { UserService } from '../user/user.service';
+import { UserService, userTableName } from '../user/user.service';
 import { NBSession } from './session.interface';
 import { NBUser } from '../user/user.interface';
 import { ServiceException } from '../service.exception';
+
+/**
+ * Session table name.
+ */
+export const sessionTableName = 'NB_SESSION';
 
 /**
  * Session table service.
  */
 @Injectable()
 export class SessionService {
-  private readonly tableName = 'NB_SESSION';
-
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
@@ -32,7 +35,7 @@ export class SessionService {
     const userExists = await this.userService.userExists(userID);
 
     if (userExists) {
-      const session = await this.dbService.create<NBSession>(this.tableName, {
+      const session = await this.dbService.create<NBSession>(sessionTableName, {
         userID,
       });
       await this.deleteOldUserSessions(userID);
@@ -50,7 +53,7 @@ export class SessionService {
    */
   public async sessionExists(sessionID: string): Promise<boolean> {
     const session = await this.dbService.getByID<NBSession>(
-      this.tableName,
+      sessionTableName,
       sessionID,
     );
     return !!session;
@@ -64,7 +67,7 @@ export class SessionService {
    */
   public async getSession(sessionID: string): Promise<NBSession> {
     const res = await this.dbService.getByID<NBSession>(
-      this.tableName,
+      sessionTableName,
       sessionID,
     );
 
@@ -83,8 +86,8 @@ export class SessionService {
    */
   public async getUserBySessionID(sessionID: string): Promise<NBUser> {
     const sql = `
-      SELECT * FROM "NB_USER" WHERE id = (
-        SELECT "userID" FROM "${this.tableName}" WHERE id = ?
+      SELECT * FROM "${userTableName}" WHERE id = (
+        SELECT "userID" FROM "${sessionTableName}" WHERE id = ?
       );`;
     const params = [sessionID];
     const res = await this.dbService.execute<NBUser>(sql, params);
@@ -107,7 +110,7 @@ export class SessionService {
 
     if (userExists) {
       return this.dbService.listByFields<NBSession>(
-        this.tableName,
+        sessionTableName,
         { userID },
         { fieldName: 'createTime', sortOrder: 'ASC' },
       );
@@ -122,7 +125,7 @@ export class SessionService {
    * @param sessionID The session's ID.
    */
   public async deleteSession(sessionID: string): Promise<void> {
-    await this.dbService.deleteByID(this.tableName, sessionID);
+    await this.dbService.deleteByID(sessionTableName, sessionID);
   }
 
   /**
@@ -131,7 +134,7 @@ export class SessionService {
    * @param userID The user's ID.
    */
   public async deleteUserSessions(userID: string): Promise<void> {
-    await this.dbService.deleteByFields(this.tableName, { userID });
+    await this.dbService.deleteByFields(sessionTableName, { userID });
   }
 
   /**
@@ -143,16 +146,15 @@ export class SessionService {
     const userExists = await this.userService.userExists(userID);
 
     if (userExists) {
-      const userMaxSessionsResource = await this.resourceService.getResource(
+      const userMaxSessions = await this.resourceService.getResource<number>(
         'USER_MAX_SESSIONS',
       );
-      const userMaxSessions = parseInt(userMaxSessionsResource);
 
       const sql = `
-        DELETE FROM "${this.tableName}"
+        DELETE FROM "${sessionTableName}"
           WHERE "userID" = ?
           AND "id" NOT IN (
-            SELECT "id" FROM "${this.tableName}"
+            SELECT "id" FROM "${sessionTableName}"
               WHERE "userID" = ?
               ORDER BY "createTime" DESC
               LIMIT ?

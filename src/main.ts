@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as enforce from 'express-sslify';
 import * as cookieParser from 'cookie-parser';
+import { autoBackupDB } from './backup';
 
 /**
  * Debug/production environment.
@@ -19,6 +20,11 @@ const port = process.env.PORT || 3000;
 process.env.TESTING = '0';
 
 /**
+ * Database URL.
+ */
+const dbURL = process.env.DATABASE_URL;
+
+/**
  * Bootstrap the application.
  */
 async function bootstrap(): Promise<void> {
@@ -29,6 +35,8 @@ async function bootstrap(): Promise<void> {
   }
 
   app.use(cookieParser());
+
+  await autoBackupDB(dbURL);
 
   await app.listen(port);
   console.log(`App running on port ${port}`);

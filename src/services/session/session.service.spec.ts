@@ -12,10 +12,6 @@ describe('SessionService', () => {
     userService = await getService(UserService);
   });
 
-  it('should be defined', () => {
-    expect(sessionService).toBeDefined();
-  });
-
   it('should create, check existence, get, and delete a session', async () => {
     // create
     const firstname = 'Martin';
@@ -36,17 +32,20 @@ describe('SessionService', () => {
 
     // check existence
     const sessionExists1 = await sessionService.sessionExists(session1.id);
-    expect(sessionExists1).toBeTruthy();
+    expect(sessionExists1).toBe(true);
 
     // get
     const session2 = await sessionService.getSession(session1.id);
     expect(session2).toBeDefined();
     expect(session2).toEqual(session1);
+    await expect(sessionService.getSession('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete
     await sessionService.deleteSession(session1.id);
     const sessionExists2 = await sessionService.sessionExists(session1.id);
-    expect(sessionExists2).toBeFalsy();
+    expect(sessionExists2).toBe(false);
     await userService.deleteUser(user.id);
     await expect(sessionService.createSession(user.id)).rejects.toThrow(
       ServiceException,
@@ -75,6 +74,9 @@ describe('SessionService', () => {
     const user2 = await sessionService.getUserBySessionID(session1.id);
     expect(user2).toBeDefined();
     expect(user2).toEqual(user1);
+    await expect(sessionService.getUserBySessionID('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // get user sessions
     const sessions1 = await sessionService.getUserSessions(user1.id);
@@ -82,6 +84,9 @@ describe('SessionService', () => {
     expect(sessions1.length).toBe(1);
     const session2 = sessions1[0];
     expect(session2).toEqual(session1);
+    await expect(sessionService.getUserSessions('')).rejects.toThrow(
+      ServiceException,
+    );
 
     // delete user sessions
     await sessionService.deleteUserSessions(user1.id);
@@ -89,5 +94,8 @@ describe('SessionService', () => {
     expect(sessions2).toBeDefined();
     expect(sessions2.length).toBe(0);
     await userService.deleteUser(user1.id);
+    await expect(sessionService.deleteOldUserSessions('')).rejects.toThrow(
+      ServiceException,
+    );
   });
 });
