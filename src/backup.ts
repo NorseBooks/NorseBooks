@@ -36,8 +36,10 @@ async function execute(command: string): Promise<ExecuteReturn> {
  */
 export async function backupDB(dbURL: string): Promise<void> {
   try {
-    const res = await execute(`python3 scripts/backup.py --url ${dbURL}`);
-    const backupFile = res.stdout.trim();
+    const backupRes = await execute(
+      `python3 scripts/backup.py --url "${dbURL}"`,
+    );
+    const backupFile = backupRes.stdout.trim();
   } catch (err) {
     console.error(err);
   }
