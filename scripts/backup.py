@@ -6,59 +6,76 @@ import argparse
 from datetime import datetime
 
 import psycopg2
+from psycopg2._psycopg import cursor
+
+from typing import Any, List, Tuple
 
 
-# Get the project root path
-def getRootPath():
+def getRootPath() -> str:
+    """Get the project root path."""
+
     thisPath = str(pathlib.Path(__file__).parent.absolute())
     rootPath = os.path.split(thisPath)[0]
+
     return rootPath
 
 
-# Get the path to the backups directory
-def getBackupPath():
+def getBackupPath() -> str:
+    """Get the path to the backups directory."""
+
     rootPath = getRootPath()
     backupPath = os.path.join(rootPath, "backups")
+
     return backupPath
 
 
-# Get a database backup path
-def getDBBackupPath(backupDir):
+def getDBBackupPath(backupDir: str) -> str:
+    """Get a database backup path."""
+
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     dbFile = f"norsebooks.backup.{timestamp}.json"
     dbPath = os.path.join(backupDir, dbFile)
+
     return dbPath
 
 
-# Get the list of tables in the database
-def getTables(db):
+def getTables(db: cursor) -> List[str]:
+    """Get the list of tables in the database."""
+
     sql = "SELECT table_name AS table FROM information_schema.tables WHERE table_schema = 'public';"
     db.execute(sql)
     tables = [row[0] for row in db.fetchall()]
+
     return tables
 
 
-# Get a table's column names
-def getTableColumns(db, table):
+def getTableColumns(db: cursor, table: str) -> List[str]:
+    """Get a table's column names."""
+
     sql = f"SELECT column_name AS column FROM information_schema.columns WHERE table_name = '{table}';"
     db.execute(sql)
     columns = [row[0] for row in db.fetchall()]
+
     return columns
 
 
-# Get all data in a table
-def getTableData(db, table, columns):
+def getTableData(db: cursor, table: str, columns: List[str]) -> List[Tuple]:
+    """Get all data in a table."""
+
     if "id" not in columns:
         sql = f'SELECT * FROM "{table}";'
     else:
         sql = f'SELECT * FROM "{table}" ORDER BY id ASC;'
+
     db.execute(sql)
     tableData = db.fetchall()
+
     return tableData
 
 
-# Convert Decimal objects to strings
-def fixDecimalValues(tableData):
+def fixDecimalValues(tableData: Any) -> Any:
+    """Convert Decimal objects to strings."""
+
     fixedData = []
 
     for row in tableData:
@@ -75,14 +92,16 @@ def fixDecimalValues(tableData):
     return fixedData
 
 
-# Save the database backup
-def saveBackup(dbPath, dbData):
+def saveBackup(dbPath: str, dbData: Any) -> None:
+    """Save the database backup."""
+
     with open(dbPath, "w") as f:
         json.dump(dbData, f, indent=2)
 
 
-# Perform the backup
-def backup(db, backupDir):
+def backup(db: cursor, backupDir: str) -> str:
+    """Perform the backup."""
+
     dbPath = getDBBackupPath(backupDir)
     dbData = {}
 
@@ -100,8 +119,9 @@ def backup(db, backupDir):
     return dbPath
 
 
-# Back up the database
-def backupDB(dbUrl, backupDir):
+def backupDB(dbUrl: str, backupDir: str) -> str:
+    """Back up the database."""
+
     conn = psycopg2.connect(dbUrl, sslmode="require")
     cur = conn.cursor()
 
@@ -115,18 +135,15 @@ def backupDB(dbUrl, backupDir):
     return dbPath
 
 
-# Execute the backup script
-def main():
+def main() -> None:
     """Process the command line arguments."""
 
-    # Parse command line arguments
     parser = argparse.ArgumentParser(description="Backup the database")
     parser.add_argument("-u", "--url", type=str, required=True, help="The database URL")
     args = parser.parse_args()
 
-    dbUrl = args.url
+    dbUrl: str = args.url
     backupPath = getBackupPath()
-
     dbPath = backupDB(dbUrl, backupPath)
 
     print(f"Successfully backed up to {dbPath}")
