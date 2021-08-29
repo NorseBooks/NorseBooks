@@ -1,11 +1,16 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SessionService } from '../services/session/session.service';
 
 /**
- * A guard for an optional user session.
+ * A guard requiring a user session.
  */
 @Injectable()
-export class UserSessionOptionalGuard implements CanActivate {
+export class SessionRequiredGuard implements CanActivate {
   constructor(private readonly sessionService: SessionService) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -15,6 +20,8 @@ export class UserSessionOptionalGuard implements CanActivate {
     if (sessionID) {
       const user = await this.sessionService.getUserBySessionID(sessionID);
       request.userSession = user;
+    } else {
+      throw new UnauthorizedException();
     }
 
     return true;

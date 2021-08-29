@@ -4,14 +4,11 @@ import {
   UseInterceptors,
   Get,
   Patch,
-  ForbiddenException,
 } from '@nestjs/common';
 import { ResourceService } from '../../services/resource/resource.service';
 import { AdminGuard } from '../../guards/admin.guard';
-import { UserSession } from '../../decorators/user-session.decorator';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
-import { NBUser } from '../../services/user/user.interface';
 
 /**
  * Resource controller.
@@ -46,7 +43,6 @@ export class ResourceController {
   /**
    * Set a resource's value.
    *
-   * @param user The logged in user.
    * @param name The resource name.
    * @param value The new resource value.
    * @returns The updated resource.
@@ -54,15 +50,10 @@ export class ResourceController {
   @Patch()
   @UseGuards(AdminGuard)
   public async setResource(
-    @UserSession() user: NBUser,
     @QueryString('name') name: string,
     @QueryString('value') value: string,
   ) {
-    if (user.admin) {
-      return this.resourceService.setResource(name, value);
-    } else {
-      throw new ForbiddenException();
-    }
+    return this.resourceService.setResource(name, value);
   }
 
   /**
