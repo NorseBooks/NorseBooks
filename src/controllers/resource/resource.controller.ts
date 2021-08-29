@@ -1,17 +1,23 @@
 import {
   Controller,
   UseGuards,
+  UseInterceptors,
   Get,
   Patch,
   ForbiddenException,
 } from '@nestjs/common';
-import { ResourceService } from 'src/services/resource/resource.service';
-import { UserSessionRequiredGuard } from 'src/guards/user-session-required.guard';
+import { ResourceService } from '../../services/resource/resource.service';
+import { UserSessionRequiredGuard } from '../../guards/user-session-required.guard';
 import { UserSession } from '../../decorators/user-session.decorator';
-import { QueryString } from 'src/decorators/query-string.decorator';
-import { NBUser } from 'src/services/user/user.interface';
+import { QueryString } from '../../decorators/query-string.decorator';
+import { ResponseInterceptor } from '../../interceptors/response.interceptor';
+import { NBUser } from '../../services/user/user.interface';
 
+/**
+ * Resource controller.
+ */
 @Controller('api/resource')
+@UseInterceptors(new ResponseInterceptor())
 export class ResourceController {
   constructor(private readonly resourceService: ResourceService) {}
 
