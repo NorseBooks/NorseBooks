@@ -21,13 +21,15 @@ import { FeedbackService } from './services/feedback/feedback.service';
 import { UserInterestService } from './services/user-interest/user-interest.service';
 import { ReferralService } from './services/referral/referral.service';
 
+import { ResourceController } from './controllers/resource/resource.controller';
+
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', '..', 'app', 'dist', 'norsebooks'),
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, ResourceController],
   providers: [
     AppService,
     DBService,

@@ -6,6 +6,9 @@ import {
 } from '@nestjs/common';
 import { SessionService } from '../services/session/session.service';
 
+/**
+ * A guard requiring a user session.
+ */
 @Injectable()
 export class UserSessionRequiredGuard implements CanActivate {
   constructor(private readonly sessionService: SessionService) {}

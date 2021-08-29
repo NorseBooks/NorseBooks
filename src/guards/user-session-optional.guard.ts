@@ -1,6 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { SessionService } from '../services/session/session.service';
 
+/**
+ * A guard for an optional user session.
+ */
 @Injectable()
 export class UserSessionOptionalGuard implements CanActivate {
   constructor(private readonly sessionService: SessionService) {}
