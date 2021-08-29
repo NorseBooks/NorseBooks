@@ -12,6 +12,10 @@ export const QueryBoolean = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const value = request.query?.[data];
 
+    if (value === undefined) {
+      throw new BadRequestException(`Expected query parameter '${data}'`);
+    }
+
     if (value === 'true') {
       return true;
     } else if (value === 'false') {
