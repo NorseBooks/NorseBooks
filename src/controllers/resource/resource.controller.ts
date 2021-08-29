@@ -21,16 +21,36 @@ import { NBUser } from '../../services/user/user.interface';
 export class ResourceController {
   constructor(private readonly resourceService: ResourceService) {}
 
+  /**
+   * Check if a resource exists.
+   *
+   * @param name The resource name.
+   * @returns Whether or not the resource exists.
+   */
   @Get('exists')
   public async resourceExists(@QueryString('name') name: string) {
     return this.resourceService.resourceExists(name);
   }
 
+  /**
+   * Get a resource.
+   *
+   * @param name The resource name.
+   * @returns The requested resource.
+   */
   @Get()
   public async getResource(@QueryString('name') name: string) {
     return this.resourceService.getResource(name);
   }
 
+  /**
+   * Set a resource's value.
+   *
+   * @param user The logged in user.
+   * @param name The resource name.
+   * @param value The new resource value.
+   * @returns The updated resource.
+   */
   @Patch()
   @UseGuards(UserSessionRequiredGuard)
   public async setResource(
@@ -45,6 +65,11 @@ export class ResourceController {
     }
   }
 
+  /**
+   * Get all resources.
+   *
+   * @returns All resources.
+   */
   @Get('all')
   public async getResources() {
     return this.resourceService.getResources();

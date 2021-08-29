@@ -20,6 +20,7 @@ import { UserInterestService } from './services/user-interest/user-interest.serv
 import { ReferralService } from './services/referral/referral.service';
 
 import { ResourceController } from './controllers/resource/resource.controller';
+import { ImageController } from './controllers/image/image.controller';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { ResourceController } from './controllers/resource/resource.controller';
       rootPath: path.join(__dirname, '..', '..', 'app', 'dist', 'norsebooks'),
     }),
   ],
-  controllers: [ResourceController],
+  controllers: [ResourceController, ImageController],
   providers: [
     DBService,
     ResourceService,
