@@ -7,7 +7,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ResourceService } from '../../services/resource/resource.service';
-import { UserSessionRequiredGuard } from '../../guards/user-session-required.guard';
+import { AdminGuard } from '../../guards/admin.guard';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
@@ -52,7 +52,7 @@ export class ResourceController {
    * @returns The updated resource.
    */
   @Patch()
-  @UseGuards(UserSessionRequiredGuard)
+  @UseGuards(AdminGuard)
   public async setResource(
     @UserSession() user: NBUser,
     @QueryString('name') name: string,
