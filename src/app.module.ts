@@ -21,6 +21,7 @@ import { ReferralService } from './services/referral/referral.service';
 
 import { ResourceController } from './controllers/resource/resource.controller';
 import { ImageController } from './controllers/image/image.controller';
+import { UserController } from './controllers/user/user.controller';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { ImageController } from './controllers/image/image.controller';
       rootPath: path.join(__dirname, '..', '..', 'app', 'dist', 'norsebooks'),
     }),
   ],
-  controllers: [ResourceController, ImageController],
+  controllers: [ResourceController, ImageController, UserController],
   providers: [
     DBService,
     ResourceService,
