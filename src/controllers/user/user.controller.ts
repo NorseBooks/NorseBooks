@@ -127,6 +127,7 @@ export class UserController {
       firstname: userInfo.firstname,
       lastname: userInfo.lastname,
       email: userInfo.email,
+      imageID: userInfo.imageID,
       numBooksListed: userInfo.numBooksListed,
       numBooksSold: userInfo.numBooksSold,
       moneyMade: userInfo.moneyMade,
@@ -148,6 +149,7 @@ export class UserController {
       id: userInfo.id,
       firstname: userInfo.firstname,
       lastname: userInfo.lastname,
+      imageID: userInfo.imageID,
       joinTime: userInfo.joinTime,
     };
   }
