@@ -15,6 +15,7 @@ import { VerifyService } from '../../services/verify/verify.service';
 import { SessionOptionalGuard } from '../../guards/session-optional.guard';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
+import { BodyString } from '../../decorators/body-string.decorator';
 import { Cookie } from '../../decorators/cookie.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
@@ -190,7 +191,7 @@ export class UserController {
   @Patch('image')
   @UseGuards(SessionRequiredGuard)
   public async setImage(
-    @QueryString('imageData') imageData: string,
+    @BodyString('imageData') imageData: string,
     @UserSession() user: NBUser,
   ) {
     await this.userService.setUserImage(user.id, imageData);
