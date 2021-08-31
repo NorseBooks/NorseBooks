@@ -17,9 +17,11 @@ import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { BodyString } from '../../decorators/body-string.decorator';
 import { Cookie } from '../../decorators/cookie.decorator';
+import { Hostname } from 'src/decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { NBUser } from '../../services/user/user.interface';
+import { sendFormattedEmail } from '../../emailer';
 
 /**
  * User controller.
@@ -47,6 +49,7 @@ export class UserController {
     @QueryString('lastname') lastname: string,
     @QueryString('email') email: string,
     @QueryString('password') password: string,
+    @Hostname() hostname: string,
   ) {
     const user = await this.userService.createUser(
       firstname,
@@ -56,7 +59,10 @@ export class UserController {
     );
     const verification = await this.verifyService.createVerification(user.id);
 
-    // TODO: send verification email
+    await sendFormattedEmail(user.email, 'Verify account', 'verify', {
+      hostname,
+      verifyID: verification.id,
+    });
   }
 
   /**

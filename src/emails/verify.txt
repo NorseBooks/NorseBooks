@@ -1,0 +1,10 @@
+Hello, welcome to {appName}!
+
+All you need to do is to confirm your email address. You can do this by clicking the link below.
+
+{hostname}/verify/{verifyID}
+
+If you did not register for {appName}, or you have already verified your account, please disregard this email, and do not click on the above link.
+
+Sincerely,
+The {appName} Dev Team
