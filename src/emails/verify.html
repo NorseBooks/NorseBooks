@@ -1,0 +1,46 @@
+<div
+  style="
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+    color: black;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  "
+>
+  <div
+    style="
+      max-width: 800px;
+      margin: auto;
+      padding: 20px 40px;
+      background-color: #efefef;
+    "
+  >
+    <h1 style="text-align: center">Hello, welcome to {appName}!</h1>
+    <p style="text-align: justify">
+      All you need to do is to confirm your email address. You can do this by
+      clicking the link below.
+    </p>
+    <div style="margin: 24px 0">
+      <a
+        href="{hostname}/verify/{verifyID}"
+        style="
+          background-color: #0f2f9f;
+          color: white;
+          padding: 12px;
+          border-radius: 6px;
+          text-decoration: none;
+        "
+      >
+        <strong style="font-size: 20px">Confirm email</strong>
+      </a>
+    </div>
+    <p style="text-align: justify">
+      If you did not register for {appName}, or you have already verified your
+      account, please disregard this email, and do not click on the above link.
+    </p>
+    <p style="color: #5f5f5f">
+      <i>Sincerely,<br />The {appName} Dev Team</i>
+    </p>
+  </div>
+</div>
