@@ -23,6 +23,7 @@ import { ResourceController } from './controllers/resource/resource.controller';
 import { ImageController } from './controllers/image/image.controller';
 import { UserController } from './controllers/user/user.controller';
 import { VerifyController } from './controllers/verify/verify.controller';
+import { PasswordResetController } from './controllers/password-reset/password-reset.controller';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { VerifyController } from './controllers/verify/verify.controller';
     ImageController,
     UserController,
     VerifyController,
+    PasswordResetController,
   ],
   providers: [
     DBService,
