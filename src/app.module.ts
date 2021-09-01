@@ -25,6 +25,7 @@ import { UserController } from './controllers/user/user.controller';
 import { VerifyController } from './controllers/verify/verify.controller';
 import { PasswordResetController } from './controllers/password-reset/password-reset.controller';
 import { DepartmentController } from './controllers/department/department.controller';
+import { BookConditionController } from './controllers/book-condition/book-condition.controller';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { DepartmentController } from './controllers/department/department.contro
     VerifyController,
     PasswordResetController,
     DepartmentController,
+    BookConditionController,
   ],
   providers: [
     DBService,
