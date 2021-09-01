@@ -10,7 +10,7 @@ import { sendFormattedEmail } from '../../emailer';
  * Password reset controller.
  */
 @Controller('api/password-reset')
-@UseInterceptors(ResponseInterceptor)
+@UseInterceptors(new ResponseInterceptor())
 export class PasswordResetController {
   constructor(
     private readonly passwordResetService: PasswordResetService,

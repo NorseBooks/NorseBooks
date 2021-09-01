@@ -75,7 +75,7 @@ export class DepartmentService {
   public async getDepartments(): Promise<NBDepartment[]> {
     const departments = await this.dbService.list<NBDepartment>(
       departmentTableName,
-      { fieldName: 'id', sortOrder: 'ASC' },
+      { fieldName: 'name', sortOrder: 'ASC' },
     );
     return departments;
   }
