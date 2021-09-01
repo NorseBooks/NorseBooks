@@ -24,6 +24,7 @@ import { ImageController } from './controllers/image/image.controller';
 import { UserController } from './controllers/user/user.controller';
 import { VerifyController } from './controllers/verify/verify.controller';
 import { PasswordResetController } from './controllers/password-reset/password-reset.controller';
+import { DepartmentController } from './controllers/department/department.controller';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { PasswordResetController } from './controllers/password-reset/password-r
     UserController,
     VerifyController,
     PasswordResetController,
+    DepartmentController,
   ],
   providers: [
     DBService,
