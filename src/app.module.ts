@@ -22,6 +22,8 @@ import { ReferralService } from './services/referral/referral.service';
 import { ResourceController } from './controllers/resource/resource.controller';
 import { ImageController } from './controllers/image/image.controller';
 import { UserController } from './controllers/user/user.controller';
+import { VerifyController } from './controllers/verify/verify.controller';
+import { PasswordResetController } from './controllers/password-reset/password-reset.controller';
 
 @Module({
   imports: [
@@ -29,7 +31,13 @@ import { UserController } from './controllers/user/user.controller';
       rootPath: path.join(__dirname, '..', '..', 'app', 'dist', 'norsebooks'),
     }),
   ],
-  controllers: [ResourceController, ImageController, UserController],
+  controllers: [
+    ResourceController,
+    ImageController,
+    UserController,
+    VerifyController,
+    PasswordResetController,
+  ],
   providers: [
     DBService,
     ResourceService,
