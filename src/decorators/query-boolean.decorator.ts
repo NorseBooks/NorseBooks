@@ -3,17 +3,29 @@ import {
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
+import { QueryParameters, queryDefaults } from './query.decorator.interface';
 
 /**
  * Decorator for a required boolean query parameter.
  */
 export const QueryBoolean = createParamDecorator(
-  (data: string, ctx: ExecutionContext) => {
+  (params: QueryParameters<boolean>, ctx: ExecutionContext) => {
+    const { name, required, defaultValue, scope } = queryDefaults(params);
+
     const request = ctx.switchToHttp().getRequest();
-    const value = request.query?.[data];
+    const value =
+      scope === 'query'
+        ? request.query?.[name]
+        : scope === 'body'
+        ? request.body?.[name]
+        : undefined;
 
     if (value === undefined) {
-      throw new BadRequestException(`Expected query parameter '${data}'`);
+      if (required) {
+        throw new BadRequestException(`Expected query parameter '${name}'`);
+      } else {
+        return defaultValue;
+      }
     }
 
     if (value === 'true') {
@@ -22,7 +34,7 @@ export const QueryBoolean = createParamDecorator(
       return false;
     } else {
       throw new BadRequestException(
-        `Expected boolean value for query parameter '${data}'`,
+        `Expected boolean value for query parameter '${name}'`,
       );
     }
   },

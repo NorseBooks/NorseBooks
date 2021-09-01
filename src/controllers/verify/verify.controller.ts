@@ -17,7 +17,7 @@ export class VerifyController {
    * @param verifyID The verification ID.
    */
   @Patch()
-  public async verify(@QueryString('verifyID') verifyID: string) {
+  public async verify(@QueryString({ name: 'verifyID' }) verifyID: string) {
     await this.verifyService.verifyUser(verifyID);
   }
 }

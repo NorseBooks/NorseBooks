@@ -26,6 +26,7 @@ import { VerifyController } from './controllers/verify/verify.controller';
 import { PasswordResetController } from './controllers/password-reset/password-reset.controller';
 import { DepartmentController } from './controllers/department/department.controller';
 import { BookConditionController } from './controllers/book-condition/book-condition.controller';
+import { BookController } from './controllers/book/book.controller';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { BookConditionController } from './controllers/book-condition/book-condi
     PasswordResetController,
     DepartmentController,
     BookConditionController,
+    BookController,
   ],
   providers: [
     DBService,

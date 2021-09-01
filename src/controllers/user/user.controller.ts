@@ -15,7 +15,6 @@ import { VerifyService } from '../../services/verify/verify.service';
 import { SessionOptionalGuard } from '../../guards/session-optional.guard';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
-import { BodyString } from '../../decorators/body-string.decorator';
 import { Cookie } from '../../decorators/cookie.decorator';
 import { Hostname } from 'src/decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
@@ -45,10 +44,10 @@ export class UserController {
    */
   @Post('register')
   public async register(
-    @QueryString('firstname') firstname: string,
-    @QueryString('lastname') lastname: string,
-    @QueryString('email') email: string,
-    @QueryString('password') password: string,
+    @QueryString({ name: 'firstname' }) firstname: string,
+    @QueryString({ name: 'lastname' }) lastname: string,
+    @QueryString({ name: 'email' }) email: string,
+    @QueryString({ name: 'password' }) password: string,
     @Hostname() hostname: string,
   ) {
     const user = await this.userService.createUser(
@@ -74,8 +73,8 @@ export class UserController {
    */
   @Post('login')
   public async login(
-    @QueryString('email') email: string,
-    @QueryString('password') password: string,
+    @QueryString({ name: 'email' }) email: string,
+    @QueryString({ name: 'password' }) password: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     const session = await this.userService.login(email, password);
@@ -149,7 +148,9 @@ export class UserController {
    * @returns The user's info.
    */
   @Get('other')
-  public async getOtherUserInfo(@QueryString('userID') userID: string) {
+  public async getOtherUserInfo(
+    @QueryString({ name: 'userID' }) userID: string,
+  ) {
     const userInfo = await this.userService.getUser(userID);
 
     return {
@@ -182,7 +183,7 @@ export class UserController {
   @Patch('password')
   @UseGuards(SessionRequiredGuard)
   public async setPassword(
-    @QueryString('newPassword') newPassword: string,
+    @QueryString({ name: 'newPassword' }) newPassword: string,
     @UserSession() user: NBUser,
   ) {
     await this.userService.setPassword(user.id, newPassword);
@@ -197,7 +198,7 @@ export class UserController {
   @Patch('image')
   @UseGuards(SessionRequiredGuard)
   public async setImage(
-    @BodyString('imageData') imageData: string,
+    @QueryString({ name: 'imageData', scope: 'body' }) imageData: string,
     @UserSession() user: NBUser,
   ) {
     await this.userService.setUserImage(user.id, imageData);

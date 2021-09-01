@@ -19,7 +19,7 @@ export class BookConditionController {
    */
   @Get()
   public async getBookCondition(
-    @QueryNumber('conditionID') conditionID: number,
+    @QueryNumber({ name: 'conditionID' }) conditionID: number,
   ) {
     return this.bookConditionService.getBookConditionName(conditionID);
   }
