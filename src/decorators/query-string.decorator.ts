@@ -3,17 +3,29 @@ import {
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
+import { QueryParameters, queryDefaults } from './query.decorator.interface';
 
 /**
  * Decorator for a required string query parameter.
  */
 export const QueryString = createParamDecorator(
-  (data: string, ctx: ExecutionContext) => {
+  (params: QueryParameters<string>, ctx: ExecutionContext) => {
+    const { name, required, defaultValue, scope } = queryDefaults(params);
+
     const request = ctx.switchToHttp().getRequest();
-    const value = request.query?.[data];
+    const value =
+      scope === 'query'
+        ? request.query?.[name]
+        : scope === 'body'
+        ? request.body?.[name]
+        : undefined;
 
     if (value === undefined) {
-      throw new BadRequestException(`Expected query parameter '${data}'`);
+      if (required) {
+        throw new BadRequestException(`Expected query parameter '${name}'`);
+      } else {
+        return defaultValue;
+      }
     }
 
     return value;

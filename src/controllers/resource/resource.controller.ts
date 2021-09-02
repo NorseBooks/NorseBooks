@@ -25,7 +25,7 @@ export class ResourceController {
    * @returns Whether or not the resource exists.
    */
   @Get('exists')
-  public async resourceExists(@QueryString('name') name: string) {
+  public async resourceExists(@QueryString({ name: 'name' }) name: string) {
     return this.resourceService.resourceExists(name);
   }
 
@@ -36,7 +36,7 @@ export class ResourceController {
    * @returns The requested resource.
    */
   @Get()
-  public async getResource(@QueryString('name') name: string) {
+  public async getResource(@QueryString({ name: 'name' }) name: string) {
     return this.resourceService.getResource(name);
   }
 
@@ -50,8 +50,8 @@ export class ResourceController {
   @Patch()
   @UseGuards(AdminGuard)
   public async setResource(
-    @QueryString('name') name: string,
-    @QueryString('value') value: string,
+    @QueryString({ name: 'name' }) name: string,
+    @QueryString({ name: 'value' }) value: string,
   ) {
     return this.resourceService.setResource(name, value);
   }

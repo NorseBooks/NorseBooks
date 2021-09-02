@@ -19,7 +19,7 @@ export class DepartmentController {
    */
   @Get()
   public async getDepartment(
-    @QueryNumber('departmentID') departmentID: number,
+    @QueryNumber({ name: 'departmentID' }) departmentID: number,
   ) {
     return this.departmentService.getDepartmentName(departmentID);
   }

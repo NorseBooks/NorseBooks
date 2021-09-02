@@ -24,7 +24,7 @@ export class PasswordResetController {
    */
   @Post()
   public async requestPasswordReset(
-    @QueryString('email') email: string,
+    @QueryString({ name: 'email' }) email: string,
     @Hostname() hostname: string,
   ) {
     const userExists = await this.userService.userExistsByEmail(email);
@@ -56,8 +56,8 @@ export class PasswordResetController {
    */
   @Patch()
   public async resetPassword(
-    @QueryString('resetID') resetID: string,
-    @QueryString('newPassword') newPassword: string,
+    @QueryString({ name: 'resetID' }) resetID: string,
+    @QueryString({ name: 'newPassword' }) newPassword: string,
   ) {
     await this.passwordResetService.resetPassword(resetID, newPassword);
   }
