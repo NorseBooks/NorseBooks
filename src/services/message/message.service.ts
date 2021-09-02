@@ -168,15 +168,29 @@ export class MessageService {
    * @returns The updated message record.
    */
   public async markRead(messageID: string): Promise<NBMessage> {
-    const messageExists = await this.messageExists(messageID);
+    const message = await this.getMessage(messageID);
 
-    if (messageExists) {
-      return this.dbService.updateByID<NBMessage>(messageTableName, messageID, {
-        read: true,
-      });
-    } else {
-      throw new ServiceException('Message does not exist');
-    }
+    const sql = `
+      WITH updated AS (
+        UPDATE "${messageTableName}"
+          SET
+            "read" = TRUE
+          WHERE
+            "fromUserID" = ? AND "toUserID" = ? AND EXTRACT(EPOCH FROM "sendTime") <= ?
+        RETURNING *
+      )
+      SELECT *
+        FROM updated
+        WHERE id = ?;`;
+    const params = [
+      message.fromUserID,
+      message.toUserID,
+      message.sendTime / 1000 + 0.000999,
+      messageID,
+    ];
+    const messages = await this.dbService.execute<NBMessage>(sql, params);
+
+    return messages[0];
   }
 
   /**
@@ -186,15 +200,29 @@ export class MessageService {
    * @returns The updated message record.
    */
   public async markUnread(messageID: string): Promise<NBMessage> {
-    const messageExists = await this.messageExists(messageID);
+    const message = await this.getMessage(messageID);
 
-    if (messageExists) {
-      return this.dbService.updateByID<NBMessage>(messageTableName, messageID, {
-        read: false,
-      });
-    } else {
-      throw new ServiceException('Message does not exist');
-    }
+    const sql = `
+      WITH updated AS (
+        UPDATE "${messageTableName}"
+          SET
+            "read" = FALSE
+          WHERE
+            "fromUserID" = ? AND "toUserID" = ? AND EXTRACT(EPOCH FROM "sendTime") >= ?
+        RETURNING *
+      )
+      SELECT *
+        FROM updated
+        WHERE id = ?;`;
+    const params = [
+      message.fromUserID,
+      message.toUserID,
+      message.sendTime / 1000,
+      messageID,
+    ];
+    const messages = await this.dbService.execute<NBMessage>(sql, params);
+
+    return messages[0];
   }
 
   /**
