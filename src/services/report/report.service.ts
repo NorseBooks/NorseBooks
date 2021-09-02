@@ -134,6 +134,29 @@ export class ReportService {
   }
 
   /**
+   * Get a user report for a book.
+   *
+   * @param userID The user's ID.
+   * @param bookID The book's ID.
+   * @returns The report.
+   */
+  public async getUserBookReport(
+    userID: string,
+    bookID: string,
+  ): Promise<NBReport> {
+    const report = await this.dbService.getByFields<NBReport>(reportTableName, {
+      userID,
+      bookID,
+    });
+
+    if (report) {
+      return report;
+    } else {
+      throw new ServiceException('Report does not exist');
+    }
+  }
+
+  /**
    * Determine whether or not a user has recently reported a book.
    *
    * @param userID The user's ID.
