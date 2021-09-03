@@ -29,6 +29,7 @@ import { BookConditionController } from './controllers/book-condition/book-condi
 import { BookController } from './controllers/book/book.controller';
 import { ReportController } from './controllers/report/report.controller';
 import { MessageController } from './controllers/message/message.controller';
+import { SearchSortController } from './controllers/search-sort/search-sort.controller';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { MessageController } from './controllers/message/message.controller';
     BookController,
     ReportController,
     MessageController,
+    SearchSortController,
   ],
   providers: [
     DBService,
