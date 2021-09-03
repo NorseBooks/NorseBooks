@@ -82,7 +82,7 @@ describe('FeedbackService', () => {
     );
   });
 
-  it('should send, get user feedback, and delete feedback', async () => {
+  it('should send, get user feedback, get all feedback, and delete feedback', async () => {
     // get user feedback
     const feedback1 = await feedbackService.getUserFeedback(user.id);
     expect(feedback1).not.toBeDefined();
@@ -100,7 +100,15 @@ describe('FeedbackService', () => {
     expect(feedback3).toBeDefined();
     expect(feedback3).toEqual(feedback2);
 
+    // get all feedback
+    const allFeedback1 = await feedbackService.getAllFeedback();
+    expect(allFeedback1).toBeDefined();
+    expect(allFeedback1).toEqual([feedback2]);
+
     // delete
     await feedbackService.deleteFeedback(feedback2.id);
+    const allFeedback2 = await feedbackService.getAllFeedback();
+    expect(allFeedback2).toBeDefined();
+    expect(allFeedback2).toEqual([]);
   });
 });
