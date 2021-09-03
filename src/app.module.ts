@@ -28,6 +28,8 @@ import { DepartmentController } from './controllers/department/department.contro
 import { BookConditionController } from './controllers/book-condition/book-condition.controller';
 import { BookController } from './controllers/book/book.controller';
 import { ReportController } from './controllers/report/report.controller';
+import { MessageController } from './controllers/message/message.controller';
+import { SearchSortController } from './controllers/search-sort/search-sort.controller';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { ReportController } from './controllers/report/report.controller';
     BookConditionController,
     BookController,
     ReportController,
+    MessageController,
+    SearchSortController,
   ],
   providers: [
     DBService,
