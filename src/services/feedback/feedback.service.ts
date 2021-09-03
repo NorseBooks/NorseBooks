@@ -111,6 +111,18 @@ export class FeedbackService {
   }
 
   /**
+   * Get all user feedback.
+   *
+   * @returns All user feedback.
+   */
+  public async getAllFeedback(): Promise<NBFeedback[]> {
+    return this.dbService.list<NBFeedback>(feedbackTableName, {
+      fieldName: 'submitTime',
+      sortOrder: 'ASC',
+    });
+  }
+
+  /**
    * Delete a feedback record.
    *
    * @param feedbackID The feedback ID.

@@ -42,10 +42,14 @@ export class ReferralService {
       const referral = await this.getReferral(newUserID);
 
       if (!referral) {
-        return this.dbService.create<NBReferral>(referralTableName, {
-          userID,
-          newUserID,
-        });
+        if (userID !== newUserID) {
+          return this.dbService.create<NBReferral>(referralTableName, {
+            userID,
+            newUserID,
+          });
+        } else {
+          throw new ServiceException('Users cannot refer themselves');
+        }
       } else {
         throw new ServiceException('User has already been referred');
       }
@@ -96,7 +100,7 @@ export class ReferralService {
    * Determine whether or not a user has reached the referral threshold.
    *
    * @param userID The user's ID.
-   * @returns Whether or not the user has reachhed the referral threshold.
+   * @returns Whether or not the user has reached the referral threshold.
    */
   public async reachedReferralThreshold(userID: string): Promise<boolean> {
     const referralThreshold = await this.resourceService.getResource<number>(
@@ -115,17 +119,12 @@ export class ReferralService {
   }
 
   /**
-   * Delete a referral record.
+   * Delete a user's referral record.
    *
-   * @param userID The user's ID.
    * @param newUserID The new user's ID.
    */
-  public async deleteReferral(
-    userID: string,
-    newUserID: string,
-  ): Promise<void> {
+  public async deleteReferral(newUserID: string): Promise<void> {
     await this.dbService.deleteByFields(referralTableName, {
-      userID,
       newUserID,
     });
   }

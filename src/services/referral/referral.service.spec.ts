@@ -37,6 +37,9 @@ describe('ReferralService', () => {
 
   it('should refer, get referral, get referrals, and delete referrals', async () => {
     // refer
+    await expect(referralService.referUser(user1.id, user1.id)).rejects.toThrow(
+      ServiceException,
+    );
     const referral1 = await referralService.referUser(user1.id, user2.id);
     expect(referral1).toBeDefined();
     expect(referral1).toHaveProperty('userID', user1.id);
@@ -83,8 +86,8 @@ describe('ReferralService', () => {
     );
 
     // delete
-    await referralService.deleteReferral(user1.id, user2.id);
-    await referralService.deleteReferral(user1.id, user3.id);
+    await referralService.deleteReferral(user2.id);
+    await referralService.deleteReferral(user3.id);
     const referral6 = await referralService.getReferral(user1.id);
     expect(referral6).not.toBeDefined();
     const referral7 = await referralService.getReferral(user2.id);
