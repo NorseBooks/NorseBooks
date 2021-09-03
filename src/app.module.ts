@@ -32,6 +32,7 @@ import { MessageController } from './controllers/message/message.controller';
 import { SearchSortController } from './controllers/search-sort/search-sort.controller';
 import { FeedbackController } from './controllers/feedback/feedback.controller';
 import { UserInterestController } from './controllers/user-interest/user-interest.controller';
+import { ReferralController } from './controllers/referral/referral.controller';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { UserInterestController } from './controllers/user-interest/user-interes
     SearchSortController,
     FeedbackController,
     UserInterestController,
+    ReferralController,
   ],
   providers: [
     DBService,
