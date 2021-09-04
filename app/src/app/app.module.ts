@@ -12,6 +12,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { APIService } from './services/api.service';
 
+/**
+ * The app module.
+ */
 @NgModule({
   declarations: [AppComponent],
   imports: [
