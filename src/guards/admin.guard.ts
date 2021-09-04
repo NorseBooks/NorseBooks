@@ -1,3 +1,8 @@
+/**
+ * A guard requiring that the user be an admin.
+ * @packageDocumentation
+ */
+
 import {
   CanActivate,
   ExecutionContext,

@@ -1,3 +1,8 @@
+/**
+ * Response object interceptor.
+ * @packageDocumentation
+ */
+
 import {
   Injectable,
   NestInterceptor,

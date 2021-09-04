@@ -1,3 +1,8 @@
+/**
+ * Image service tests.
+ * @packageDocumentation
+ */
+
 import { ImageService } from './image.service';
 import { ResourceService } from '../resource/resource.service';
 import { getService } from '../test-util';

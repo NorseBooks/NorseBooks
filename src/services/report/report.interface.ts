@@ -1,4 +1,9 @@
 /**
+ * Report interface.
+ * @packageDocumentation
+ */
+
+/**
  * Report table schema.
  */
 export interface NBReport {

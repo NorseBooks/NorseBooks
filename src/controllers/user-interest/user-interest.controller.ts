@@ -1,3 +1,8 @@
+/**
+ * User interest controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

@@ -1,4 +1,9 @@
 /**
+ * User interest interface.
+ * @packageDocumentation
+ */
+
+/**
  * User interest table schema.
  */
 export interface NBUserInterest {

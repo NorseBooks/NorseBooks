@@ -1,3 +1,8 @@
+/**
+ * Feedback controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { FeedbackController } from './feedback.controller';
 

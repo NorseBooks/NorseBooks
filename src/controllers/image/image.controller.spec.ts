@@ -1,3 +1,8 @@
+/**
+ * Image controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { ImageController } from './image.controller';
 

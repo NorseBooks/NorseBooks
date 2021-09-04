@@ -1,3 +1,8 @@
+/**
+ * Book condition controller.
+ * @packageDocumentation
+ */
+
 import { Controller, UseInterceptors, Get } from '@nestjs/common';
 import { BookConditionService } from '../../services/book-condition/book-condition.service';
 import { QueryNumber } from '../../decorators/query-number.decorator';

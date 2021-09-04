@@ -1,3 +1,8 @@
+/**
+ * Generic exception for the service layer.
+ * @packageDocumentation
+ */
+
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 /**

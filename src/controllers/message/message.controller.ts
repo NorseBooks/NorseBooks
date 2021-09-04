@@ -1,3 +1,8 @@
+/**
+ * Message controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

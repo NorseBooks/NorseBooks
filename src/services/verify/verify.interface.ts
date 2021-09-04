@@ -1,4 +1,9 @@
 /**
+ * Verify interface.
+ * @packageDocumentation
+ */
+
+/**
  * Verify table schema.
  */
 export interface NBVerify {

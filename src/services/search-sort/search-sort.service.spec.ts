@@ -1,3 +1,8 @@
+/**
+ * Search sort service tests.
+ * @packageDocumentation
+ */
+
 import { SearchSortService } from './search-sort.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';

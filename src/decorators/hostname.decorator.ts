@@ -1,3 +1,8 @@
+/**
+ * Decorator for getting the hostname.
+ * @packageDocumentation
+ */
+
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**

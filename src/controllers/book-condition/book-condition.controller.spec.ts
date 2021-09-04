@@ -1,3 +1,8 @@
+/**
+ * Book condition controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { BookConditionController } from './book-condition.controller';
 

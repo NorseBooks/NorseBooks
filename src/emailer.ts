@@ -1,3 +1,8 @@
+/**
+ * Functions for sending emails.
+ * @packageDocumentation
+ */
+
 import * as nodemailer from 'nodemailer';
 import * as fs from 'fs';
 

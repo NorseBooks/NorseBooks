@@ -1,3 +1,8 @@
+/**
+ * Decorator for a user session.
+ * @packageDocumentation
+ */
+
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**

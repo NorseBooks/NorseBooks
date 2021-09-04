@@ -1,3 +1,8 @@
+/**
+ * Test setup function.
+ * @packageDocumentation
+ */
+
 import { DBService } from './db/db.service';
 import { getService } from './test-util';
 

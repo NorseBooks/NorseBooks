@@ -1,3 +1,8 @@
+/**
+ * Referral controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

@@ -1,3 +1,8 @@
+/**
+ * Verify controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { VerifyController } from './verify.controller';
 

@@ -1,3 +1,8 @@
+/**
+ * User interest service tests.
+ * @packageDocumentation
+ */
+
 import { UserInterestService } from './user-interest.service';
 import { UserService } from '../user/user.service';
 import { getService } from '../test-util';

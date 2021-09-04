@@ -1,3 +1,8 @@
+/**
+ * Department controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { DepartmentController } from './department.controller';
 

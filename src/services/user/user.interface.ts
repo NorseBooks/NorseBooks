@@ -1,4 +1,9 @@
 /**
+ * User interface.
+ * @packageDocumentation
+ */
+
+/**
  * User table schema.
  */
 export interface NBUser {

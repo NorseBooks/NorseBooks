@@ -1,3 +1,8 @@
+/**
+ * Report controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReportController } from './report.controller';
 

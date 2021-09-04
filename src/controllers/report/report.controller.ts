@@ -1,3 +1,8 @@
+/**
+ * Report controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

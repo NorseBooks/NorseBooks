@@ -1,3 +1,8 @@
+/**
+ * Feedback service tests.
+ * @packageDocumentation
+ */
+
 import { FeedbackService } from './feedback.service';
 import { UserService } from '../user/user.service';
 import { getService } from '../test-util';
