@@ -1,3 +1,8 @@
+/**
+ * Feedback service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
@@ -107,6 +112,18 @@ export class FeedbackService {
   ): Promise<NBFeedback | undefined> {
     return this.dbService.getByFields<NBFeedback>(feedbackTableName, {
       userID,
+    });
+  }
+
+  /**
+   * Get all user feedback.
+   *
+   * @returns All user feedback.
+   */
+  public async getAllFeedback(): Promise<NBFeedback[]> {
+    return this.dbService.list<NBFeedback>(feedbackTableName, {
+      fieldName: 'submitTime',
+      sortOrder: 'ASC',
     });
   }
 

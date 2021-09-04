@@ -1,3 +1,8 @@
+/**
+ * Department service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { NBDepartment } from './department.interface';
@@ -75,7 +80,7 @@ export class DepartmentService {
   public async getDepartments(): Promise<NBDepartment[]> {
     const departments = await this.dbService.list<NBDepartment>(
       departmentTableName,
-      { fieldName: 'id', sortOrder: 'ASC' },
+      { fieldName: 'name', sortOrder: 'ASC' },
     );
     return departments;
   }

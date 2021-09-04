@@ -1,3 +1,8 @@
+/**
+ * Report service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
@@ -131,6 +136,29 @@ export class ReportService {
       bookID,
     });
     return !!report;
+  }
+
+  /**
+   * Get a user report for a book.
+   *
+   * @param userID The user's ID.
+   * @param bookID The book's ID.
+   * @returns The report.
+   */
+  public async getUserBookReport(
+    userID: string,
+    bookID: string,
+  ): Promise<NBReport> {
+    const report = await this.dbService.getByFields<NBReport>(reportTableName, {
+      userID,
+      bookID,
+    });
+
+    if (report) {
+      return report;
+    } else {
+      throw new ServiceException('Report does not exist');
+    }
   }
 
   /**

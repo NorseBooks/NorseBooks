@@ -1,4 +1,9 @@
 /**
+ * Message interface.
+ * @packageDocumentation
+ */
+
+/**
  * Message table schema.
  */
 export interface NBMessage {

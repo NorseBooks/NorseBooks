@@ -1,3 +1,8 @@
+/**
+ * Department service tests.
+ * @packageDocumentation
+ */
+
 import { DepartmentService } from './department.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';

@@ -1,3 +1,8 @@
+/**
+ * Report service tests.
+ * @packageDocumentation
+ */
+
 import { ReportService } from './report.service';
 import { UserService } from '../user/user.service';
 import { BookService } from '../book/book.service';
@@ -146,13 +151,18 @@ describe('ReportService', () => {
     );
   });
 
-  it('should create, check if user reported a book, check if user reported recently, get user reported books, and delete reports', async () => {
+  it('should create, check if user reported a book, get user reported book, check if user reported recently, get user reported books, and delete reports', async () => {
     // check if user reported a book
     const reportedBook1 = await reportService.userReportedBook(
       user.id,
       book.id,
     );
     expect(reportedBook1).toBe(false);
+
+    // get user reported book
+    await expect(
+      reportService.getUserBookReport(user.id, book.id),
+    ).rejects.toThrow(ServiceException);
 
     // check if user reported recently
     const reportedRecently1 = await reportService.userReportedRecently(user.id);
@@ -167,13 +177,13 @@ describe('ReportService', () => {
     );
 
     // create
-    const report = await reportService.reportBook(user.id, book.id, reason);
-    expect(report).toBeDefined();
-    expect(report).toHaveProperty('id');
-    expect(report).toHaveProperty('bookID', book.id);
-    expect(report).toHaveProperty('userID', user.id);
-    expect(report).toHaveProperty('reason', reason);
-    expect(report).toHaveProperty('reportTime');
+    const report1 = await reportService.reportBook(user.id, book.id, reason);
+    expect(report1).toBeDefined();
+    expect(report1).toHaveProperty('id');
+    expect(report1).toHaveProperty('bookID', book.id);
+    expect(report1).toHaveProperty('userID', user.id);
+    expect(report1).toHaveProperty('reason', reason);
+    expect(report1).toHaveProperty('reportTime');
 
     // check if user reported a book
     const reportedBook2 = await reportService.userReportedBook(
@@ -181,6 +191,11 @@ describe('ReportService', () => {
       book.id,
     );
     expect(reportedBook2).toBe(true);
+
+    // get user reported book
+    const report2 = await reportService.getUserBookReport(user.id, book.id);
+    expect(report2).toBeDefined();
+    expect(report2).toEqual(report1);
 
     // check if user reported recently
     const reportedRecently2 = await reportService.userReportedRecently(user.id);
@@ -190,10 +205,10 @@ describe('ReportService', () => {
     const reportedBooks2 = await reportService.getUserBookReports(user.id);
     expect(reportedBooks2).toBeDefined();
     expect(reportedBooks2.length).toBe(1);
-    expect(reportedBooks2[0]).toEqual(report);
+    expect(reportedBooks2[0]).toEqual(report1);
 
     // delete
-    await reportService.deleteReport(report.id);
+    await reportService.deleteReport(report1.id);
     const reportedBook3 = await reportService.userReportedBook(
       user.id,
       book.id,

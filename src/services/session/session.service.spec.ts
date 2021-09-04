@@ -1,3 +1,8 @@
+/**
+ * Session service tests.
+ * @packageDocumentation
+ */
+
 import { SessionService } from './session.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';

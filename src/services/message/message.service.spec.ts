@@ -1,3 +1,8 @@
+/**
+ * Message service tests.
+ * @packageDocumentation
+ */
+
 import { MessageService } from './message.service';
 import { UserService } from '../user/user.service';
 import { getService } from '../test-util';
@@ -170,28 +175,54 @@ describe('MessageService', () => {
     expect(message1).toHaveProperty('sendTime');
 
     // mark read
-    const message2 = await messageService.markRead(message1.id);
+    const message2 = await messageService.sendMessage(
+      user1.id,
+      user2.id,
+      content1,
+    );
     expect(message2).toBeDefined();
-    expect(message2).not.toEqual(message1);
-    expect(message2.id).toEqual(message1.id);
-    expect(message2.read).toBe(true);
-    const message3 = await messageService.getMessage(message1.id);
+    const message3 = await messageService.sendMessage(
+      user1.id,
+      user2.id,
+      content1,
+    );
     expect(message3).toBeDefined();
-    expect(message3).toEqual(message2);
+    const message4 = await messageService.markRead(message2.id);
+    expect(message4).toBeDefined();
+    expect(message4).not.toEqual(message2);
+    expect(message4.id).toEqual(message2.id);
+    expect(message4.read).toBe(true);
+    const message5 = await messageService.getMessage(message2.id);
+    expect(message5).toBeDefined();
+    expect(message5).toEqual(message4);
+    const message6 = await messageService.getMessage(message1.id);
+    expect(message6).toBeDefined();
+    expect(message6.read).toBe(true);
+    const message7 = await messageService.getMessage(message3.id);
+    expect(message7).toBeDefined();
+    expect(message7.read).toBe(false);
     await expect(messageService.markRead('')).rejects.toThrow(ServiceException);
 
     // mark unread
-    const message4 = await messageService.markUnread(message1.id);
-    expect(message4).toBeDefined();
-    expect(message4).not.toEqual(message2);
-    expect(message4).toEqual(message1);
-    expect(message4.read).toBe(false);
+    await messageService.markRead(message3.id);
+    const message8 = await messageService.markUnread(message2.id);
+    expect(message8).toBeDefined();
+    expect(message8).not.toEqual(message4);
+    expect(message8.read).toBe(false);
+    const message9 = await messageService.getMessage(message1.id);
+    expect(message9).toBeDefined();
+    expect(message9.read).toBe(true);
+    const message10 = await messageService.getMessage(message3.id);
+    expect(message10).toBeDefined();
+    expect(message10.read).toBe(false);
     await expect(messageService.markUnread('')).rejects.toThrow(
       ServiceException,
     );
 
     // delete
     await messageService.deleteMessage(message1.id);
+    await messageService.deleteMessage(message2.id);
+    await messageService.deleteMessage(message3.id);
 
     // delete old
     await messageService.deleteOldMessages(user1.id, user2.id);

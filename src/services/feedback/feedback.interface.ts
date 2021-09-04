@@ -1,4 +1,9 @@
 /**
+ * Feedback interface.
+ * @packageDocumentation
+ */
+
+/**
  * Feedback table schema.
  */
 export interface NBFeedback {

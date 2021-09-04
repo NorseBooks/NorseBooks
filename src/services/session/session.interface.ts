@@ -1,4 +1,9 @@
 /**
+ * Session interface.
+ * @packageDocumentation
+ */
+
+/**
  * Session table schema.
  */
 export interface NBSession {

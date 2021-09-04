@@ -1,3 +1,8 @@
+/**
+ * Database service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Pool, types } from 'pg';
 import * as fs from 'fs';

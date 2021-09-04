@@ -1,3 +1,8 @@
+/**
+ * Database service tests.
+ * @packageDocumentation
+ */
+
 import { DBService } from './db.service';
 import { getService } from '../test-util';
 import { NBResource } from '../resource/resource.interface';

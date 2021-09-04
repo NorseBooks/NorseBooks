@@ -1,4 +1,9 @@
 /**
+ * Referral interface.
+ * @packageDocumentation
+ */
+
+/**
  * Referral table schema.
  */
 export interface NBReferral {

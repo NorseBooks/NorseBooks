@@ -1,3 +1,8 @@
+/**
+ * User service tests.
+ * @packageDocumentation
+ */
+
 import { UserService } from './user.service';
 import { ImageService } from '../image/image.service';
 import { BookService } from '../book/book.service';
