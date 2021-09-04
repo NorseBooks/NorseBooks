@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { APIService } from './services/api.service';
+import { APIService } from './services/api/api.service';
 
 /**
  * The app module.
