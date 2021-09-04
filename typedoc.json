@@ -1,5 +1,5 @@
 {
   "out": "documentation",
   "theme": "default",
-  "entryPoints": ["src/services"]
+  "entryPoints": ["src"]
 }
