@@ -1,3 +1,8 @@
+/**
+ * A guard for an optional user session.
+ * @packageDocumentation
+ */
+
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { SessionService } from '../services/session/session.service';
 

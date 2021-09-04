@@ -1,12 +1,17 @@
+/**
+ * Decorator for a boolean query parameter.
+ * @packageDocumentation
+ */
+
 import {
   createParamDecorator,
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
-import { QueryParameters, queryDefaults } from './query.decorator.interface';
+import { QueryParameters, queryDefaults } from './parameter';
 
 /**
- * Decorator for a required boolean query parameter.
+ * Decorator for a boolean query parameter.
  */
 export const QueryBoolean = createParamDecorator(
   (params: QueryParameters<boolean>, ctx: ExecutionContext) => {

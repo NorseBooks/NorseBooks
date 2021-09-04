@@ -1,4 +1,9 @@
 /**
+ * Types, interfaces, and functions involving query and body parameters.
+ * @packageDocumentation
+ */
+
+/**
  * The scope of the parameter.
  */
 type ParameterScope = 'query' | 'body';
@@ -13,6 +18,9 @@ export interface QueryParameters<T> {
   scope?: ParameterScope;
 }
 
+/**
+ * Fully defined parameters for a request query field.
+ */
 interface QueryParametersFull<T> {
   name: string;
   required: boolean;
@@ -20,6 +28,12 @@ interface QueryParametersFull<T> {
   scope: ParameterScope;
 }
 
+/**
+ * Set default query parameters.
+ *
+ * @param params The query parameters.
+ * @returns Fully defined query parameters.
+ */
 export function queryDefaults<T>(
   params: QueryParameters<T>,
 ): QueryParametersFull<T> {

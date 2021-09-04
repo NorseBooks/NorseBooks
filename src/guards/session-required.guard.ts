@@ -1,3 +1,8 @@
+/**
+ * A guard requiring the user be authenticated.
+ * @packageDocumentation
+ */
+
 import {
   CanActivate,
   ExecutionContext,
@@ -7,7 +12,7 @@ import {
 import { SessionService } from '../services/session/session.service';
 
 /**
- * A guard requiring a user session.
+ * A guard requiring the user be authenticated.
  */
 @Injectable()
 export class SessionRequiredGuard implements CanActivate {

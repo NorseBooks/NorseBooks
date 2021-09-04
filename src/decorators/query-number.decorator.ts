@@ -1,12 +1,17 @@
+/**
+ * Decorator for a number query parameter.
+ * @packageDocumentation
+ */
+
 import {
   createParamDecorator,
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
-import { QueryParameters, queryDefaults } from './query.decorator.interface';
+import { QueryParameters, queryDefaults } from './parameter';
 
 /**
- * Decorator for a required number query parameter.
+ * Decorator for a number query parameter.
  */
 export const QueryNumber = createParamDecorator(
   (params: QueryParameters<number>, ctx: ExecutionContext) => {

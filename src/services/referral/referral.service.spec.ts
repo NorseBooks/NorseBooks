@@ -1,3 +1,8 @@
+/**
+ * Referral service tests.
+ * @packageDocumentation
+ */
+
 import { ReferralService } from './referral.service';
 import { UserService } from '../user/user.service';
 import { getService } from '../test-util';

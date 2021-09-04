@@ -1,3 +1,8 @@
+/**
+ * Book condition service tests.
+ * @packageDocumentation
+ */
+
 import { BookConditionService } from './book-condition.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';

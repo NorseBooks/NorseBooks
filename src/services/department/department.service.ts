@@ -1,3 +1,8 @@
+/**
+ * Department service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { NBDepartment } from './department.interface';

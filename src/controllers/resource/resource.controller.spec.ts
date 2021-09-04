@@ -1,3 +1,8 @@
+/**
+ * Resource controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { ResourceController } from './resource.controller';
 

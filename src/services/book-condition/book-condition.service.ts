@@ -1,3 +1,8 @@
+/**
+ * Book condition service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { NBBookCondition } from './book-condition.interface';

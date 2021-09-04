@@ -1,3 +1,8 @@
+/**
+ * Decorator for getting a cookie.
+ * @packageDocumentation
+ */
+
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**

@@ -1,3 +1,8 @@
+/**
+ * Search sort service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { NBSearchSort } from './search-sort.interface';

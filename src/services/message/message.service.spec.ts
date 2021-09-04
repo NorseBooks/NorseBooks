@@ -1,3 +1,8 @@
+/**
+ * Message service tests.
+ * @packageDocumentation
+ */
+
 import { MessageService } from './message.service';
 import { UserService } from '../user/user.service';
 import { getService } from '../test-util';

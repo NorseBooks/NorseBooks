@@ -1,3 +1,8 @@
+/**
+ * Verify controller.
+ * @packageDocumentation
+ */
+
 import { Controller, UseInterceptors, Patch } from '@nestjs/common';
 import { VerifyService } from '../../services/verify/verify.service';
 import { QueryString } from '../../decorators/query-string.decorator';

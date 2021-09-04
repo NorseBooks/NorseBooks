@@ -1,3 +1,8 @@
+/**
+ * Search sort controller.
+ * @packageDocumentation
+ */
+
 import { Controller, UseInterceptors, Get } from '@nestjs/common';
 import { SearchSortService } from '../../services/search-sort/search-sort.service';
 import { QueryNumber } from '../../decorators/query-number.decorator';

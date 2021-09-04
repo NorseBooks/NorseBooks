@@ -1,3 +1,8 @@
+/**
+ * Utility functions for service tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { Abstract } from '@nestjs/common/interfaces';
 import { Type } from '@nestjs/common/interfaces/type.interface';

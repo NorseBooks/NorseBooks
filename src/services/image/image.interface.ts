@@ -1,4 +1,9 @@
 /**
+ * Image interface.
+ * @packageDocumentation
+ */
+
+/**
  * Image table schema.
  */
 export interface NBImage {

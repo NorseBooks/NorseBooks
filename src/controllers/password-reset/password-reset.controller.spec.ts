@@ -1,3 +1,8 @@
+/**
+ * Password reset controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordResetController } from './password-reset.controller';
 

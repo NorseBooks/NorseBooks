@@ -1,3 +1,8 @@
+/**
+ * Resource controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

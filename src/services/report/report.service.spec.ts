@@ -1,3 +1,8 @@
+/**
+ * Report service tests.
+ * @packageDocumentation
+ */
+
 import { ReportService } from './report.service';
 import { UserService } from '../user/user.service';
 import { BookService } from '../book/book.service';

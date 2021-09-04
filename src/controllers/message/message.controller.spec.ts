@@ -1,3 +1,8 @@
+/**
+ * Message controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { MessageController } from './message.controller';
 

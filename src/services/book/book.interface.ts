@@ -1,4 +1,9 @@
 /**
+ * Book interface.
+ * @packageDocumentation
+ */
+
+/**
  * Book table schema.
  */
 export interface NBBook {

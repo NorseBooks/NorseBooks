@@ -1,3 +1,8 @@
+/**
+ * Functions for backing up the database.
+ * @packageDocumentation
+ */
+
 import { exec } from 'child_process';
 
 /**

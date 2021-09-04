@@ -1,3 +1,8 @@
+/**
+ * Referral controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReferralController } from './referral.controller';
 

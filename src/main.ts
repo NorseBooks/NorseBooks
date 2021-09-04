@@ -1,3 +1,8 @@
+/**
+ * The app entry point.
+ * @packageDocumentation
+ */
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as enforce from 'express-sslify';

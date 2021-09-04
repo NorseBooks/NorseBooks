@@ -1,3 +1,8 @@
+/**
+ * Feedback controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

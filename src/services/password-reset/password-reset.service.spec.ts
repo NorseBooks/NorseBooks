@@ -1,3 +1,8 @@
+/**
+ * Password reset service tests.
+ * @packageDocumentation
+ */
+
 import { PasswordResetService } from './password-reset.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';

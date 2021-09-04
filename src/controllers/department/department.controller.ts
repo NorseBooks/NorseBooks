@@ -1,3 +1,8 @@
+/**
+ * Department controller.
+ * @packageDocumentation
+ */
+
 import { Controller, UseInterceptors, Get } from '@nestjs/common';
 import { DepartmentService } from '../../services/department/department.service';
 import { QueryNumber } from '../../decorators/query-number.decorator';

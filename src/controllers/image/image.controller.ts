@@ -1,3 +1,8 @@
+/**
+ * Image controller.
+ * @packageDocumentation
+ */
+
 import { Controller, Get, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { ImageService } from '../../services/image/image.service';

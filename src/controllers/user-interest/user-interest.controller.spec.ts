@@ -1,3 +1,8 @@
+/**
+ * User interest controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserInterestController } from './user-interest.controller';
 

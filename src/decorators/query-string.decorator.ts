@@ -1,12 +1,17 @@
+/**
+ * Decorator for a string query parameter.
+ * @packageDocumentation
+ */
+
 import {
   createParamDecorator,
   ExecutionContext,
   BadRequestException,
 } from '@nestjs/common';
-import { QueryParameters, queryDefaults } from './query.decorator.interface';
+import { QueryParameters, queryDefaults } from './parameter';
 
 /**
- * Decorator for a required string query parameter.
+ * Decorator for a string query parameter.
  */
 export const QueryString = createParamDecorator(
   (params: QueryParameters<string>, ctx: ExecutionContext) => {

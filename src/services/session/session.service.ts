@@ -1,3 +1,8 @@
+/**
+ * Session service.
+ * @packageDocumentation
+ */
+
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';

@@ -1,3 +1,8 @@
+/**
+ * Password reset controller.
+ * @packageDocumentation
+ */
+
 import { Controller, UseInterceptors, Post, Patch } from '@nestjs/common';
 import { PasswordResetService } from '../../services/password-reset/password-reset.service';
 import { UserService } from '../../services/user/user.service';

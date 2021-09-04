@@ -1,3 +1,8 @@
+/**
+ * User controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,

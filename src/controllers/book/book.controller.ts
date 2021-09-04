@@ -1,3 +1,8 @@
+/**
+ * Book controller.
+ * @packageDocumentation
+ */
+
 import {
   Controller,
   UseGuards,
