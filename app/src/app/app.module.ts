@@ -13,6 +13,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { APIService } from './services/api/api.service';
 import { ResourceService } from './services/resource/resource.service';
 import { UserService } from './services/user/user.service';
+import { VerifyService } from './services/verify/verify.service';
+import { PasswordResetService } from './services/password-reset/password-reset.service';
 
 /**
  * The app module.
@@ -28,7 +30,13 @@ import { UserService } from './services/user/user.service';
     MatIconModule,
     MatToolbarModule,
   ],
-  providers: [APIService, ResourceService, UserService],
+  providers: [
+    APIService,
+    ResourceService,
+    UserService,
+    VerifyService,
+    PasswordResetService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
