@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { APIService } from '../api/api.service';
-
-/**
- * All resources.
- */
-interface Resources {
-  [name: string]: boolean | number | string;
-}
+import { Resources } from './resource.interface';
 
 /**
  * Resource service.
