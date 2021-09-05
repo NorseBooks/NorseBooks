@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { APIService } from './services/api/api.service';
+import { ResourceService } from './services/resource/resource.service';
 
 /**
  * The app module.
@@ -26,7 +27,7 @@ import { APIService } from './services/api/api.service';
     MatIconModule,
     MatToolbarModule,
   ],
-  providers: [APIService],
+  providers: [APIService, ResourceService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
