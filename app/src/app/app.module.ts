@@ -12,6 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { APIService } from './services/api/api.service';
 import { ResourceService } from './services/resource/resource.service';
+import { UserService } from './services/user/user.service';
 
 /**
  * The app module.
@@ -27,7 +28,7 @@ import { ResourceService } from './services/resource/resource.service';
     MatIconModule,
     MatToolbarModule,
   ],
-  providers: [APIService, ResourceService],
+  providers: [APIService, ResourceService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
