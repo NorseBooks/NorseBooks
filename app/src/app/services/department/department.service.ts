@@ -17,7 +17,7 @@ export class DepartmentService {
    * @param departmentID The department ID.
    * @returns The name of the department.
    */
-  public async getDepartment(departmentID: string): Promise<string> {
+  public async getDepartment(departmentID: number): Promise<string> {
     return this.apiService.get<string>('department', {
       query: { departmentID },
     });

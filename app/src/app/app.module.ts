@@ -16,6 +16,7 @@ import { UserService } from './services/user/user.service';
 import { VerifyService } from './services/verify/verify.service';
 import { PasswordResetService } from './services/password-reset/password-reset.service';
 import { DepartmentService } from './services/department/department.service';
+import { BookConditionService } from './services/book-condition/book-condition.service';
 
 /**
  * The app module.
@@ -38,6 +39,7 @@ import { DepartmentService } from './services/department/department.service';
     VerifyService,
     PasswordResetService,
     DepartmentService,
+    BookConditionService,
   ],
   bootstrap: [AppComponent],
 })
