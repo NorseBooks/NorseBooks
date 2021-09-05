@@ -14,6 +14,7 @@ import { APIService } from './services/api/api.service';
 import { ResourceService } from './services/resource/resource.service';
 import { UserService } from './services/user/user.service';
 import { VerifyService } from './services/verify/verify.service';
+import { PasswordResetService } from './services/password-reset/password-reset.service';
 
 /**
  * The app module.
@@ -29,7 +30,13 @@ import { VerifyService } from './services/verify/verify.service';
     MatIconModule,
     MatToolbarModule,
   ],
-  providers: [APIService, ResourceService, UserService, VerifyService],
+  providers: [
+    APIService,
+    ResourceService,
+    UserService,
+    VerifyService,
+    PasswordResetService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
