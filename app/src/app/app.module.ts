@@ -20,6 +20,8 @@ import { BookConditionService } from './services/book-condition/book-condition.s
 import { BookService } from './services/book/book.service';
 import { ReportService } from './services/report/report.service';
 import { MessageService } from './services/message/message.service';
+import { SearchSortService } from './services/search-sort/search-sort.service';
+import { FeedbackService } from './services/feedback/feedback.service';
 
 /**
  * The app module.
@@ -46,6 +48,8 @@ import { MessageService } from './services/message/message.service';
     BookService,
     ReportService,
     MessageService,
+    SearchSortService,
+    FeedbackService,
   ],
   bootstrap: [AppComponent],
 })
