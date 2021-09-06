@@ -18,6 +18,7 @@ import { PasswordResetService } from './services/password-reset/password-reset.s
 import { DepartmentService } from './services/department/department.service';
 import { BookConditionService } from './services/book-condition/book-condition.service';
 import { BookService } from './services/book/book.service';
+import { ReportService } from './services/report/report.service';
 
 /**
  * The app module.
@@ -42,6 +43,7 @@ import { BookService } from './services/book/book.service';
     DepartmentService,
     BookConditionService,
     BookService,
+    ReportService,
   ],
   bootstrap: [AppComponent],
 })
