@@ -19,6 +19,7 @@ import { DepartmentService } from './services/department/department.service';
 import { BookConditionService } from './services/book-condition/book-condition.service';
 import { BookService } from './services/book/book.service';
 import { ReportService } from './services/report/report.service';
+import { MessageService } from './services/message/message.service';
 
 /**
  * The app module.
@@ -44,6 +45,7 @@ import { ReportService } from './services/report/report.service';
     BookConditionService,
     BookService,
     ReportService,
+    MessageService,
   ],
   bootstrap: [AppComponent],
 })

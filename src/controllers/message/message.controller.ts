@@ -111,7 +111,7 @@ export class MessageController {
     const message = await this.messageService.getMessage(messageID);
 
     if (message.toUserID === user.id) {
-      return this.messageService.markRead(messageID);
+      await this.messageService.markRead(messageID);
     } else {
       throw new ForbiddenException();
     }
