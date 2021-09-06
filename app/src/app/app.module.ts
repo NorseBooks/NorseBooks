@@ -22,6 +22,7 @@ import { ReportService } from './services/report/report.service';
 import { MessageService } from './services/message/message.service';
 import { SearchSortService } from './services/search-sort/search-sort.service';
 import { FeedbackService } from './services/feedback/feedback.service';
+import { UserInterestService } from './services/user-interest/user-interest.service';
 
 /**
  * The app module.
@@ -50,6 +51,7 @@ import { FeedbackService } from './services/feedback/feedback.service';
     MessageService,
     SearchSortService,
     FeedbackService,
+    UserInterestService,
   ],
   bootstrap: [AppComponent],
 })
