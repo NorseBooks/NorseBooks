@@ -27,20 +27,32 @@ describe('ResourceService', () => {
     const resource1 = await resourceService.getResource<number>('SALT_ROUNDS');
     expect(resource1).toBeDefined();
     expect(resource1).toBe(12);
+    const resource2 = await resourceService.getResource<string>('VERSION');
+    expect(resource2).toBeDefined();
+    expect(resource2).toBe('2.0.0');
     await expect(
       resourceService.getResource<string>('FAKE_RESOURCE'),
     ).rejects.toThrow(ServiceException);
 
     // set resource
-    const resource2 = await resourceService.setResource('SALT_ROUNDS', 13);
-    expect(resource2).toBeDefined();
-    expect(resource2).toHaveProperty('name', 'SALT_ROUNDS');
-    expect(resource2).toHaveProperty('value', 13);
-    expect(resource2).toHaveProperty('type', 'NUMBER');
-    const resource3 = await resourceService.getResource<number>('SALT_ROUNDS');
+    const resource3 = await resourceService.setResource('SALT_ROUNDS', 13);
     expect(resource3).toBeDefined();
-    expect(resource3).toBe(13);
+    expect(resource3).toHaveProperty('name', 'SALT_ROUNDS');
+    expect(resource3).toHaveProperty('value', 13);
+    expect(resource3).toHaveProperty('type', 'NUMBER');
+    const resource4 = await resourceService.getResource<number>('SALT_ROUNDS');
+    expect(resource4).toBeDefined();
+    expect(resource4).toBe(13);
+    const resource5 = await resourceService.setResource('VERSION', '2.0.1');
+    expect(resource5).toBeDefined();
+    expect(resource5).toHaveProperty('name', 'VERSION');
+    expect(resource5).toHaveProperty('value', '2.0.1');
+    expect(resource5).toHaveProperty('type', 'STRING');
+    const resource6 = await resourceService.getResource<string>('VERSION');
+    expect(resource6).toBeDefined();
+    expect(resource6).toBe('2.0.1');
     await resourceService.setResource('SALT_ROUNDS', 12);
+    await resourceService.setResource('VERSION', '2.0.0');
     await expect(
       resourceService.setResource('FAKE_RESOURCE', 1),
     ).rejects.toThrow(ServiceException);
