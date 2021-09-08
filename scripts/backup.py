@@ -138,8 +138,13 @@ def backupDB(dbUrl: str, backupDir: str) -> str:
 def main() -> None:
     """Execute the script."""
 
+    # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Backup the database")
+
+    # The database URL
     parser.add_argument("-u", "--url", type=str, required=True, help="The database URL")
+
+    # Get the values of the arguments
     args = parser.parse_args()
 
     dbUrl: str = args.url
