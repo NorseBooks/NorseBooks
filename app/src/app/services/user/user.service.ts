@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { APIService } from '../api/api.service';
 import { UserInfo, OtherUserInfo } from './user.interface';
 import { NBBook } from '../book/book.interface';
+import { Subject } from 'rxjs';
 
 /**
  * User service.
@@ -10,6 +11,9 @@ import { NBBook } from '../book/book.interface';
   providedIn: 'root',
 })
 export class UserService {
+  private loggedInStorageName = 'loggedIn';
+  public loggedInChange = new Subject<boolean>();
+
   constructor(private readonly apiService: APIService) {}
 
   /**
@@ -39,6 +43,7 @@ export class UserService {
    */
   public async login(email: string, password: string): Promise<void> {
     await this.apiService.post('user/login', { query: { email, password } });
+    this.setLoggedIn(true);
   }
 
   /**
@@ -46,6 +51,7 @@ export class UserService {
    */
   public async logout(): Promise<void> {
     await this.apiService.delete('logout');
+    this.setLoggedIn(false);
   }
 
   /**
@@ -53,6 +59,7 @@ export class UserService {
    */
   public async logoutEverywhere(): Promise<void> {
     await this.apiService.delete('logout-everywhere');
+    this.setLoggedIn(false);
   }
 
   /**
@@ -117,5 +124,24 @@ export class UserService {
    */
   public async getRecommendations(): Promise<NBBook[]> {
     return this.apiService.get<NBBook[]>('user/recommendations');
+  }
+
+  /**
+   * Check if the user is logged in.
+   *
+   * @returns Whether or not the user is logged in.
+   */
+  public loggedIn(): boolean {
+    return localStorage.getItem(this.loggedInStorageName) === 'true';
+  }
+
+  /**
+   * Set the logged in status of the user.
+   *
+   * @param loggedIn The logged in status of the user.
+   */
+  private setLoggedIn(loggedIn: boolean): void {
+    localStorage.setItem(this.loggedInStorageName, loggedIn.toString());
+    this.loggedInChange.next(loggedIn);
   }
 }
