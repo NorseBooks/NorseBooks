@@ -12,9 +12,18 @@
     </div>
   </a>
   <div class="header-icons">
+    <a mat-icon-button routerLink="/help" matTooltip="Help">
+      <mat-icon>help_outline</mat-icon>
+    </a>
     <div *ngIf="loggedIn; else notLoggedIn">
       <a mat-icon-button routerLink="/logout" matTooltip="Log out">
         <mat-icon>logout</mat-icon>
+      </a>
+      <a mat-icon-button routerLink="/book" matTooltip="New listing">
+        <mat-icon>add</mat-icon>
+      </a>
+      <a mat-icon-button routerLink="/profile" matTooltip="Profile">
+        <mat-icon>account_circle</mat-icon>
       </a>
     </div>
   </div>
