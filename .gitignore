@@ -5,6 +5,7 @@
 /coverage/coverage-summary.json
 /coverage/lcov-report
 /coverage/lcov.info
+__pycache__
 
 # Logs
 logs

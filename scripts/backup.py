@@ -8,6 +8,8 @@ from datetime import datetime
 import psycopg2
 from psycopg2._psycopg import cursor
 
+import env
+
 from typing import Any, List, Tuple
 
 
@@ -138,11 +140,23 @@ def backupDB(dbUrl: str, backupDir: str) -> str:
 def main() -> None:
     """Execute the script."""
 
+    # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Backup the database")
-    parser.add_argument("-u", "--url", type=str, required=True, help="The database URL")
+
+    # The database URL
+    parser.add_argument("-u", "--url", type=str, help="The database URL")
+
+    # Get the values of the arguments
     args = parser.parse_args()
 
-    dbUrl: str = args.url
+    dbUrl = env.getVariable("DATABASE_URL", ".env")
+
+    if dbUrl is None:
+        if args.url is not None:
+            dbUrl = args.url
+        else:
+            parser.error("could not find database URL")
+
     backupPath = getBackupPath()
     dbPath = backupDB(dbUrl, backupPath)
 
