@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { APIService } from './services/api/api.service';
 import { ResourceService } from './services/resource/resource.service';
@@ -24,12 +25,13 @@ import { SearchSortService } from './services/search-sort/search-sort.service';
 import { FeedbackService } from './services/feedback/feedback.service';
 import { UserInterestService } from './services/user-interest/user-interest.service';
 import { ReferralService } from './services/referral/referral.service';
+import { HeaderComponent } from './components/header/header.component';
 
 /**
  * The app module.
  */
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -38,6 +40,7 @@ import { ReferralService } from './services/referral/referral.service';
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
+    MatTooltipModule,
   ],
   providers: [
     APIService,
