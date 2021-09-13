@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 
 /**
- * The header component.
+ * The global site header.
  */
 @Component({
   selector: 'nb-header',
