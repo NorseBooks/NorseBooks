@@ -24,7 +24,94 @@
     <mat-divider *ngIf="loggedIn"></mat-divider>
     <div class="search">
       <h2>Search for books</h2>
-      <div class="search-options"></div>
+      <div class="search-options">
+        <form
+          #searchBooksForm="ngForm"
+          (ngSubmit)="onSearchBooks(searchBooksForm.value)"
+        >
+          <div class="form-row search-line-1">
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Query</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="query"
+                    name="query"
+                    maxlength="255"
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="form-row search-line-2">
+            <div>
+              <div>
+                <mat-form-field [appearance]="inputAppearance">
+                  <mat-label>Department</mat-label>
+                  <mat-select id="departmentID" name="departmentID" ngModel>
+                    <mat-option
+                      *ngFor="let department of departments"
+                      [value]="department.id"
+                      >{{ department.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div>
+              <div>
+                <mat-form-field [appearance]="inputAppearance">
+                  <mat-label>Course number</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    id="courseNumber"
+                    name="courseNumber"
+                    maxlength="3"
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div>
+              <div>
+                <mat-form-field [appearance]="inputAppearance">
+                  <mat-label>Sort</mat-label>
+                  <mat-select
+                    id="sortID"
+                    name="sortID"
+                    [value]="defaultSortValue"
+                    ngModel
+                  >
+                    <mat-option
+                      *ngFor="let sortOption of sortOptions"
+                      [value]="sortOption.id"
+                      >{{ sortOption.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="submittingSearch"
+          >
+            Search
+          </button>
+          <div *ngIf="searchError" class="form-error">
+            <span>{{ searchError }}</span>
+          </div>
+        </form>
+      </div>
       <div
         *ngIf="searchResults.length > 0; else noSearchResults"
         class="search-results"

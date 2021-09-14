@@ -1,3 +1,5 @@
+@use '../../../globals';
+
 .home {
   .home-image {
     background-image: url('/assets/img/library.jpg');
@@ -39,6 +41,20 @@
 
     & > div {
       padding: 32px 0;
+    }
+
+    .search {
+      .search-options {
+        margin-bottom: 1rem;
+
+        .search-line-1 > * {
+          @include globals.col(12, 12, 12);
+        }
+
+        .search-line-2 > * {
+          @include globals.col(4, 4, 12);
+        }
+      }
     }
   }
 }
