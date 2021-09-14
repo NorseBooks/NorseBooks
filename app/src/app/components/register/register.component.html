@@ -1,0 +1,158 @@
+<div class="register">
+  <mat-card class="register-card">
+    <mat-card-title class="text-center">Sign up</mat-card-title>
+    <mat-card-content>
+      <div
+        *ngIf="!registerSuccess; else registerSuccessMessage"
+        class="register-form"
+      >
+        <form
+          #registerForm="ngForm"
+          (ngSubmit)="onRegister(registerForm.value)"
+        >
+          <div class="form-row register-line-1">
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>First name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="firstname"
+                    name="firstname"
+                    [maxLength]="firstnameMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Last name</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="lastname"
+                    name="lastname"
+                    [maxLength]="lastnameMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="form-row register-line-2">
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Norse email address</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="email"
+                    name="email"
+                    [maxLength]="emailMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="form-row register-line-3">
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    id="password"
+                    name="password"
+                    [maxLength]="passwordMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Confirm password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    [maxLength]="passwordMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="form-row-simple mb">
+            <mat-checkbox
+              color="primary"
+              id="terms"
+              name="terms"
+              required
+              ngModel
+              >I agree to the
+              <a routerLink="/terms" class="standard-link"
+                >terms and conditions</a
+              >.</mat-checkbox
+            >
+          </div>
+          <div class="form-row-simple mb">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingRegister"
+            >
+              Sign up
+            </button>
+          </div>
+          <div *ngIf="registerError" class="form-error form-row-simple mb">
+            <span>{{ registerError }}</span>
+          </div>
+          <div class="form-row-simple">
+            <small class="text-center"
+              >Already have an account?
+              <a routerLink="/login" class="standard-link">Log in.</a></small
+            >
+          </div>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #registerSuccessMessage>
+  <p class="text-justified">
+    Success! You are registered. We've sent you an email containing a link to
+    verify your email address. Simply click the link in the email and your
+    account will be activated. Note that the link will expire after one hour.
+  </p>
+</ng-template>

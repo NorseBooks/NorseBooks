@@ -11,7 +11,7 @@
       <a mat-raised-button color="primary" routerLink="/book">Sell a book</a>
     </div>
   </div>
-  <div class="home-content">
+  <div *ngIf="done; else loading" class="home-content">
     <div *ngIf="loggedIn" class="recommendations">
       <h2>Recommended for you</h2>
       <div
@@ -127,3 +127,7 @@
 <ng-template #noSearchResults
   >No search results matched your query.</ng-template
 >
+
+<ng-template #loading>
+  <mat-spinner class="spinner"></mat-spinner>
+</ng-template>
