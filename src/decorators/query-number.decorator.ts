@@ -25,7 +25,7 @@ export const QueryNumber = createParamDecorator(
         ? request.body?.[name]
         : undefined;
 
-    if (value === undefined) {
+    if (value === undefined || value === '') {
       if (required) {
         throw new BadRequestException(`Expected query parameter '${name}'`);
       } else {
