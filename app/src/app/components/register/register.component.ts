@@ -83,6 +83,7 @@ export class RegisterComponent implements OnInit {
           form.password,
         );
 
+        this.registerError = '';
         this.registerSuccess = true;
       } catch (err: any) {
         this.registerError = err;

@@ -82,6 +82,8 @@ export class HomeComponent implements OnInit {
         },
         form.sortID,
       );
+
+      this.searchError = '';
     } catch (err: any) {
       this.searchError = err;
     }

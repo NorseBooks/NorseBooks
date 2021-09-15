@@ -128,12 +128,25 @@ a.standard-link {
   width: 100%;
 }
 
+.vertical-align {
+  display: flex;
+  align-items: center;
+}
+
 .mt {
   margin-top: 16px;
 }
 
 .mb {
   margin-bottom: 16px;
+}
+
+.ml {
+  margin-left: 16px;
+}
+
+.mr {
+  margin-right: 16px;
 }
 
 .form-row {
@@ -182,6 +195,8 @@ a.standard-link {
 
 mat-card {
   padding: 2rem;
+  box-shadow: 5px 5px 20px rgb(70 39 39) !important;
+  border-radius: 12px;
 
   mat-card-title {
     margin-bottom: 2rem;

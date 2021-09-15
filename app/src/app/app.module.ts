@@ -37,6 +37,7 @@ import { ReferralService } from './services/referral/referral.service';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 
 /**
  * The app module.
@@ -47,6 +48,7 @@ import { RegisterComponent } from './components/register/register.component';
     HeaderComponent,
     HomeComponent,
     RegisterComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

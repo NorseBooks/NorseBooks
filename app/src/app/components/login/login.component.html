@@ -1,0 +1,79 @@
+<div class="login">
+  <mat-card class="login-card">
+    <mat-card-title class="text-center">Sign in</mat-card-title>
+    <mat-card-content>
+      <div class="login-form">
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm.value)">
+          <div class="form-row login-line-1">
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    id="email"
+                    name="email"
+                    [maxLength]="emailMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="form-row login-line-2">
+            <div>
+              <div>
+                <mat-form-field
+                  [appearance]="inputAppearance"
+                  class="max-width"
+                >
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    id="password"
+                    name="password"
+                    [maxLength]="passwordMaxLength"
+                    required
+                    ngModel
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="form-row-simple mb vertical-align">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingLogin"
+            >
+              Sign in
+            </button>
+            <span class="ml">
+              <a routerLink="/password-reset" class="standard-link"
+                >Forgot password?</a
+              >
+            </span>
+          </div>
+          <div *ngIf="loginError" class="form-error form-row-simple mb">
+            <span>{{ loginError }}</span>
+          </div>
+          <div class="form-row-simple">
+            <small class="text-center"
+              >Don't have an account?
+              <a routerLink="/register" class="standard-link"
+                >Sign up.</a
+              ></small
+            >
+          </div>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
