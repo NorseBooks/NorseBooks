@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 /**
  * App routing configuration.
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
+  { path: 'profile', component: ProfileComponent },
 ];
 
 /**

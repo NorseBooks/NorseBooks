@@ -1,0 +1,43 @@
+<div *ngIf="done; else loading" class="profile">
+  <div *ngIf="loggedIn; else notLoggedIn">
+    <div class="settings"></div>
+    <div class="user-books">
+      <div>
+        <h2>Your books</h2>
+        <div *ngIf="userBooks.length > 0; else noUserBooks">
+          <!-- <nb-book *ngFor="let book of recommended"></nb-book> -->
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div>
+        <h2>Recommended for you</h2>
+        <div *ngIf="recommended.length > 0; else noRecommended">
+          <!-- <nb-book *ngFor="let book of recommended"></nb-book> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #notLoggedIn>
+  <div class="padded text-center">
+    Please
+    <a
+      routerLink="/login"
+      [queryParams]="{ after: 'profile' }"
+      class="standard-link"
+      >sign in</a
+    >
+    to view your profile.
+  </div>
+</ng-template>
+
+<ng-template #noUserBooks
+  >You do not have any books listed currently.</ng-template
+>
+
+<ng-template #noRecommended>You have no book recommendations.</ng-template>
+
+<ng-template #loading>
+  <mat-spinner class="spinner"></mat-spinner>
+</ng-template>

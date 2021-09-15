@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -39,6 +40,7 @@ import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 /**
  * The app module.
@@ -51,6 +53,7 @@ import { LogoutComponent } from './components/logout/logout.component';
     RegisterComponent,
     LoginComponent,
     LogoutComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +69,7 @@ import { LogoutComponent } from './components/logout/logout.component';
     MatInputModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatIconModule,
     MatToolbarModule,
     MatTooltipModule,

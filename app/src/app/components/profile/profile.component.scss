@@ -1,0 +1,22 @@
+@use '../../../globals';
+
+.profile {
+  .settings {
+    background-image: url('/assets/img/backgrounds/profile.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    padding: 48px;
+  }
+
+  .user-books {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 32px;
+
+    & > div {
+      padding: 32px 0;
+    }
+  }
+}
