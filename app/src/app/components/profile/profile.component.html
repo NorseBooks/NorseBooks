@@ -5,7 +5,7 @@
       <div>
         <h2>Your books</h2>
         <div *ngIf="userBooks.length > 0; else noUserBooks">
-          <!-- <nb-book *ngFor="let book of recommended"></nb-book> -->
+          <!-- <nb-book *ngFor="let book of userBooks"></nb-book> -->
         </div>
       </div>
       <mat-divider></mat-divider>
@@ -13,6 +13,13 @@
         <h2>Recommended for you</h2>
         <div *ngIf="recommended.length > 0; else noRecommended">
           <!-- <nb-book *ngFor="let book of recommended"></nb-book> -->
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div>
+        <h2>Reported books</h2>
+        <div *ngIf="reported.length > 0; else noReported">
+          <!-- <nb-book *ngFor="let book of reported"></nb-book> -->
         </div>
       </div>
     </div>
@@ -37,6 +44,8 @@
 >
 
 <ng-template #noRecommended>You have no book recommendations.</ng-template>
+
+<ng-template #noReported>You have not reported any books.</ng-template>
 
 <ng-template #loading>
   <mat-spinner class="spinner"></mat-spinner>

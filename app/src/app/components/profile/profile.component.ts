@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
+import { ReportService } from '../../services/report/report.service';
 import { NBBook } from '../../services/book/book.interface';
 import { inputAppearance } from '../../globals';
 
@@ -19,11 +20,13 @@ export class ProfileComponent implements OnInit {
   public loggedIn = false;
   public userBooks: NBBook[] = [];
   public recommended: NBBook[] = [];
+  public reported: NBBook[] = [];
   public readonly inputAppearance = inputAppearance;
 
   constructor(
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
+    private readonly reportService: ReportService,
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -39,6 +42,7 @@ export class ProfileComponent implements OnInit {
       try {
         this.userBooks = await this.userService.getCurrentBooks();
         this.recommended = await this.userService.getRecommendations();
+        this.reported = await this.reportService.getUserReportedBooks();
       } catch (err) {
         await this.userService.logout();
         this.loggedIn = false;
