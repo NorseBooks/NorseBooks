@@ -22,11 +22,12 @@ interface SearchBooksForm {
  * The app home page.
  */
 @Component({
-  selector: 'app-home',
+  selector: 'nb-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  public done = false;
   public loggedIn = false;
   public submittingSearch = false;
   public searchError = '';
@@ -52,10 +53,22 @@ export class HomeComponent implements OnInit {
     this.defaultSortValue = 0;
 
     if (this.loggedIn) {
-      this.recommended = await this.userService.getRecommendations();
+      try {
+        this.recommended = await this.userService.getRecommendations();
+      } catch (err) {
+        await this.userService.logout();
+        this.loggedIn = false;
+      }
     }
+
+    this.done = true;
   }
 
+  /**
+   * Search for books.
+   *
+   * @param form The search books form.
+   */
   public async onSearchBooks(form: SearchBooksForm): Promise<void> {
     this.searchError = '';
     this.submittingSearch = true;
@@ -69,8 +82,10 @@ export class HomeComponent implements OnInit {
         },
         form.sortID,
       );
-    } catch (err) {
-      this.searchError = (err as any).toString();
+
+      this.searchError = '';
+    } catch (err: any) {
+      this.searchError = err;
     }
 
     this.submittingSearch = false;

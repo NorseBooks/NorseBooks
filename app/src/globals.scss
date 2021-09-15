@@ -94,6 +94,10 @@ a.standard-link {
   width: 100%;
 }
 
+.error-text {
+  color: red;
+}
+
 .form-error {
   margin-top: 8px;
   color: red;
@@ -128,11 +132,37 @@ a.standard-link {
   width: 100%;
 }
 
+.vertical-align {
+  display: flex;
+  align-items: center;
+}
+
+.mt {
+  margin-top: 16px;
+}
+
+.mb {
+  margin-bottom: 16px;
+}
+
+.ml {
+  margin-left: 16px;
+}
+
+.mr {
+  margin-right: 16px;
+}
+
 .form-row {
   display: flex;
   flex-wrap: wrap;
   margin-left: -$col-spacing;
   margin-right: -$col-spacing;
+}
+
+.form-row-simple {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 @mixin col($lg-columns, $md-columns, $sm-columns) {
@@ -164,5 +194,15 @@ a.standard-link {
     & > * {
       width: 100%;
     }
+  }
+}
+
+mat-card {
+  padding: 2rem;
+  box-shadow: 5px 5px 20px rgb(70 39 39) !important;
+  border-radius: 12px;
+
+  mat-card-title {
+    margin-bottom: 2rem;
   }
 }

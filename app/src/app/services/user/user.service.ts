@@ -50,7 +50,7 @@ export class UserService {
    * Log out.
    */
   public async logout(): Promise<void> {
-    await this.apiService.delete('logout');
+    await this.apiService.delete('user/logout');
     this.setLoggedIn(false);
   }
 
@@ -58,7 +58,7 @@ export class UserService {
    * Log out everywhere.
    */
   public async logoutEverywhere(): Promise<void> {
-    await this.apiService.delete('logout-everywhere');
+    await this.apiService.delete('user/logout-everywhere');
     this.setLoggedIn(false);
   }
 
