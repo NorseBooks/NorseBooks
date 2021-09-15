@@ -38,6 +38,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 /**
  * The app module.
@@ -49,6 +50,7 @@ import { LoginComponent } from './components/login/login.component';
     HomeComponent,
     RegisterComponent,
     LoginComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,

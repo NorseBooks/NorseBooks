@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private activatedRoute: ActivatedRoute,
+    private readonly activatedRoute: ActivatedRoute,
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
   ) {}
