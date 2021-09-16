@@ -9,27 +9,29 @@
     position: relative;
     padding: 48px;
 
-    .user-info {
+    .user-image {
+      margin: auto;
+      margin-bottom: 16px;
+    }
+
+    .user-details-card {
+      max-width: 500px;
+      margin: auto;
       text-align: center;
 
-      .user-image {
-        margin: auto;
+      .user-details-card-title {
         margin-bottom: 16px;
       }
 
-      .user-details {
-        max-width: 400px;
-        margin: auto;
-        background-color: black;
-        color: white;
-        padding: 4px;
-        border-radius: 4px;
-
-        & > * {
-          margin: 0;
-          padding: 4px;
-        }
+      .user-email {
+        font-style: italic;
       }
+    }
+
+    .settings-card {
+      max-width: 500px;
+      margin: auto;
+      margin-top: 48px;
     }
   }
 
