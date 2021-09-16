@@ -1,6 +1,27 @@
 <div *ngIf="done; else loading" class="profile">
   <div *ngIf="loggedIn; else notLoggedIn">
-    <div class="settings"></div>
+    <div class="settings">
+      <div class="user-info">
+        <div class="user-image">
+          <nb-user-image
+            [userInfo]="userInfo"
+            [size]="150"
+            [center]="true"
+            [shadow]="true"
+          ></nb-user-image>
+        </div>
+        <div class="user-details">
+          <h2>{{ userInfo.firstname }} {{ userInfo.lastname }}</h2>
+          <p>{{ userInfo.email }}</p>
+          <p>Joined {{ userInfo.joinTime | date }}</p>
+          <ul class="inline-list">
+            <li>Listed {{ userInfo.numBooksListed }} books</li>
+            <li>Sold {{ userInfo.numBooksSold }} books</li>
+            <li>Made {{ userInfo.moneyMade | currency }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="user-books">
       <div>
         <h2>Your books</h2>

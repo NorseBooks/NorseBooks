@@ -210,3 +210,22 @@ mat-card {
     margin-bottom: 2rem;
   }
 }
+
+.inline-list {
+  padding-inline-start: 0;
+  text-align: center;
+
+  li {
+    list-style: none;
+    display: inline;
+
+    &:after {
+      content: ' \2022  ';
+      padding: 0 8px;
+    }
+
+    &:last-child:after {
+      content: none;
+    }
+  }
+}

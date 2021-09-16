@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
 import { ReportService } from '../../services/report/report.service';
+import { UserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
 import { inputAppearance } from '../../globals';
 
@@ -18,6 +19,7 @@ export class ProfileComponent implements OnInit {
   public passwordMaxLength = 1;
   public done = false;
   public loggedIn = false;
+  public userInfo!: UserInfo;
   public userBooks: NBBook[] = [];
   public recommended: NBBook[] = [];
   public reported: NBBook[] = [];
@@ -40,6 +42,7 @@ export class ProfileComponent implements OnInit {
 
     if (this.loggedIn) {
       try {
+        this.userInfo = await this.userService.getUserInfo();
         this.userBooks = await this.userService.getCurrentBooks();
         this.recommended = await this.userService.getRecommendations();
         this.reported = await this.reportService.getUserReportedBooks();

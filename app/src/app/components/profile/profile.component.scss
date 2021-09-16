@@ -8,6 +8,29 @@
     background-size: cover;
     position: relative;
     padding: 48px;
+
+    .user-info {
+      text-align: center;
+
+      .user-image {
+        margin: auto;
+        margin-bottom: 16px;
+      }
+
+      .user-details {
+        max-width: 400px;
+        margin: auto;
+        background-color: black;
+        color: white;
+        padding: 4px;
+        border-radius: 4px;
+
+        & > * {
+          margin: 0;
+          padding: 4px;
+        }
+      }
+    }
   }
 
   .user-books {
