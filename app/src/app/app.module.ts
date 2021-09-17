@@ -41,7 +41,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { UserImageComponent } from './components/user-image/user-image.component';
+import { FileInputComponent } from './components/file-input/file-input.component';
 
 /**
  * The app module.
@@ -55,7 +55,7 @@ import { UserImageComponent } from './components/user-image/user-image.component
     LoginComponent,
     LogoutComponent,
     ProfileComponent,
-    UserImageComponent,
+    FileInputComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,13 @@
 <div *ngIf="done; else loading" class="profile">
   <div *ngIf="loggedIn; else notLoggedIn">
     <div class="settings">
-      <div class="user-image">
-        <nb-user-image
-          [userInfo]="userInfo"
-          [size]="150"
-          [center]="true"
-          [shadow]="true"
-        ></nb-user-image>
+      <div class="user-image-container">
+        <img
+          class="user-image"
+          id="user-avatar"
+          [src]="userImageURL"
+          alt="user image"
+        />
       </div>
       <mat-card class="user-details-card">
         <mat-card-title class="text-center user-details-card-title"
@@ -25,17 +25,111 @@
       </mat-card>
       <mat-card class="settings-card">
         <mat-card-title class="text-center">Change your avatar</mat-card-title>
-        <mat-card-content></mat-card-content>
+        <mat-card-content>
+          <p class="text-justified">
+            You may choose an image to set as your user avatar.
+          </p>
+          <div class="vertical-align">
+            <nb-file-input
+              [acceptTypes]="acceptImageTypes"
+              (fileChange)="setUserImage($event)"
+              >Choose image</nb-file-input
+            >
+            <button mat-raised-button (click)="deleteUserImage()" class="ml">
+              Reset avatar
+            </button>
+          </div>
+          <div *ngIf="setImageError" class="form-error">
+            <span>{{ setImageError }}</span>
+          </div>
+        </mat-card-content>
       </mat-card>
       <mat-card class="settings-card">
         <mat-card-title class="text-center"
           >Change your password</mat-card-title
         >
-        <mat-card-content></mat-card-content>
+        <mat-card-content>
+          <form
+            #setPasswordForm="ngForm"
+            (ngSubmit)="onSetPassword(setPasswordForm.value)"
+          >
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>New password</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                id="password"
+                name="password"
+                [maxLength]="passwordMaxLength"
+                required
+                ngModel
+              />
+              <button
+                mat-icon-button
+                type="button"
+                matSuffix
+                (click)="hidePassword = !hidePassword"
+              >
+                <mat-icon>{{
+                  hidePassword ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>Confirm new password</mat-label>
+              <input
+                matInput
+                [type]="hideConfirmPassword ? 'password' : 'text'"
+                id="confirmPassword"
+                name="confirmPassword"
+                [maxLength]="passwordMaxLength"
+                required
+                ngModel
+              />
+              <button
+                mat-icon-button
+                type="button"
+                matSuffix
+                (click)="hideConfirmPassword = !hideConfirmPassword"
+              >
+                <mat-icon>{{
+                  hideConfirmPassword ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingSetPasswordForm"
+            >
+              Change password
+            </button>
+            <div *ngIf="setPasswordError" class="form-error">
+              <span>{{ setPasswordError }}</span>
+            </div>
+          </form>
+        </mat-card-content>
       </mat-card>
       <mat-card class="settings-card">
         <mat-card-title class="text-center">Sign out everywhere</mat-card-title>
-        <mat-card-content></mat-card-content>
+        <mat-card-content>
+          <p class="text-justified">
+            This will sign you out of your account everywhere, on all devices.
+          </p>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="logoutEverywhere()"
+            [disabled]="logoutEverywhereClicked"
+          >
+            Sign out everywhere
+          </button>
+          <div *ngIf="logoutEverywhereError" class="form-error">
+            <span>{{ logoutEverywhereError }}</span>
+          </div>
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="user-books">

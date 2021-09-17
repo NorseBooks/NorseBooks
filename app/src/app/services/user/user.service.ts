@@ -107,7 +107,7 @@ export class UserService {
    * @param imageData The image data.
    */
   public async setImage(imageData: string): Promise<void> {
-    await this.apiService.patch('user/image', { query: { imageData } });
+    await this.apiService.patch('user/image', { body: { imageData } });
   }
 
   /**

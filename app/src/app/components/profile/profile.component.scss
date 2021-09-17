@@ -1,5 +1,7 @@
 @use '../../../globals';
 
+$image-size: 128px;
+
 .profile {
   .settings {
     background-image: url('/assets/img/backgrounds/profile.jpg');
@@ -7,11 +9,25 @@
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
-    padding: 48px;
+    padding: 0 48px 48px 48px;
 
-    .user-image {
+    .user-image-container {
+      background-color: white;
+      border-radius: 9999px;
+      overflow: hidden;
+      width: $image-size;
+      height: $image-size;
       margin: auto;
-      margin-bottom: 16px;
+      transform: translateY($image-size / 2);
+      z-index: 1;
+      position: relative;
+      box-shadow: 0 0 16px #1e1e1e !important;
+
+      .user-image {
+        width: $image-size;
+        height: $image-size;
+        object-fit: cover;
+      }
     }
 
     .user-details-card {
@@ -20,6 +36,7 @@
       text-align: center;
 
       .user-details-card-title {
+        margin-top: $image-size / 2 - 8px;
         margin-bottom: 16px;
       }
 
