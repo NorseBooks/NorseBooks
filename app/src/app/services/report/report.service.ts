@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { APIService } from '../api/api.service';
 import { NBReport } from './report.interface';
+import { NBBook } from '../book/book.interface';
 
 /**
  * Report service.
@@ -83,6 +84,15 @@ export class ReportService {
    */
   public async getUserReports(): Promise<NBReport[]> {
     return this.apiService.get<NBReport[]>('report/user-reports');
+  }
+
+  /**
+   * Get all of the user's reported books.
+   *
+   * @returns All books reported by the user.
+   */
+  public async getUserReportedBooks(): Promise<NBBook[]> {
+    return this.apiService.get<NBBook[]>('report/user-reported-books');
   }
 
   /**

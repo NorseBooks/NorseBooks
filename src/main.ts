@@ -7,6 +7,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as enforce from 'express-sslify';
 import * as cookieParser from 'cookie-parser';
+import { json } from 'express';
 import { autoBackupDB } from './backup';
 
 /**
@@ -40,6 +41,8 @@ async function bootstrap(): Promise<void> {
   }
 
   app.use(cookieParser());
+
+  app.use(json({ limit: '16mb' }));
 
   await autoBackupDB(dbURL);
 

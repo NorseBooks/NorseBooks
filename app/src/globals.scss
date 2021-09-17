@@ -94,6 +94,12 @@ a.standard-link {
   width: 100%;
 }
 
+.alert-panel-center {
+  span {
+    margin: auto;
+  }
+}
+
 .error-text {
   color: red;
 }
@@ -153,6 +159,10 @@ a.standard-link {
   margin-right: 16px;
 }
 
+.padded {
+  padding: 16px;
+}
+
 .form-row {
   display: flex;
   flex-wrap: wrap;
@@ -199,10 +209,29 @@ a.standard-link {
 
 mat-card {
   padding: 2rem;
-  box-shadow: 5px 5px 20px rgb(70 39 39) !important;
+  box-shadow: 0 0 16px #1e1e1e !important;
   border-radius: 12px;
 
   mat-card-title {
     margin-bottom: 2rem;
+  }
+}
+
+.inline-list {
+  padding-inline-start: 0;
+  text-align: center;
+
+  li {
+    list-style: none;
+    display: inline;
+
+    &:after {
+      content: ' \2022  ';
+      padding: 0 8px;
+    }
+
+    &:last-child:after {
+      content: none;
+    }
   }
 }
