@@ -36,6 +36,7 @@ import { UserInterestService } from './services/user-interest/user-interest.serv
 import { ReferralService } from './services/referral/referral.service';
 
 import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
@@ -50,6 +51,7 @@ import { FileInputComponent } from './components/file-input/file-input.component
   declarations: [
     AppComponent,
     HeaderComponent,
+    FooterComponent,
     HomeComponent,
     RegisterComponent,
     LoginComponent,

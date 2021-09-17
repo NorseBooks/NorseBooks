@@ -1,0 +1,32 @@
+@use '../../../globals';
+
+$footer-text-color: #8e8e9b;
+
+.footer {
+  background-color: #2a2a2e;
+  color: $footer-text-color;
+  padding: 2rem;
+  text-align: center;
+
+  .footer-sections > * {
+    margin-bottom: 32px;
+    @include globals.col(4, 4, 12);
+
+    h2 {
+      font-weight: 500;
+    }
+
+    a {
+      text-align: center;
+      display: block;
+      color: $footer-text-color;
+      font-size: 1.12em;
+      margin-bottom: 4px;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
