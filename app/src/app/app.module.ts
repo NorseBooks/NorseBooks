@@ -43,6 +43,7 @@ import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FileInputComponent } from './components/file-input/file-input.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 /**
  * The app module.
@@ -58,6 +59,7 @@ import { FileInputComponent } from './components/file-input/file-input.component
     LogoutComponent,
     ProfileComponent,
     FileInputComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
