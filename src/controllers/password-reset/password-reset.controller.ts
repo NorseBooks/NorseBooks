@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { Controller, UseInterceptors, Post, Patch } from '@nestjs/common';
+import { Controller, UseInterceptors, Post, Patch, Get } from '@nestjs/common';
 import { PasswordResetService } from '../../services/password-reset/password-reset.service';
 import { UserService } from '../../services/user/user.service';
 import { QueryString } from '../../decorators/query-string.decorator';
@@ -51,6 +51,19 @@ export class PasswordResetController {
         });
       }
     }
+  }
+
+  /**
+   * Get whether or not the password reset record exists.
+   *
+   * @param resetID The password reset ID.
+   * @returns Whether or not the password reset record exists.
+   */
+  @Get('exists')
+  public async passwordResetExists(
+    @QueryString({ name: 'resetID' }) resetID: string,
+  ) {
+    return this.passwordResetService.passwordResetExists(resetID);
   }
 
   /**
