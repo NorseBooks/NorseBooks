@@ -1,0 +1,15 @@
+@use '../../../globals';
+
+.not-found {
+  background-image: url('/assets/img/backgrounds/not-found.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .not-found-card {
+    max-width: 500px;
+    margin: auto;
+  }
+}

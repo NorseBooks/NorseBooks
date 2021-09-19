@@ -151,7 +151,7 @@ describe('ReportService', () => {
     );
   });
 
-  it('should create, check if user reported a book, get user reported book, check if user reported recently, get user reported books, and delete reports', async () => {
+  it('should create, check if user reported a book, get user reported book, check if user reported recently, get user book reports, get user reported books, and delete reports', async () => {
     // check if user reported a book
     const reportedBook1 = await reportService.userReportedBook(
       user.id,
@@ -168,11 +168,19 @@ describe('ReportService', () => {
     const reportedRecently1 = await reportService.userReportedRecently(user.id);
     expect(reportedRecently1).toBe(false);
 
+    // get user book reports
+    const bookReports1 = await reportService.getUserBookReports(user.id);
+    expect(bookReports1).toBeDefined();
+    expect(bookReports1.length).toBe(0);
+    await expect(reportService.getUserBookReports('')).rejects.toThrow(
+      ServiceException,
+    );
+
     // get user reported books
-    const reportedBooks1 = await reportService.getUserBookReports(user.id);
+    const reportedBooks1 = await reportService.getUserReportedBooks(user.id);
     expect(reportedBooks1).toBeDefined();
     expect(reportedBooks1.length).toBe(0);
-    await expect(reportService.getUserBookReports('')).rejects.toThrow(
+    await expect(reportService.getUserReportedBooks('')).rejects.toThrow(
       ServiceException,
     );
 
@@ -201,11 +209,17 @@ describe('ReportService', () => {
     const reportedRecently2 = await reportService.userReportedRecently(user.id);
     expect(reportedRecently2).toBe(true);
 
+    // get user book reports
+    const bookReports2 = await reportService.getUserBookReports(user.id);
+    expect(bookReports2).toBeDefined();
+    expect(bookReports2.length).toBe(1);
+    expect(bookReports2[0]).toEqual(report1);
+
     // get user reported books
-    const reportedBooks2 = await reportService.getUserBookReports(user.id);
+    const reportedBooks2 = await reportService.getUserReportedBooks(user.id);
     expect(reportedBooks2).toBeDefined();
     expect(reportedBooks2.length).toBe(1);
-    expect(reportedBooks2[0]).toEqual(report1);
+    expect(reportedBooks2[0]).toEqual(book);
 
     // delete
     await reportService.deleteReport(report1.id);
@@ -216,7 +230,10 @@ describe('ReportService', () => {
     expect(reportedBook3).toBe(false);
     const reportedRecently3 = await reportService.userReportedRecently(user.id);
     expect(reportedRecently3).toBe(false);
-    const reportedBooks3 = await reportService.getUserBookReports(user.id);
+    const bookReports3 = await reportService.getUserBookReports(user.id);
+    expect(bookReports3).toBeDefined();
+    expect(bookReports3.length).toBe(0);
+    const reportedBooks3 = await reportService.getUserReportedBooks(user.id);
     expect(reportedBooks3).toBeDefined();
     expect(reportedBooks3.length).toBe(0);
   });

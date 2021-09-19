@@ -1,0 +1,9 @@
+<div *ngIf="!logoutError; else logoutErrorMessage" class="center">
+  <mat-spinner class="spinner"></mat-spinner>
+</div>
+
+<ng-template #logoutErrorMessage>
+  <span *ngIf="logoutError" class="text-center error-text"
+    >Error: {{ logoutError }}</span
+  >
+</ng-template>

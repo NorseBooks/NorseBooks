@@ -1,0 +1,29 @@
+@use '../../../globals';
+
+.register {
+  background-image: url('/assets/img/backgrounds/register.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .register-card {
+    max-width: 600px;
+    margin: auto;
+
+    .register-form {
+      .register-line-1 > * {
+        @include globals.col(6, 6, 12);
+      }
+
+      .register-line-2 > * {
+        @include globals.col(12, 12, 12);
+      }
+
+      .register-line-3 > * {
+        @include globals.col(6, 6, 12);
+      }
+    }
+  }
+}

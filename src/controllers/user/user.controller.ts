@@ -142,6 +142,7 @@ export class UserController {
       numBooksListed: userInfo.numBooksListed,
       numBooksSold: userInfo.numBooksSold,
       moneyMade: userInfo.moneyMade,
+      admin: userInfo.admin,
       joinTime: userInfo.joinTime,
     };
   }

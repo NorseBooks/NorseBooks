@@ -29,6 +29,7 @@ export interface UserInfo {
   numBooksListed: number;
   numBooksSold: number;
   moneyMade: number;
+  admin: boolean;
   joinTime: number;
 }
 

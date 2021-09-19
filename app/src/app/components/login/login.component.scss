@@ -1,0 +1,25 @@
+@use '../../../globals';
+
+.login {
+  background-image: url('/assets/img/backgrounds/login.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .login-card {
+    max-width: 400px;
+    margin: auto;
+
+    .login-form {
+      .login-line-1 > * {
+        @include globals.col(12, 12, 12);
+      }
+
+      .login-line-2 > * {
+        @include globals.col(12, 12, 12);
+      }
+    }
+  }
+}

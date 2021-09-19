@@ -137,6 +137,18 @@ export class ReportController {
   }
 
   /**
+   * Get all of the books reported by the user.
+   *
+   * @param user The user.
+   * @returns All books reported by the user.
+   */
+  @Get('user-reported-books')
+  @UseGuards(SessionRequiredGuard)
+  public async getUserReportedBooks(@UserSession() user: NBUser) {
+    return this.reportService.getUserReportedBooks(user.id);
+  }
+
+  /**
    * Get all reports for a book.
    *
    * @param bookID The book's ID.

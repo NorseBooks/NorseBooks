@@ -1,0 +1,64 @@
+@use '../../../globals';
+
+$image-size: 128px;
+
+.profile {
+  .settings {
+    background-image: url('/assets/img/backgrounds/profile.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    padding: 0 48px 48px 48px;
+
+    .user-image-container {
+      background-color: white;
+      border-radius: 9999px;
+      overflow: hidden;
+      width: $image-size;
+      height: $image-size;
+      margin: auto;
+      transform: translateY($image-size / 2);
+      z-index: 1;
+      position: relative;
+      box-shadow: 0 0 16px #1e1e1e !important;
+
+      .user-image {
+        width: $image-size;
+        height: $image-size;
+        object-fit: cover;
+      }
+    }
+
+    .user-details-card {
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+
+      .user-details-card-title {
+        margin-top: $image-size / 2 - 8px;
+        margin-bottom: 16px;
+      }
+
+      .user-email {
+        font-style: italic;
+      }
+    }
+
+    .settings-card {
+      max-width: 500px;
+      margin: auto;
+      margin-top: 48px;
+    }
+  }
+
+  .user-books {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 32px;
+
+    & > div {
+      padding: 32px 0;
+    }
+  }
+}

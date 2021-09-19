@@ -7,8 +7,9 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { UserService } from '../user/user.service';
-import { BookService } from '../book/book.service';
+import { BookService, bookTableName } from '../book/book.service';
 import { NBReport } from './report.interface';
+import { NBBook } from 'app/src/app/services/book/book.interface';
 import { ServiceException } from '../service.exception';
 
 /**
@@ -191,6 +192,30 @@ export class ReportService {
 
     if (userExists) {
       return this.dbService.listByFields<NBReport>(reportTableName, { userID });
+    } else {
+      throw new ServiceException('User does not exist');
+    }
+  }
+
+  /**
+   * Get all books reported by a user.
+   *
+   * @param userID The user's ID.
+   * @returns All books reported by the user.
+   */
+  public async getUserReportedBooks(userID: string): Promise<NBBook[]> {
+    const userExists = await this.userService.userExists(userID);
+
+    if (userExists) {
+      const sql = `
+        SELECT "${bookTableName}".*
+          FROM "${reportTableName}"
+          JOIN "${bookTableName}"
+            ON "${reportTableName}"."bookID" = "${bookTableName}".id
+        WHERE "${reportTableName}"."userID" = ?
+        ORDER BY "${reportTableName}"."reportTime" ASC;`;
+      const params = [userID];
+      return this.dbService.execute<NBBook>(sql, params);
     } else {
       throw new ServiceException('User does not exist');
     }

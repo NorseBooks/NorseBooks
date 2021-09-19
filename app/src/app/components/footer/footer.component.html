@@ -1,0 +1,28 @@
+<div class="footer">
+  <div class="form-row footer-sections">
+    <div>
+      <div>
+        <h2>EXPLORE</h2>
+        <a routerLink="/">Home</a>
+        <a routerLink="/about">About</a>
+        <a routerLink="/feedback">Provide feedback</a>
+      </div>
+    </div>
+    <div>
+      <div>
+        <h2>ACCOUNT</h2>
+        <a *ngIf="!loggedIn" routerLink="/login">Sign in</a>
+        <a *ngIf="!loggedIn" routerLink="/register">Sign up</a>
+        <a *ngIf="loggedIn" routerLink="/profile">Profile</a>
+        <a *ngIf="loggedIn" routerLink="/logout">Sign out</a>
+      </div>
+    </div>
+    <div>
+      <div>
+        <h2>LEGAL</h2>
+        <a routerLink="/terms">Terms and conditions</a>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">NorseBooks v{{ version }}</div>
+</div>
