@@ -26,14 +26,6 @@
     <a
       *ngIf="loggedIn"
       mat-icon-button
-      routerLink="/logout"
-      matTooltip="Log out"
-    >
-      <mat-icon>logout</mat-icon>
-    </a>
-    <a
-      *ngIf="loggedIn"
-      mat-icon-button
       routerLink="/book"
       matTooltip="New listing"
     >
@@ -46,6 +38,14 @@
       matTooltip="Profile"
     >
       <mat-icon>account_circle</mat-icon>
+    </a>
+    <a
+      *ngIf="loggedIn"
+      mat-icon-button
+      routerLink="/logout"
+      matTooltip="Log out"
+    >
+      <mat-icon>logout</mat-icon>
     </a>
     <a
       *ngIf="!loggedIn"

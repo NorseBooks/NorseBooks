@@ -5,27 +5,32 @@ $footer-text-color: #8e8e9b;
 .footer {
   background-color: #2a2a2e;
   color: $footer-text-color;
-  padding: 2rem;
+  padding: 2.5rem;
   text-align: center;
 
-  .footer-sections > * {
-    margin-bottom: 32px;
-    @include globals.col(4, 4, 12);
+  .footer-sections {
+    max-width: 1000px;
+    margin: auto;
 
-    h2 {
-      font-weight: 500;
-    }
+    & > * {
+      margin-bottom: 32px;
+      @include globals.col(4, 4, 12);
 
-    a {
-      text-align: center;
-      display: block;
-      color: $footer-text-color;
-      font-size: 1.12em;
-      margin-bottom: 4px;
-      text-decoration: none;
+      h2 {
+        font-weight: 500;
+      }
 
-      &:hover {
-        text-decoration: underline;
+      a {
+        text-align: center;
+        display: block;
+        color: $footer-text-color;
+        font-size: 1.12em;
+        margin-bottom: 4px;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
