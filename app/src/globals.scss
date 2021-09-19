@@ -1,5 +1,6 @@
 $primary-color: #1e49e6;
 $secondary-color: white;
+$error-color: #e80000;
 $col-spacing: 12px;
 
 html,
@@ -114,16 +115,16 @@ a.standard-link {
 }
 
 .error-text {
-  color: red;
+  color: $error-color;
 }
 
 .form-error {
   margin-top: 8px;
-  color: red;
+  color: $error-color;
 }
 
 .form-error-text {
-  color: red;
+  color: $error-color;
   margin-top: 8px;
 }
 

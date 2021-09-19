@@ -44,6 +44,8 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FileInputComponent } from './components/file-input/file-input.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { VerifyComponent } from './components/verify/verify.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 
 /**
  * The app module.
@@ -60,6 +62,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     ProfileComponent,
     FileInputComponent,
     NotFoundComponent,
+    VerifyComponent,
+    PasswordResetComponent,
   ],
   imports: [
     BrowserModule,
