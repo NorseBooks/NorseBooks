@@ -11,13 +11,26 @@ import { UserService } from '../../services/user/user.service';
 })
 export class HeaderComponent implements OnInit {
   public loggedIn = false;
+  public admin = false;
 
   constructor(private readonly userService: UserService) {}
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
     this.loggedIn = this.userService.loggedIn();
-    this.userService.loggedInChange.subscribe(
-      (loggedIn) => (this.loggedIn = loggedIn),
-    );
+    this.userService.loggedInChange.subscribe(async (loggedIn) => {
+      this.loggedIn = loggedIn;
+
+      if (this.loggedIn) {
+        const userInfo = await this.userService.getUserInfo();
+        this.admin = userInfo.admin;
+      } else {
+        this.admin = false;
+      }
+    });
+
+    if (this.loggedIn) {
+      const userInfo = await this.userService.getUserInfo();
+      this.admin = userInfo.admin;
+    }
   }
 }
