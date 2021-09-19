@@ -15,22 +15,45 @@
     <a mat-icon-button routerLink="/help" matTooltip="Help">
       <mat-icon>help_outline</mat-icon>
     </a>
-    <div *ngIf="loggedIn; else notLoggedIn">
-      <a mat-icon-button routerLink="/logout" matTooltip="Log out">
-        <mat-icon>logout</mat-icon>
-      </a>
-      <a mat-icon-button routerLink="/book" matTooltip="New listing">
-        <mat-icon>add</mat-icon>
-      </a>
-      <a mat-icon-button routerLink="/profile" matTooltip="Profile">
-        <mat-icon>account_circle</mat-icon>
-      </a>
-    </div>
+    <a
+      *ngIf="admin"
+      mat-icon-button
+      routerLink="/admin"
+      matTooltip="Admin control panel"
+    >
+      <mat-icon>admin_panel_settings</mat-icon>
+    </a>
+    <a
+      *ngIf="loggedIn"
+      mat-icon-button
+      routerLink="/book"
+      matTooltip="New listing"
+    >
+      <mat-icon>add</mat-icon>
+    </a>
+    <a
+      *ngIf="loggedIn"
+      mat-icon-button
+      routerLink="/profile"
+      matTooltip="Profile"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </a>
+    <a
+      *ngIf="loggedIn"
+      mat-icon-button
+      routerLink="/logout"
+      matTooltip="Log out"
+    >
+      <mat-icon>logout</mat-icon>
+    </a>
+    <a
+      *ngIf="!loggedIn"
+      mat-icon-button
+      routerLink="/login"
+      matTooltip="Log in"
+    >
+      <mat-icon>login</mat-icon>
+    </a>
   </div>
 </mat-toolbar>
-
-<ng-template #notLoggedIn>
-  <a mat-icon-button routerLink="/login" matTooltip="Log in">
-    <mat-icon>login</mat-icon>
-  </a>
-</ng-template>
