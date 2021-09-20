@@ -9,7 +9,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./file-input.component.scss'],
 })
 export class FileInputComponent implements OnInit {
-  @Input() buttonLabel = 'Choose file';
   @Input() acceptTypes: string[] = [];
   @Output() fileChange = new EventEmitter<string>();
   public acceptTypesString = '*';
