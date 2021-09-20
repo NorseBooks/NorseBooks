@@ -86,7 +86,7 @@ Our backend uses [Nest](https://nestjs.com/) to expose API endpoints for the fro
 
 ### Scripts
 
-The repository contains a number of Python scripts found in the `scripts` directory. Scripts can be called directly or using one of either a bash/batch script for convenience.
+The repository contains a number of Python scripts found in the `scripts` directory. Scripts can be called directly or using one of either a bash or batch script for convenience.
 
 Bash:
 
@@ -102,7 +102,7 @@ script [script name] [script arguments...]
 
 #### Environment Variables
 
-The `env.py` script provides useful functions for acquiring variables from the environment and from `.env` files. It is not meant to be invoked directoy, but rather to be used from other scripts.
+The `env.py` script provides useful functions for acquiring variables from the environment and from `.env` files. It is not meant to be invoked directly, but rather to be used from other scripts.
 
 #### Admin
 
