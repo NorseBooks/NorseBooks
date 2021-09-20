@@ -4,7 +4,7 @@ import { UserInfo } from './services/user/user.interface';
 /**
  * The appearance of input elements.
  */
-export const inputAppearance: MatFormFieldAppearance = 'outline';
+export const inputAppearance: MatFormFieldAppearance = 'fill';
 
 /**
  * The accepted image types.

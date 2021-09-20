@@ -1,0 +1,233 @@
+<div *ngIf="done; else loading">
+  <div *ngIf="loggedIn; else notLoggedIn">
+    <div class="book-create">
+      <mat-card class="book-create-card">
+        <mat-card-title class="text-center">New book</mat-card-title>
+        <mat-card-content>
+          <form
+            #bookCreateForm="ngForm"
+            (ngSubmit)="onCreateBook(bookCreateForm.value)"
+          >
+            <div class="form-row book-create-line-1">
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>Title</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      id="title"
+                      name="title"
+                      [maxLength]="bookTitleMaxLength"
+                      required
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>Author</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      id="author"
+                      name="author"
+                      [maxLength]="bookAuthorMaxLength"
+                      required
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="form-row book-create-line-2">
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>ISBN-10</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      id="ISBN10"
+                      name="ISBN10"
+                      [maxLength]="19"
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>ISBN-13</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      id="ISBN13"
+                      name="ISBN13"
+                      [maxLength]="25"
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="form-row book-create-line-3">
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>Department</mat-label>
+                    <mat-select
+                      id="departmentID"
+                      name="departmentID"
+                      required
+                      ngModel
+                    >
+                      <mat-option
+                        *ngFor="let department of departments"
+                        [value]="department.id"
+                        >{{ department.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>Course number</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      id="courseNumber"
+                      name="courseNumber"
+                      [maxLength]="3"
+                      ngModel
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="form-row book-create-line-4">
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>Condition</mat-label>
+                    <mat-select
+                      id="conditionID"
+                      name="conditionID"
+                      required
+                      ngModel
+                    >
+                      <mat-option
+                        *ngFor="let bookCondition of bookConditions"
+                        [value]="bookCondition.id"
+                        >{{ bookCondition.name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <mat-form-field
+                    [appearance]="inputAppearance"
+                    class="max-width"
+                  >
+                    <mat-label>Price</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      id="price"
+                      name="price"
+                      [maxLength]="6"
+                      required
+                      ngModel
+                    />
+                    <span matPrefix>$&nbsp;</span>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>Description</mat-label>
+              <textarea
+                matInput
+                type="text"
+                id="description"
+                name="description"
+                [maxLength]="bookDescriptionMaxLength"
+                rows="3"
+                required
+                ngModel
+              ></textarea>
+            </mat-form-field>
+            <div class="vertical-align mb">
+              <nb-file-input
+                [acceptTypes]="acceptImageTypes"
+                (fileChange)="imageSelected($event)"
+                >Select book image</nb-file-input
+              >
+              <span *ngIf="imageData.length > 0" class="ml"
+                >Image selected</span
+              >
+            </div>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingCreateBookForm"
+            >
+              List book
+            </button>
+            <div *ngIf="createBookError" class="form-error">
+              <span>{{ createBookError }}</span>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<ng-template #notLoggedIn>
+  <div class="padded text-center">
+    Please
+    <a
+      routerLink="/login"
+      [queryParams]="{ after: 'book' }"
+      class="standard-link"
+      >sign in</a
+    >
+    to list a book.
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>

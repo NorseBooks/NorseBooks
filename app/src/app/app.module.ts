@@ -46,6 +46,7 @@ import { FileInputComponent } from './components/file-input/file-input.component
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { VerifyComponent } from './components/verify/verify.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { BookCreateComponent } from './components/book-create/book-create.component';
 
 /**
  * The app module.
@@ -64,6 +65,7 @@ import { PasswordResetComponent } from './components/password-reset/password-res
     NotFoundComponent,
     VerifyComponent,
     PasswordResetComponent,
+    BookCreateComponent,
   ],
   imports: [
     BrowserModule,

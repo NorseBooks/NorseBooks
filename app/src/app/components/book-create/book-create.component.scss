@@ -1,0 +1,22 @@
+@use '../../../globals';
+
+.book-create {
+  background-image: url('/assets/img/backgrounds/book-create.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .book-create-card {
+    max-width: 600px;
+    margin: auto;
+
+    .book-create-line-1 > *,
+    .book-create-line-2 > *,
+    .book-create-line-3 > *,
+    .book-create-line-4 > * {
+      @include globals.col(6, 6, 12);
+    }
+  }
+}
