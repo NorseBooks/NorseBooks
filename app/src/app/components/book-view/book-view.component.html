@@ -11,7 +11,12 @@
         </div>
         <div class="book-view-details">
           <div class="book-view-info">
-            <h3 class="book-price">{{ bookInfo.price | currency }}</h3>
+            <div>
+              <span class="book-price">{{ bookInfo.price | currency }} </span>
+              <span>
+                from {{ userInfo.firstname }} {{ userInfo.lastname }}</span
+              >
+            </div>
             <ul class="inline-list details-list">
               <li>
                 {{ bookDepartment

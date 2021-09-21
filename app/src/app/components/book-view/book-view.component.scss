@@ -34,10 +34,13 @@
         .book-view-info {
           text-align: left;
 
+          & > * {
+            margin-bottom: 12px;
+          }
+
           .book-price {
             font-size: 1.25em;
             font-weight: 500;
-            margin-bottom: 12px;
           }
 
           .details-list {
