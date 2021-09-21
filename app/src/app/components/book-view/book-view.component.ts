@@ -8,7 +8,7 @@ import { DepartmentService } from '../../services/department/department.service'
 import { BookConditionService } from '../../services/book-condition/book-condition.service';
 import { BookService } from '../../services/book/book.service';
 import { ReportService } from '../../services/report/report.service';
-import { OtherUserInfo } from 'src/app/services/user/user.interface';
+import { OtherUserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
 import { inputAppearance, copyMessage } from '../../globals';
 
