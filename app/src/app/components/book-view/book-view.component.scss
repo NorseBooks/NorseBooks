@@ -1,0 +1,75 @@
+@use '../../../globals';
+
+.book-view {
+  background-image: url('/assets/img/backgrounds/book-view.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .book-view-card {
+    max-width: 800px;
+    margin: auto;
+
+    .book-view-content {
+      display: flex;
+      flex-direction: row;
+
+      .book-view-image {
+        flex: 0 0 auto;
+        max-width: 200px;
+        max-height: 300px;
+        padding-right: 2rem;
+
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+
+      .book-view-details {
+        flex: 1 1 auto;
+
+        .book-view-info {
+          text-align: left;
+
+          .book-price {
+            font-size: 1.25em;
+            font-weight: 500;
+            margin-bottom: 12px;
+          }
+
+          .details-list {
+            text-align: left;
+            margin-top: 0;
+          }
+
+          .isbns {
+            font-style: italic;
+          }
+        }
+      }
+
+      @media (max-width: 576px) {
+        flex-wrap: wrap;
+
+        .book-view-image {
+          margin: auto;
+          margin-bottom: 16px;
+          padding-right: 0;
+        }
+
+        .book-view-details {
+          .book-view-info {
+            text-align: center;
+
+            .details-list {
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}

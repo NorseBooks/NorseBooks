@@ -1,0 +1,139 @@
+<div *ngIf="done; else loading" class="book-view">
+  <mat-card class="book-view-card">
+    <mat-card-title class="text-center">{{ bookInfo.title }}</mat-card-title>
+    <mat-card-subtitle class="text-center"
+      >By {{ bookInfo.author }}</mat-card-subtitle
+    >
+    <mat-card-content>
+      <div class="book-view-content">
+        <div class="book-view-image">
+          <img src="/image/{{ bookInfo.imageID }}" />
+        </div>
+        <div class="book-view-details">
+          <div class="book-view-info">
+            <h3 class="book-price">{{ bookInfo.price | currency }}</h3>
+            <ul class="inline-list details-list">
+              <li>
+                {{ bookDepartment
+                }}<span *ngIf="bookInfo.courseNumber">
+                  {{ bookInfo.courseNumber }}</span
+                >
+              </li>
+              <li>In {{ bookCondition | lowercase }} condition</li>
+              <li>Posted on {{ bookInfo.listTime | date }}</li>
+            </ul>
+            <p class="isbns">
+              <span *ngIf="bookInfo.ISBN10"
+                >ISBN-10: {{ bookInfo.ISBN10 }}</span
+              >
+              <br *ngIf="bookInfo.ISBN10 && bookInfo.ISBN13" />
+              <span *ngIf="bookInfo.ISBN13"
+                >ISBN-13: {{ bookInfo.ISBN13 }}</span
+              >
+            </p>
+          </div>
+          <p class="text-justified">{{ bookInfo.description }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div *ngIf="loggedIn; else notLoggedInActions">
+        <a
+          mat-icon-button
+          routerLink="/message/{{ bookInfo.userID }}"
+          matTooltip="Contact book owner"
+        >
+          <mat-icon>chat</mat-icon>
+        </a>
+        <button
+          mat-icon-button
+          (click)="copyBookLink()"
+          matTooltip="Copy link to book"
+        >
+          <mat-icon>link</mat-icon>
+        </button>
+        <button
+          *ngIf="!reportedBook && !reportedRecently; else cannotReportButton"
+          mat-icon-button
+          (click)="openReportBookDialog()"
+          matTooltip="Report book"
+          [disabled]="reportingBook"
+        >
+          <mat-icon>flag</mat-icon>
+        </button>
+      </div>
+    </mat-card-actions>
+    <div *ngIf="reportBookError" class="form-error">
+      <span>{{ reportBookError }}</span>
+    </div>
+  </mat-card>
+
+  <nb-dialog
+    #reportReasonDialog
+    title="Report reason"
+    doneButtonLabel="Submit report"
+    width="500px"
+    (close)="reportBook($event)"
+  ></nb-dialog>
+</div>
+
+<ng-template #notLoggedInActions>
+  <span matTooltip="Sign in to contact book owner">
+    <button mat-icon-button disabled>
+      <mat-icon>chat</mat-icon>
+    </button>
+  </span>
+  <button
+    mat-icon-button
+    (click)="copyBookLink()"
+    matTooltip="Copy link to book"
+  >
+    <mat-icon>link</mat-icon>
+  </button>
+  <span matTooltip="Sign in to report book">
+    <button mat-icon-button disabled>
+      <mat-icon>flag</mat-icon>
+    </button>
+  </span>
+</ng-template>
+
+<ng-template #cannotReportButton>
+  <span *ngIf="reportedBook" matTooltip="You have already reported this book">
+    <button mat-icon-button disabled>
+      <mat-icon>flag</mat-icon>
+    </button>
+  </span>
+  <span
+    *ngIf="!reportedBook && reportedRecently"
+    matTooltip="You have recently reported another book"
+  >
+    <button
+      mat-icon-button
+      matTooltip="You have reported a book recently"
+      disabled
+    >
+      <mat-icon>flag</mat-icon>
+    </button>
+  </span>
+</ng-template>
+
+<ng-template #reportReasonTemplate>
+  <mat-form-field class="max-width" [appearance]="inputAppearance">
+    <mat-label>Reason</mat-label>
+    <input
+      matInput
+      type="text"
+      id="reason"
+      name="reason"
+      [maxLength]="reportReasonMaxLength"
+      required
+      [(ngModel)]="reason"
+    />
+  </mat-form-field>
+</ng-template>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>
