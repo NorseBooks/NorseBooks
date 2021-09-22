@@ -15,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -50,6 +51,7 @@ import { PasswordResetComponent } from './components/password-reset/password-res
 import { BookCreateComponent } from './components/book-create/book-create.component';
 import { BookViewComponent } from './components/book-view/book-view.component';
 import { Dialog, DialogComponent } from './components/dialog/dialog.component';
+import { BookListComponent } from './components/book-list/book-list.component';
 
 /**
  * The app module.
@@ -72,6 +74,7 @@ import { Dialog, DialogComponent } from './components/dialog/dialog.component';
     BookViewComponent,
     Dialog,
     DialogComponent,
+    BookListComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,6 +89,7 @@ import { Dialog, DialogComponent } from './components/dialog/dialog.component';
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,

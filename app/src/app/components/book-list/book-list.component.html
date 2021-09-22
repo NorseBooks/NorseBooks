@@ -1,0 +1,36 @@
+<div class="book-list">
+  <mat-paginator
+    color="primary"
+    [length]="books.length"
+    [pageSize]="24"
+    [pageSizeOptions]="pageSizeOptions"
+    showFirstLastButtons
+    (page)="onPageChange($event)"
+  ></mat-paginator>
+  <div class="book-list-paginated">
+    <a
+      *ngFor="let book of visibleBooks"
+      routerLink="/book/{{ book.id }}"
+      class="standard-link"
+    >
+      <mat-card class="book-card">
+        <mat-card-content class="book-card-content">
+          <div class="book-image">
+            <img src="/image/{{ book.imageID }}" />
+          </div>
+          <div class="book-details">
+            <div class="book-details-header">
+              <h2 class="book-title">{{ book.title }}</h2>
+              <span class="book-price">{{ book.price | currency }}</span>
+            </div>
+            <p class="book-author">By {{ book.author }}</p>
+            <p class="book-department">
+              {{ departments[book.departmentID]
+              }}<span *ngIf="book.courseNumber"> {{ book.courseNumber }}</span>
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </a>
+  </div>
+</div>

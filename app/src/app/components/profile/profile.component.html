@@ -136,21 +136,21 @@
       <div>
         <h2>Your books</h2>
         <div *ngIf="userBooks.length > 0; else noUserBooks">
-          <!-- <nb-book *ngFor="let book of userBooks"></nb-book> -->
+          <nb-book-list [books]="userBooks"></nb-book-list>
         </div>
       </div>
       <mat-divider></mat-divider>
       <div>
         <h2>Recommended for you</h2>
         <div *ngIf="recommended.length > 0; else noRecommended">
-          <!-- <nb-book *ngFor="let book of recommended"></nb-book> -->
+          <nb-book-list [books]="recommended"></nb-book-list>
         </div>
       </div>
       <mat-divider></mat-divider>
       <div>
         <h2>Reported books</h2>
         <div *ngIf="reported.length > 0; else noReported">
-          <!-- <nb-book *ngFor="let book of reported"></nb-book> -->
+          <nb-book-list [books]="reported"></nb-book-list>
         </div>
       </div>
     </div>
