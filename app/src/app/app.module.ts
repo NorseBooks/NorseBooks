@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,6 +49,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { VerifyComponent } from './components/verify/verify.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { BookCreateComponent } from './components/book-create/book-create.component';
+import { BookViewComponent } from './components/book-view/book-view.component';
+import { Dialog, DialogComponent } from './components/dialog/dialog.component';
 import { BookListComponent } from './components/book-list/book-list.component';
 
 /**
@@ -68,6 +71,9 @@ import { BookListComponent } from './components/book-list/book-list.component';
     VerifyComponent,
     PasswordResetComponent,
     BookCreateComponent,
+    BookViewComponent,
+    Dialog,
+    DialogComponent,
     BookListComponent,
   ],
   imports: [
@@ -79,6 +85,7 @@ import { BookListComponent } from './components/book-list/book-list.component';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
