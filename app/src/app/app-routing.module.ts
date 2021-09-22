@@ -9,6 +9,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { VerifyComponent } from './components/verify/verify.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { BookCreateComponent } from './components/book-create/book-create.component';
+import { BookViewComponent } from './components/book-view/book-view.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
 /**
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'password-reset', component: PasswordResetComponent },
   { path: 'password-reset/:resetID', component: PasswordResetComponent },
   { path: 'book', component: BookCreateComponent },
+  { path: 'book/:bookID', component: BookViewComponent },
   { path: '**', component: NotFoundComponent },
 ];
 
