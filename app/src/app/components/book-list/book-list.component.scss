@@ -1,6 +1,7 @@
 @use '../../../globals';
 
 $card-size: 250px;
+$card-height: 400px;
 
 .book-list {
   .book-list-paginated {
@@ -14,6 +15,7 @@ $card-size: 250px;
       .book-card {
         padding: 0;
         overflow: hidden;
+        height: $card-height;
         @include globals.hover-zoom();
 
         .book-card-content {
