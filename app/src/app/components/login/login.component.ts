@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   public passwordMaxLength = 1;
   public submittingLogin = false;
   public loginError = '';
+  public hidePassword = true;
   public readonly inputAppearance = inputAppearance;
 
   constructor(
