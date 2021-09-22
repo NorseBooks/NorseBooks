@@ -3,59 +3,61 @@
 $card-size: 250px;
 
 .book-list {
-  @include globals.flex-grid($card-size, 2.5rem);
+  .book-list-paginated {
+    @include globals.flex-grid($card-size, 2.5rem);
 
-  a {
-    &:hover {
-      text-decoration: none !important;
-    }
+    a {
+      &:hover {
+        text-decoration: none;
+      }
 
-    .book-card {
-      padding: 0;
-      overflow: hidden;
-      @include globals.hover-zoom();
-
-      .book-card-content {
+      .book-card {
         padding: 0;
+        overflow: hidden;
+        @include globals.hover-zoom();
 
-        .book-image {
-          width: 100%;
-          height: $card-size * 0.8;
+        .book-card-content {
+          padding: 0;
 
-          img {
+          .book-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-          }
-        }
+            height: $card-size * 0.8;
 
-        .book-details {
-          padding: 1rem;
-
-          .book-details-header {
-            display: flex;
-            flex-direction: row;
-            gap: 8px;
-
-            .book-title {
-              flex: 1 1 auto;
-              margin-bottom: 12px;
-              @include globals.line-cutoff(3);
-            }
-
-            .book-price {
-              flex: 0 0 auto;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              object-position: center;
             }
           }
 
-          .book-author {
-            @include globals.line-cutoff(1);
-          }
+          .book-details {
+            padding: 1rem;
 
-          .book-department {
-            font-style: italic;
-            margin-bottom: 6px;
+            .book-details-header {
+              display: flex;
+              flex-direction: row;
+              gap: 8px;
+
+              .book-title {
+                flex: 1 1 auto;
+                margin-bottom: 12px;
+                @include globals.line-cutoff(3);
+              }
+
+              .book-price {
+                flex: 0 0 auto;
+              }
+            }
+
+            .book-author {
+              @include globals.line-cutoff(1);
+            }
+
+            .book-department {
+              font-style: italic;
+              margin-bottom: 6px;
+            }
           }
         }
       }
