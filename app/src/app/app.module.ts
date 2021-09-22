@@ -47,6 +47,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { VerifyComponent } from './components/verify/verify.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { BookCreateComponent } from './components/book-create/book-create.component';
+import { BookListComponent } from './components/book-list/book-list.component';
 
 /**
  * The app module.
@@ -66,6 +67,7 @@ import { BookCreateComponent } from './components/book-create/book-create.compon
     VerifyComponent,
     PasswordResetComponent,
     BookCreateComponent,
+    BookListComponent,
   ],
   imports: [
     BrowserModule,
