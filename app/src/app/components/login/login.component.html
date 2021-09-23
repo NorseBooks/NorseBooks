@@ -11,7 +11,7 @@
                   [appearance]="inputAppearance"
                   class="max-width"
                 >
-                  <mat-label>Email</mat-label>
+                  <mat-label>Norse email</mat-label>
                   <input
                     matInput
                     type="text"
@@ -21,6 +21,7 @@
                     required
                     ngModel
                   />
+                  <span matSuffix>@luther.edu</span>
                 </mat-form-field>
               </div>
             </div>
@@ -35,13 +36,23 @@
                   <mat-label>Password</mat-label>
                   <input
                     matInput
-                    type="password"
+                    [type]="hidePassword ? 'password' : 'text'"
                     id="password"
                     name="password"
                     [maxLength]="passwordMaxLength"
                     required
                     ngModel
                   />
+                  <button
+                    mat-icon-button
+                    type="button"
+                    matSuffix
+                    (click)="hidePassword = !hidePassword"
+                  >
+                    <mat-icon>{{
+                      hidePassword ? 'visibility_off' : 'visibility'
+                    }}</mat-icon>
+                  </button>
                 </mat-form-field>
               </div>
             </div>

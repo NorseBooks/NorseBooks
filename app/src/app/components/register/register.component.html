@@ -57,7 +57,7 @@
                   [appearance]="inputAppearance"
                   class="max-width"
                 >
-                  <mat-label>Norse email address</mat-label>
+                  <mat-label>Norse email</mat-label>
                   <input
                     matInput
                     type="text"
@@ -67,6 +67,7 @@
                     required
                     ngModel
                   />
+                  <span matSuffix>@luther.edu</span>
                 </mat-form-field>
               </div>
             </div>
@@ -81,13 +82,23 @@
                   <mat-label>Password</mat-label>
                   <input
                     matInput
-                    type="password"
+                    [type]="hidePassword ? 'password' : 'text'"
                     id="password"
                     name="password"
                     [maxLength]="passwordMaxLength"
                     required
                     ngModel
                   />
+                  <button
+                    mat-icon-button
+                    type="button"
+                    matSuffix
+                    (click)="hidePassword = !hidePassword"
+                  >
+                    <mat-icon>{{
+                      hidePassword ? 'visibility_off' : 'visibility'
+                    }}</mat-icon>
+                  </button>
                 </mat-form-field>
               </div>
             </div>
@@ -100,13 +111,23 @@
                   <mat-label>Confirm password</mat-label>
                   <input
                     matInput
-                    type="password"
+                    [type]="hideConfirmPassword ? 'password' : 'text'"
                     id="confirmPassword"
                     name="confirmPassword"
                     [maxLength]="passwordMaxLength"
                     required
                     ngModel
                   />
+                  <button
+                    mat-icon-button
+                    type="button"
+                    matSuffix
+                    (click)="hideConfirmPassword = !hideConfirmPassword"
+                  >
+                    <mat-icon>{{
+                      hideConfirmPassword ? 'visibility_off' : 'visibility'
+                    }}</mat-icon>
+                  </button>
                 </mat-form-field>
               </div>
             </div>

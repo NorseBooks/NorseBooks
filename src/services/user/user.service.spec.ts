@@ -50,6 +50,18 @@ describe('UserService', () => {
     expect(user1).toHaveProperty('joinTime');
     expect(user1).toHaveProperty('lastLoginTime', null);
 
+    // create without email domain
+    const email2 = 'luthma02';
+    const user2 = await userService.createUser(
+      firstname,
+      lastname,
+      email2,
+      password,
+    );
+    expect(user2).toBeDefined();
+    expect(user2).toHaveProperty('id');
+    expect(user2).toHaveProperty('email', email2 + '@luther.edu');
+
     // create invalid
     await expect(
       userService.createUser('', lastname, email, password),
@@ -66,6 +78,22 @@ describe('UserService', () => {
     await expect(
       userService.createUser(firstname, lastname, email, password),
     ).rejects.toThrow(ServiceException);
+    await expect(
+      userService.createUser(
+        firstname,
+        lastname,
+        email.replace('@luther.edu', ''),
+        password,
+      ),
+    ).rejects.toThrow(ServiceException);
+    await expect(
+      userService.createUser(
+        firstname,
+        lastname,
+        'luthma01@gmail.com',
+        password,
+      ),
+    ).rejects.toThrow(ServiceException);
 
     // check existence
     const userExists1 = await userService.userExists(user1.id);
@@ -76,14 +104,14 @@ describe('UserService', () => {
     expect(userExists2).toBe(true);
 
     // get
-    const user2 = await userService.getUser(user1.id);
-    expect(user2).toBeDefined();
-    expect(user2).toEqual(user1);
-
-    // get by email
-    const user3 = await userService.getUserByEmail(email);
+    const user3 = await userService.getUser(user1.id);
     expect(user3).toBeDefined();
     expect(user3).toEqual(user1);
+
+    // get by email
+    const user4 = await userService.getUserByEmail(email);
+    expect(user4).toBeDefined();
+    expect(user4).toEqual(user1);
     await expect(userService.getUserByEmail('')).rejects.toThrow(
       ServiceException,
     );
@@ -103,6 +131,9 @@ describe('UserService', () => {
     await expect(userService.getUser(user1.id)).rejects.toThrow(
       ServiceException,
     );
+    await userService.deleteUser(user2.id);
+    const userExists4 = await userService.userExists(user2.id);
+    expect(userExists4).toBe(false);
   });
 
   it('should create, set password/verified/image, delete image, and delete a user', async () => {
