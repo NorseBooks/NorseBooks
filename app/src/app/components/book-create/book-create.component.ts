@@ -66,6 +66,13 @@ export class BookCreateComponent implements OnInit {
       'BOOK_DESCRIPTION_MAX_LENGTH',
     );
     this.loggedIn = this.userService.loggedIn();
+
+    if (!this.loggedIn) {
+      await this.router.navigate(['unauthorized'], {
+        queryParams: { after: 'book' },
+      });
+    }
+
     this.departments = await this.departmentService.getDepartments();
     this.bookConditions = await this.bookConditionService.getBookConditions();
 
