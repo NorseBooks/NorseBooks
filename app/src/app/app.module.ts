@@ -52,6 +52,7 @@ import { BookCreateComponent } from './components/book-create/book-create.compon
 import { BookViewComponent } from './components/book-view/book-view.component';
 import { Dialog, DialogComponent } from './components/dialog/dialog.component';
 import { BookListComponent } from './components/book-list/book-list.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 
 /**
  * The app module.
@@ -75,6 +76,7 @@ import { BookListComponent } from './components/book-list/book-list.component';
     Dialog,
     DialogComponent,
     BookListComponent,
+    UnauthorizedComponent,
   ],
   imports: [
     BrowserModule,
