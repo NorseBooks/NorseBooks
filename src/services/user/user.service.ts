@@ -70,34 +70,41 @@ export class UserService {
         'USER_PASSWORD_MAX_LENGTH',
       );
 
+    const emailAddressWithoutDomain = email.replace('@luther.edu', '');
+
     if (firstname.length > 0 && firstname.length <= userNameMaxLength) {
       if (lastname.length > 0 && lastname.length <= userNameMaxLength) {
         if (
-          email.length >= userEmailMinLength &&
-          email.length <= userEmailMaxLength
+          emailAddressWithoutDomain.length >= userEmailMinLength &&
+          emailAddressWithoutDomain.length <= userEmailMaxLength
         ) {
-          if (
-            password.length >= userPasswordMinLength &&
-            password.length <= userPasswordMaxLength
-          ) {
-            const emailExists = await this.userExistsByEmail(email);
+          if (!emailAddressWithoutDomain.includes('@')) {
+            if (
+              password.length >= userPasswordMinLength &&
+              password.length <= userPasswordMaxLength
+            ) {
+              const emailAddress = `${emailAddressWithoutDomain}@luther.edu`;
+              const emailExists = await this.userExistsByEmail(emailAddress);
 
-            if (!emailExists) {
-              const passwordHash = await this.hashPassword(password);
+              if (!emailExists) {
+                const passwordHash = await this.hashPassword(password);
 
-              return this.dbService.create<NBUser>(userTableName, {
-                firstname,
-                lastname,
-                email,
-                passwordHash,
-              });
+                return this.dbService.create<NBUser>(userTableName, {
+                  firstname,
+                  lastname,
+                  email: emailAddress,
+                  passwordHash,
+                });
+              } else {
+                throw new ServiceException('Email is already in use');
+              }
             } else {
-              throw new ServiceException('Email is already in use');
+              throw new ServiceException(
+                `Password must be between ${userPasswordMinLength} and ${userPasswordMaxLength} characters`,
+              );
             }
           } else {
-            throw new ServiceException(
-              `Password must be between ${userPasswordMinLength} and ${userPasswordMaxLength} characters`,
-            );
+            throw new ServiceException('Please use Norse email address');
           }
         } else {
           throw new ServiceException(
