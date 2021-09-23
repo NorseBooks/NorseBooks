@@ -1,0 +1,17 @@
+<div class="unauthorized">
+  <mat-card class="unauthorized-card">
+    <mat-card-title class="text-center">Unauthorized</mat-card-title>
+    <mat-card-content>
+      <p class="text-justified">
+        You must be signed in to {{ unauthorizedAction }}.
+      </p>
+      <a
+        mat-raised-button
+        color="primary"
+        routerLink="/login"
+        [queryParams]="{ after: after }"
+        >Sign in</a
+      >
+    </mat-card-content>
+  </mat-card>
+</div>

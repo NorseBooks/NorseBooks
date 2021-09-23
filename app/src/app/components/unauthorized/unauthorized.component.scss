@@ -1,0 +1,15 @@
+@use '../../../globals';
+
+.unauthorized {
+  background-image: url('/assets/img/backgrounds/unauthorized.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .unauthorized-card {
+    max-width: 400px;
+    margin: auto;
+  }
+}
