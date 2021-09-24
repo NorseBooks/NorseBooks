@@ -84,6 +84,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 @mixin hover-zoom($zoom-amount: 1.05) {
