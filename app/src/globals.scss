@@ -232,6 +232,11 @@ mat-card {
   }
 }
 
+mat-dialog-container {
+  box-shadow: 0 0 16px #1e1e1e !important;
+  border-radius: 12px !important;
+}
+
 .inline-list {
   padding-inline-start: 0;
   text-align: center;
