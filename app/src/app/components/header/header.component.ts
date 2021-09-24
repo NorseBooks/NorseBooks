@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, RoutesRecognized } from '@angular/router';
+import { filter, pairwise } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 
 /**
@@ -12,8 +14,12 @@ import { UserService } from '../../services/user/user.service';
 export class HeaderComponent implements OnInit {
   public loggedIn = false;
   public admin = false;
+  public loginLogoutAfter = window.location.pathname || '/';
 
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly router: Router,
+    private readonly userService: UserService,
+  ) {}
 
   public async ngOnInit(): Promise<void> {
     this.loggedIn = this.userService.loggedIn();
@@ -32,5 +38,14 @@ export class HeaderComponent implements OnInit {
       const userInfo = await this.userService.getUserInfo();
       this.admin = userInfo.admin;
     }
+
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof RoutesRecognized),
+        pairwise(),
+      )
+      .subscribe((events) => {
+        this.loginLogoutAfter = (events[1] as any)?.urlAfterRedirects || '/';
+      });
   }
 }
