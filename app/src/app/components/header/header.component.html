@@ -58,4 +58,45 @@
       <mat-icon>login</mat-icon>
     </a>
   </div>
+  <div class="header-icons-small">
+    <button mat-icon-button [matMenuTriggerFor]="headerMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #headerMenu="matMenu">
+      <a mat-menu-item routerLink="/help">
+        <mat-icon>help_outline</mat-icon>
+        <span>Help</span>
+      </a>
+      <a *ngIf="admin" mat-menu-item routerLink="/admin">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Admin control panel</span>
+      </a>
+      <a *ngIf="loggedIn" mat-menu-item routerLink="/book">
+        <mat-icon>add</mat-icon>
+        <span>New listing</span>
+      </a>
+      <a *ngIf="loggedIn" mat-menu-item routerLink="/profile">
+        <mat-icon>account_circle</mat-icon>
+        <span>Profile</span>
+      </a>
+      <a
+        *ngIf="loggedIn"
+        mat-menu-item
+        routerLink="/logout"
+        [queryParams]="{ after: loginLogoutAfter }"
+      >
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+      </a>
+      <a
+        *ngIf="!loggedIn"
+        mat-menu-item
+        routerLink="/login"
+        [queryParams]="{ after: loginLogoutAfter }"
+      >
+        <mat-icon>login</mat-icon>
+        <span>Sign in</span>
+      </a>
+    </mat-menu>
+  </div>
 </mat-toolbar>
