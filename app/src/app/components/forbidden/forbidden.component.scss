@@ -1,14 +1,14 @@
 @use '../../../globals';
 
-.not-found {
-  background-image: url('/assets/img/backgrounds/not-found.jpg');
+.forbidden {
+  background-image: url('/assets/img/backgrounds/forbidden.jpg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
   padding: 48px;
 
-  .not-found-card {
+  .forbidden-card {
     max-width: 400px;
     margin: auto;
   }

@@ -84,6 +84,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 @mixin hover-zoom($zoom-amount: 1.05) {
@@ -229,6 +230,11 @@ mat-card {
   mat-card-title {
     margin-bottom: 2rem;
   }
+}
+
+mat-dialog-container {
+  box-shadow: 0 0 16px #1e1e1e !important;
+  border-radius: 12px !important;
 }
 
 .inline-list {

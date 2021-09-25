@@ -43,6 +43,7 @@
       *ngIf="loggedIn"
       mat-icon-button
       routerLink="/logout"
+      [queryParams]="{ after: loginLogoutAfter }"
       matTooltip="Sign out"
     >
       <mat-icon>logout</mat-icon>
@@ -51,6 +52,7 @@
       *ngIf="!loggedIn"
       mat-icon-button
       routerLink="/login"
+      [queryParams]="{ after: loginLogoutAfter }"
       matTooltip="Sign in"
     >
       <mat-icon>login</mat-icon>

@@ -1,13 +1,14 @@
 @use '../../../globals';
 
 $card-size: 250px;
-$card-height: 400px;
 
 .book-list {
   .book-list-paginated {
     @include globals.flex-grid($card-size, 2.5rem);
 
-    a {
+    .book-link {
+      display: flex;
+
       &:hover {
         text-decoration: none;
       }
@@ -15,7 +16,7 @@ $card-height: 400px;
       .book-card {
         padding: 0;
         overflow: hidden;
-        height: $card-height;
+        width: 100%;
         @include globals.hover-zoom();
 
         .book-card-content {
