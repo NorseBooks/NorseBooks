@@ -83,12 +83,7 @@
               <div>
                 <mat-form-field [appearance]="inputAppearance">
                   <mat-label>Sort</mat-label>
-                  <mat-select
-                    id="sortID"
-                    name="sortID"
-                    [value]="defaultSortValue"
-                    ngModel
-                  >
+                  <mat-select id="sortID" name="sortID" [(ngModel)]="sortID">
                     <mat-option
                       *ngFor="let sortOption of sortOptions"
                       [value]="sortOption.id"

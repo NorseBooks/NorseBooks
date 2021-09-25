@@ -28,4 +28,18 @@
     flex-direction: row;
     align-items: center;
   }
+
+  .header-icons-small {
+    display: none;
+  }
+
+  @media (max-width: 576px) {
+    .header-icons {
+      display: none;
+    }
+
+    .header-icons-small {
+      display: block;
+    }
+  }
 }

@@ -1,4 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  Input,
+} from '@angular/core';
 import { DepartmentService } from '../../services/department/department.service';
 import { NBBook } from '../../services/book/book.interface';
 import { PageEvent } from '@angular/material/paginator';
@@ -18,8 +24,9 @@ interface DepartmentMap {
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnChanges {
   @Input() books: NBBook[] = [];
+  public currentPage = 0;
   public booksPerPage = 24;
   public pageSizeOptions = [3, 6, 12, 24, 48];
   public departments: DepartmentMap = {};
@@ -36,16 +43,30 @@ export class BookListComponent implements OnInit {
     this.visibleBooks = this.books.slice(0, this.booksPerPage);
   }
 
+  public async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    this.books = changes.books.currentValue;
+    this.selectPage(this.currentPage, this.booksPerPage);
+  }
+
+  /**
+   * Select a page.
+   *
+   * @param pageIndex The page number.
+   * @param pageSize The size of the page.
+   */
+  public selectPage(pageIndex: number, pageSize: number): void {
+    const startIndex = pageIndex * pageSize;
+    this.visibleBooks = this.books.slice(startIndex, startIndex + pageSize);
+    this.currentPage = pageIndex;
+    this.booksPerPage = pageSize;
+  }
+
   /**
    * Update the displayed books when the page changes.
    *
    * @param event The page change event.
    */
   public onPageChange(event: PageEvent): void {
-    const startIndex = event.pageIndex * event.pageSize;
-    this.visibleBooks = this.books.slice(
-      startIndex,
-      startIndex + event.pageSize,
-    );
+    this.selectPage(event.pageIndex, event.pageSize);
   }
 }
