@@ -83,12 +83,7 @@
               <div>
                 <mat-form-field [appearance]="inputAppearance">
                   <mat-label>Sort</mat-label>
-                  <mat-select
-                    id="sortID"
-                    name="sortID"
-                    [value]="defaultSortValue"
-                    ngModel
-                  >
+                  <mat-select id="sortID" name="sortID" [(ngModel)]="sortID">
                     <mat-option
                       *ngFor="let sortOption of sortOptions"
                       [value]="sortOption.id"
@@ -116,7 +111,7 @@
         *ngIf="searchResults.length > 0; else noSearchResults"
         class="search-results"
       >
-        <!-- <nb-book *ngFor="let book of searchResults"></nb-book> -->
+        <nb-book-list [books]="searchResults"></nb-book-list>
       </div>
     </div>
   </div>

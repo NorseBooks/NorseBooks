@@ -105,14 +105,12 @@ export class BookService {
         'BOOK_DESCRIPTION_MAX_LENGTH',
       );
 
-    const ISBN10 =
-      options.ISBN10 === undefined
-        ? undefined
-        : options.ISBN10.replace(/[- ]/g, '');
-    const ISBN13 =
-      options.ISBN13 === undefined
-        ? undefined
-        : options.ISBN13.replace(/[- ]/g, '');
+    const ISBN10 = !options.ISBN10
+      ? undefined
+      : options.ISBN10.replace(/[- ]/g, '');
+    const ISBN13 = !options.ISBN13
+      ? undefined
+      : options.ISBN13.replace(/[- ]/g, '');
 
     const userExists = await this.userService.userExists(options.userID);
 

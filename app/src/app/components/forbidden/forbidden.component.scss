@@ -1,0 +1,15 @@
+@use '../../../globals';
+
+.forbidden {
+  background-image: url('/assets/img/backgrounds/forbidden.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .forbidden-card {
+    max-width: 400px;
+    margin: auto;
+  }
+}

@@ -15,7 +15,6 @@ interface SearchBooksForm {
   query?: string;
   departmentID?: number;
   courseNumber?: number;
-  sortID: number;
 }
 
 /**
@@ -31,7 +30,7 @@ export class HomeComponent implements OnInit {
   public loggedIn = false;
   public submittingSearch = false;
   public searchError = '';
-  public defaultSortValue = -1;
+  public sortID = 0;
   public departments: NBDepartment[] = [];
   public sortOptions: NBSearchSort[] = [];
   public searchResults: NBBook[] = [];
@@ -50,7 +49,6 @@ export class HomeComponent implements OnInit {
     this.departments = await this.departmentService.getDepartments();
     this.sortOptions = await this.searchSortService.getSortOptions();
     this.searchResults = await this.bookService.searchBooks({}, 0);
-    this.defaultSortValue = 0;
 
     if (this.loggedIn) {
       try {
@@ -80,7 +78,7 @@ export class HomeComponent implements OnInit {
           departmentID: form.departmentID,
           courseNumber: form.courseNumber,
         },
-        form.sortID,
+        this.sortID,
       );
 
       this.searchError = '';

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { APIService } from '../api/api.service';
 import { UserInfo, OtherUserInfo } from './user.interface';
 import { NBBook } from '../book/book.interface';
-import { Subject } from 'rxjs';
 
 /**
  * User service.
@@ -11,7 +11,6 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private loggedInStorageName = 'loggedIn';
   public loggedInChange = new Subject<boolean>();
 
   constructor(private readonly apiService: APIService) {}
@@ -132,7 +131,7 @@ export class UserService {
    * @returns Whether or not the user is logged in.
    */
   public loggedIn(): boolean {
-    return localStorage.getItem(this.loggedInStorageName) === 'true';
+    return !!this.getCookie('sessionID');
   }
 
   /**
@@ -141,7 +140,27 @@ export class UserService {
    * @param loggedIn The logged in status of the user.
    */
   private setLoggedIn(loggedIn: boolean): void {
-    localStorage.setItem(this.loggedInStorageName, loggedIn.toString());
     this.loggedInChange.next(loggedIn);
+  }
+
+  /**
+   * Get a cookie.
+   *
+   * @param name The cookie name.
+   * @returns The cookie value.
+   */
+  private getCookie(name: string): string | null {
+    const cookies = document.cookie.split(';');
+    const cookieName = `${name}=`;
+
+    for (const cookie of cookies) {
+      const c = cookie.replace(/^\s+/g, '');
+
+      if (c.indexOf(cookieName) === 0) {
+        return c.substring(cookieName.length, c.length);
+      }
+    }
+
+    return null;
   }
 }

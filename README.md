@@ -16,10 +16,16 @@ The NorseBooks project seeks to provide Luther College students a place to buy a
 - [Prerequisites](#prerequisites)
 - [Cloning the Project](#cloning-the-project)
 - [Local Deployment](#local-deployment)
+- [Testing](#testing)
 - [Frontend](#frontend)
 - [Backend](#backend)
+- [Scripts](#scripts)
 - [Database](#database)
 - [Deployment](#deployment)
+- [Coverage](#coverage)
+- [Documentation](#documentation)
+- [Error Pages](#error-pages)
+- [GitHub Actions](#github-actions)
 - [License](#license)
 
 ### Prerequisites
@@ -62,6 +68,14 @@ $ heroku local web
 
 After the local deployment, the built application can be accessed at [localhost:3000](http://localhost:3000/).
 
+### Testing
+
+We primarily use [Jest](https://jestjs.io/) for automated testing. The tests can be run using NPM:
+
+```bash
+$ npm run test
+```
+
 ### Frontend
 
 For frontend, we are using [Angular](https://angular.io/) with [Material](https://material.angular.io/).
@@ -70,6 +84,34 @@ For frontend, we are using [Angular](https://angular.io/) with [Material](https:
 
 Our backend uses [Nest](https://nestjs.com/) to expose API endpoints for the frontend to access.
 
+### Scripts
+
+The repository contains a number of Python scripts found in the `scripts` directory. Scripts can be called directly or using one of either a bash or batch script for convenience.
+
+Bash:
+
+```bash
+script.sh [script name] [script arguments...]
+```
+
+Batch:
+
+```batch
+script [script name] [script arguments...]
+```
+
+#### Environment Variables
+
+The `env.py` script provides useful functions for acquiring variables from the environment and from `.env` files. It is not meant to be invoked directly, but rather to be used from other scripts.
+
+#### Admin
+
+The `admin.py` script can be used to give and revoke a user's admin privileges, and to list the current admins. Run with the `-h` flag for usage help.
+
+#### Backup
+
+The `backup.py` script is used to create backups of the database in JSON format. Run with the `-h` flag for usage help.
+
 ### Database
 
 We are using a [PostgreSQL](https://www.postgresql.org/) database, which is accessible from the application itself and via the Heroku CLI.
@@ -77,6 +119,28 @@ We are using a [PostgreSQL](https://www.postgresql.org/) database, which is acce
 ### Deployment
 
 The application is deployed to [Heroku](https://heroku.com/). It can be found at [nb-2.herokuapp.com](https://nb-2.herokuapp.com/).
+
+### Coverage
+
+The coverage numbers are shown above. A more detailed coverage report is hosted at [norsebooks.github.io/coverage](https://norsebooks.github.io/coverage/). The coverage report repository exists [here](https://github.com/NorseBooks/coverage). Coverage reports are generated automatically when the tests run.
+
+### Documentation
+
+The [TypeDoc](https://typedoc.org/) package is used to generate the project code documentation. It includes annotations for nearly every significant function, class, etc. Documentation can be generated manually with:
+
+```bash
+$ npm run document
+```
+
+The documentation is hosted at [norsebooks.github.io/docs](https://norsebooks.github.io/docs/). The documentation repository exists [here](https://github.com/NorseBooks/docs). The documentation is generated automatically when the tests run.
+
+### Error Pages
+
+The error pages are a fallback to account for scenarios in which the application goes down. If the application experiences a fatal error and crashes, the error page will display. If the application is set to maintenance mode in the Heroku control panel, the maintenance page will display. The error pages repository exists [here](https://github.com/NorseBooks/error-pages/).
+
+### GitHub Actions
+
+GitHub Actions runs jobs automatically on any push or pull request to the `main` and `dev` branches. This includes running our automated tests, as well as generating coverage reports and documentation, which are pushed to their respective repositories.
 
 ## License
 

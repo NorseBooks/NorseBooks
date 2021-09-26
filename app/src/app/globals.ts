@@ -4,7 +4,7 @@ import { UserInfo } from './services/user/user.interface';
 /**
  * The appearance of input elements.
  */
-export const inputAppearance: MatFormFieldAppearance = 'outline';
+export const inputAppearance: MatFormFieldAppearance = 'fill';
 
 /**
  * The accepted image types.
@@ -50,4 +50,23 @@ export function updateImages(): void {
       console.log(image.src);
     }
   }
+}
+
+/**
+ * Copy text to the clipboard.
+ *
+ * @param val The text to copy.
+ */
+export function copyMessage(val: string): void {
+  const selBox = document.createElement('textarea');
+  selBox.style.position = 'fixed';
+  selBox.style.left = '0';
+  selBox.style.top = '0';
+  selBox.style.opacity = '0';
+  selBox.value = val;
+  document.body.appendChild(selBox);
+  selBox.focus();
+  selBox.select();
+  document.execCommand('copy');
+  document.body.removeChild(selBox);
 }

@@ -66,17 +66,24 @@ export class ProfileComponent implements OnInit {
     );
     this.loggedIn = this.userService.loggedIn();
 
-    if (this.loggedIn) {
-      try {
-        this.userInfo = await this.userService.getUserInfo();
-        this.userImageURL = getUserImageURL(this.userInfo);
-        this.userBooks = await this.userService.getCurrentBooks();
-        this.recommended = await this.userService.getRecommendations();
-        this.reported = await this.reportService.getUserReportedBooks();
-      } catch (err) {
-        await this.userService.logout();
-        this.loggedIn = false;
-      }
+    if (!this.loggedIn) {
+      await this.router.navigate(['unauthorized'], {
+        queryParams: { after: 'profile' },
+      });
+    }
+
+    try {
+      this.userInfo = await this.userService.getUserInfo();
+      this.userImageURL = getUserImageURL(this.userInfo);
+      this.userBooks = await this.userService.getCurrentBooks();
+      this.recommended = await this.userService.getRecommendations();
+      this.reported = await this.reportService.getUserReportedBooks();
+    } catch (err) {
+      await this.userService.logout();
+      this.loggedIn = false;
+      await this.router.navigate(['unauthorized'], {
+        queryParams: { after: 'profile' },
+      });
     }
 
     this.done = true;

@@ -10,10 +10,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -44,6 +47,14 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FileInputComponent } from './components/file-input/file-input.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { VerifyComponent } from './components/verify/verify.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { BookCreateComponent } from './components/book-create/book-create.component';
+import { BookViewComponent } from './components/book-view/book-view.component';
+import { Dialog, DialogComponent } from './components/dialog/dialog.component';
+import { BookListComponent } from './components/book-list/book-list.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 
 /**
  * The app module.
@@ -60,6 +71,15 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     ProfileComponent,
     FileInputComponent,
     NotFoundComponent,
+    VerifyComponent,
+    PasswordResetComponent,
+    BookCreateComponent,
+    BookViewComponent,
+    Dialog,
+    DialogComponent,
+    BookListComponent,
+    UnauthorizedComponent,
+    ForbiddenComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,9 +90,12 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatMenuModule,
+    MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,

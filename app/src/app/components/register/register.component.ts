@@ -33,6 +33,8 @@ export class RegisterComponent implements OnInit {
   public submittingRegister = false;
   public registerError = '';
   public registerSuccess = false;
+  public hidePassword = true;
+  public hideConfirmPassword = true;
   public readonly inputAppearance = inputAppearance;
 
   constructor(

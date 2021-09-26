@@ -1,174 +1,157 @@
 <div *ngIf="done; else loading" class="profile">
-  <div *ngIf="loggedIn; else notLoggedIn">
-    <div class="settings">
-      <div class="user-image-container">
-        <img
-          class="user-image"
-          id="user-avatar"
-          [src]="userImageURL"
-          alt="user image"
-        />
-      </div>
-      <mat-card class="user-details-card">
-        <mat-card-title class="text-center user-details-card-title"
-          >{{ userInfo.firstname }} {{ userInfo.lastname }}</mat-card-title
-        >
-        <mat-card-content>
-          <p class="user-email">{{ userInfo.email }}</p>
-          <p>Joined {{ userInfo.joinTime | date }}</p>
-          <ul class="inline-list">
-            <li>Listed {{ userInfo.numBooksListed }} books</li>
-            <li>Sold {{ userInfo.numBooksSold }} books</li>
-            <li>Made {{ userInfo.moneyMade | currency }}</li>
-          </ul>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="settings-card">
-        <mat-card-title class="text-center">Change your avatar</mat-card-title>
-        <mat-card-content>
-          <p class="text-justified">
-            You may choose an image to set as your user avatar.
-          </p>
-          <div class="vertical-align">
-            <nb-file-input
-              [acceptTypes]="acceptImageTypes"
-              (fileChange)="setUserImage($event)"
-              >Choose image</nb-file-input
-            >
-            <button mat-raised-button (click)="deleteUserImage()" class="ml">
-              Reset avatar
-            </button>
-          </div>
-          <div *ngIf="setImageError" class="form-error">
-            <span>{{ setImageError }}</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="settings-card">
-        <mat-card-title class="text-center"
-          >Change your password</mat-card-title
-        >
-        <mat-card-content>
-          <form
-            #setPasswordForm="ngForm"
-            (ngSubmit)="onSetPassword(setPasswordForm.value)"
+  <div class="settings">
+    <div class="user-image-container">
+      <img
+        class="user-image"
+        id="user-avatar"
+        [src]="userImageURL"
+        alt="user image"
+      />
+    </div>
+    <mat-card class="user-details-card">
+      <mat-card-title class="text-center user-details-card-title"
+        >{{ userInfo.firstname }} {{ userInfo.lastname }}</mat-card-title
+      >
+      <mat-card-content>
+        <p class="user-email">{{ userInfo.email }}</p>
+        <p>Joined {{ userInfo.joinTime | date }}</p>
+        <ul class="inline-list">
+          <li>Listed {{ userInfo.numBooksListed }} books</li>
+          <li>Sold {{ userInfo.numBooksSold }} books</li>
+          <li>Made {{ userInfo.moneyMade | currency }}</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="settings-card">
+      <mat-card-title class="text-center">Change your avatar</mat-card-title>
+      <mat-card-content>
+        <p class="text-justified">
+          You may choose an image to set as your user avatar.
+        </p>
+        <div class="vertical-align">
+          <nb-file-input
+            [acceptTypes]="acceptImageTypes"
+            (fileChange)="setUserImage($event)"
+            >Choose image</nb-file-input
           >
-            <mat-form-field [appearance]="inputAppearance" class="max-width">
-              <mat-label>New password</mat-label>
-              <input
-                matInput
-                [type]="hidePassword ? 'password' : 'text'"
-                id="password"
-                name="password"
-                [maxLength]="passwordMaxLength"
-                required
-                ngModel
-              />
-              <button
-                mat-icon-button
-                type="button"
-                matSuffix
-                (click)="hidePassword = !hidePassword"
-              >
-                <mat-icon>{{
-                  hidePassword ? 'visibility_off' : 'visibility'
-                }}</mat-icon>
-              </button>
-            </mat-form-field>
-            <mat-form-field [appearance]="inputAppearance" class="max-width">
-              <mat-label>Confirm new password</mat-label>
-              <input
-                matInput
-                [type]="hideConfirmPassword ? 'password' : 'text'"
-                id="confirmPassword"
-                name="confirmPassword"
-                [maxLength]="passwordMaxLength"
-                required
-                ngModel
-              />
-              <button
-                mat-icon-button
-                type="button"
-                matSuffix
-                (click)="hideConfirmPassword = !hideConfirmPassword"
-              >
-                <mat-icon>{{
-                  hideConfirmPassword ? 'visibility_off' : 'visibility'
-                }}</mat-icon>
-              </button>
-            </mat-form-field>
+          <button mat-raised-button (click)="deleteUserImage()" class="ml">
+            Reset avatar
+          </button>
+        </div>
+        <div *ngIf="setImageError" class="form-error">
+          <span>{{ setImageError }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="settings-card">
+      <mat-card-title class="text-center">Change your password</mat-card-title>
+      <mat-card-content>
+        <form
+          #setPasswordForm="ngForm"
+          (ngSubmit)="onSetPassword(setPasswordForm.value)"
+        >
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>New password</mat-label>
+            <input
+              matInput
+              [type]="hidePassword ? 'password' : 'text'"
+              id="password"
+              name="password"
+              [maxLength]="passwordMaxLength"
+              required
+              ngModel
+            />
             <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              [disabled]="submittingSetPasswordForm"
+              mat-icon-button
+              type="button"
+              matSuffix
+              (click)="hidePassword = !hidePassword"
             >
-              Change password
+              <mat-icon>{{
+                hidePassword ? 'visibility_off' : 'visibility'
+              }}</mat-icon>
             </button>
-            <div *ngIf="setPasswordError" class="form-error">
-              <span>{{ setPasswordError }}</span>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="settings-card">
-        <mat-card-title class="text-center">Sign out everywhere</mat-card-title>
-        <mat-card-content>
-          <p class="text-justified">
-            This will sign you out of your account everywhere, on all devices.
-          </p>
+          </mat-form-field>
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>Confirm new password</mat-label>
+            <input
+              matInput
+              [type]="hideConfirmPassword ? 'password' : 'text'"
+              id="confirmPassword"
+              name="confirmPassword"
+              [maxLength]="passwordMaxLength"
+              required
+              ngModel
+            />
+            <button
+              mat-icon-button
+              type="button"
+              matSuffix
+              (click)="hideConfirmPassword = !hideConfirmPassword"
+            >
+              <mat-icon>{{
+                hideConfirmPassword ? 'visibility_off' : 'visibility'
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
           <button
             mat-raised-button
             color="primary"
-            type="button"
-            (click)="logoutEverywhere()"
-            [disabled]="logoutEverywhereClicked"
+            type="submit"
+            [disabled]="submittingSetPasswordForm"
           >
-            Sign out everywhere
+            Change password
           </button>
-          <div *ngIf="logoutEverywhereError" class="form-error">
-            <span>{{ logoutEverywhereError }}</span>
+          <div *ngIf="setPasswordError" class="form-error">
+            <span>{{ setPasswordError }}</span>
           </div>
-        </mat-card-content>
-      </mat-card>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="settings-card">
+      <mat-card-title class="text-center">Sign out everywhere</mat-card-title>
+      <mat-card-content>
+        <p class="text-justified">
+          This will sign you out of your account everywhere, on all devices.
+        </p>
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="logoutEverywhere()"
+          [disabled]="logoutEverywhereClicked"
+        >
+          Sign out everywhere
+        </button>
+        <div *ngIf="logoutEverywhereError" class="form-error">
+          <span>{{ logoutEverywhereError }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="user-books">
+    <div>
+      <h2>Your books</h2>
+      <div *ngIf="userBooks.length > 0; else noUserBooks">
+        <nb-book-list [books]="userBooks"></nb-book-list>
+      </div>
     </div>
-    <div class="user-books">
-      <div>
-        <h2>Your books</h2>
-        <div *ngIf="userBooks.length > 0; else noUserBooks">
-          <!-- <nb-book *ngFor="let book of userBooks"></nb-book> -->
-        </div>
+    <mat-divider></mat-divider>
+    <div>
+      <h2>Recommended for you</h2>
+      <div *ngIf="recommended.length > 0; else noRecommended">
+        <nb-book-list [books]="recommended"></nb-book-list>
       </div>
-      <mat-divider></mat-divider>
-      <div>
-        <h2>Recommended for you</h2>
-        <div *ngIf="recommended.length > 0; else noRecommended">
-          <!-- <nb-book *ngFor="let book of recommended"></nb-book> -->
-        </div>
-      </div>
-      <mat-divider></mat-divider>
-      <div>
-        <h2>Reported books</h2>
-        <div *ngIf="reported.length > 0; else noReported">
-          <!-- <nb-book *ngFor="let book of reported"></nb-book> -->
-        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div>
+      <h2>Reported books</h2>
+      <div *ngIf="reported.length > 0; else noReported">
+        <nb-book-list [books]="reported"></nb-book-list>
       </div>
     </div>
   </div>
 </div>
-
-<ng-template #notLoggedIn>
-  <div class="padded text-center">
-    Please
-    <a
-      routerLink="/login"
-      [queryParams]="{ after: 'profile' }"
-      class="standard-link"
-      >sign in</a
-    >
-    to view your profile.
-  </div>
-</ng-template>
 
 <ng-template #noUserBooks
   >You do not have any books listed currently.</ng-template
