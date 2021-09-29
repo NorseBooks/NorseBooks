@@ -56,7 +56,7 @@ export class ReferralService {
           throw new ServiceException('Users cannot refer themselves');
         }
       } else {
-        throw new ServiceException('User has already been referred');
+        throw new ServiceException('A user has already referred');
       }
     } else {
       throw new ServiceException('User does not exist');
