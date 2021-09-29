@@ -101,13 +101,15 @@ export class BookController {
     @QueryString({ name: 'title', required: false }) title: string,
     @QueryString({ name: 'author', required: false }) author: string,
     @QueryString({ name: 'description', required: false }) description: string,
-    @QueryString({ name: 'ISBN10', required: false }) ISBN10: string,
-    @QueryString({ name: 'ISBN13', required: false }) ISBN13: string,
+    @QueryString({ name: 'ISBN10', required: false, parseNull: true })
+    ISBN10: string,
+    @QueryString({ name: 'ISBN13', required: false, parseNull: true })
+    ISBN13: string,
     @QueryString({ name: 'imageData', required: false, scope: 'body' })
     imageData: string,
     @QueryNumber({ name: 'departmentID', required: false })
     departmentID: number,
-    @QueryNumber({ name: 'courseNumber', required: false })
+    @QueryNumber({ name: 'courseNumber', required: false, parseNull: true })
     courseNumber: number,
     @QueryNumber({ name: 'price', required: false }) price: number,
     @QueryNumber({ name: 'conditionID', required: false }) conditionID: number,

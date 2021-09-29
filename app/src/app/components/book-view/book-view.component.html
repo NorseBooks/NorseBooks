@@ -7,7 +7,7 @@
     <mat-card-content>
       <div class="book-view-content">
         <div class="book-view-image">
-          <img src="/image/{{ bookInfo.imageID }}" />
+          <img src="/image/{{ bookInfo.imageID }}" id="book-image" />
         </div>
         <div class="book-view-details">
           <div class="book-view-info">
@@ -43,29 +43,31 @@
     </mat-card-content>
     <mat-card-actions>
       <div *ngIf="loggedIn; else notLoggedInActions">
-        <a
-          mat-icon-button
-          routerLink="/message/{{ bookInfo.userID }}"
-          matTooltip="Request to purchase"
-        >
-          <mat-icon>chat</mat-icon>
-        </a>
-        <button
-          mat-icon-button
-          (click)="copyBookLink()"
-          matTooltip="Copy link to book"
-        >
-          <mat-icon>link</mat-icon>
-        </button>
-        <button
-          *ngIf="!reportedBook && !reportedRecently; else cannotReportButton"
-          mat-icon-button
-          (click)="openReportBookDialog()"
-          matTooltip="Report book"
-          [disabled]="reportingBook"
-        >
-          <mat-icon>flag</mat-icon>
-        </button>
+        <div *ngIf="userInfo.id !== thisUserInfo.id; else bookCreatorActions">
+          <a
+            mat-icon-button
+            routerLink="/message/{{ bookInfo.userID }}"
+            matTooltip="Request to purchase"
+          >
+            <mat-icon>chat</mat-icon>
+          </a>
+          <button
+            mat-icon-button
+            (click)="copyBookLink()"
+            matTooltip="Copy link to book"
+          >
+            <mat-icon>link</mat-icon>
+          </button>
+          <button
+            *ngIf="!reportedBook && !reportedRecently; else cannotReportButton"
+            mat-icon-button
+            (click)="openReportBookDialog()"
+            matTooltip="Report book"
+            [disabled]="reportingBook"
+          >
+            <mat-icon>flag</mat-icon>
+          </button>
+        </div>
       </div>
     </mat-card-actions>
     <div *ngIf="reportBookError" class="form-error">
@@ -100,6 +102,23 @@
       <mat-icon>flag</mat-icon>
     </button>
   </span>
+</ng-template>
+
+<ng-template #bookCreatorActions>
+  <button
+    mat-icon-button
+    (click)="copyBookLink()"
+    matTooltip="Copy link to book"
+  >
+    <mat-icon>link</mat-icon>
+  </button>
+  <a
+    mat-icon-button
+    routerLink="/edit/{{ bookInfo.id }}"
+    matTooltip="Edit book"
+  >
+    <mat-icon>edit</mat-icon>
+  </a>
 </ng-template>
 
 <ng-template #cannotReportButton>

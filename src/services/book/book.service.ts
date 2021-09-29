@@ -39,11 +39,11 @@ interface EditBookOptions {
   title?: string;
   author?: string;
   description?: string;
-  ISBN10?: string;
-  ISBN13?: string;
+  ISBN10?: string | null;
+  ISBN13?: string | null;
   imageData?: string;
   departmentID?: number;
-  courseNumber?: number;
+  courseNumber?: number | null;
   price?: number;
   conditionID?: number;
 }
@@ -252,12 +252,12 @@ export class BookService {
       );
 
     const ISBN10 =
-      options.ISBN10 === undefined
-        ? undefined
+      options.ISBN10 === undefined || options.ISBN10 === null
+        ? options.ISBN10
         : options.ISBN10.replace(/[- ]/g, '');
     const ISBN13 =
-      options.ISBN13 === undefined
-        ? undefined
+      options.ISBN13 === undefined || options.ISBN13 === null
+        ? options.ISBN13
         : options.ISBN13.replace(/[- ]/g, '');
 
     const book = await this.getBook(bookID);
@@ -276,8 +276,12 @@ export class BookService {
           (options.description.length >= 1 &&
             options.description.length <= bookDescriptionMaxLength)
         ) {
-          if (ISBN10 === undefined || ISBN10.length === 10) {
-            if (ISBN13 === undefined || ISBN13.length === 13) {
+          if (ISBN10 === undefined || ISBN10 === null || ISBN10.length === 10) {
+            if (
+              ISBN13 === undefined ||
+              ISBN13 === null ||
+              ISBN13.length === 13
+            ) {
               const departmentExists =
                 options.departmentID === undefined
                   ? true
@@ -288,6 +292,7 @@ export class BookService {
               if (departmentExists) {
                 if (
                   options.courseNumber === undefined ||
+                  options.courseNumber === null ||
                   (options.courseNumber >= 101 && options.courseNumber <= 499)
                 ) {
                   if (

@@ -10,6 +10,7 @@ import { VerifyComponent } from './components/verify/verify.component';
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { BookCreateComponent } from './components/book-create/book-create.component';
 import { BookViewComponent } from './components/book-view/book-view.component';
+import { BookEditComponent } from './components/book-edit/book-edit.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'password-reset/:resetID', component: PasswordResetComponent },
   { path: 'book', component: BookCreateComponent },
   { path: 'book/:bookID', component: BookViewComponent },
+  { path: 'edit/:bookID', component: BookEditComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'forbidden', component: ForbiddenComponent },
   { path: '**', component: NotFoundComponent },

@@ -1,5 +1,6 @@
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { UserInfo } from './services/user/user.interface';
+import { NBBook } from './services/book/book.interface';
 
 /**
  * The appearance of input elements.
@@ -32,6 +33,16 @@ export function getUserImageURL(userInfo: UserInfo): string {
   } else {
     return `https://avatars.dicebear.com/api/jdenticon/${userInfo.id}.svg`;
   }
+}
+
+/**
+ * Get a book's image URL.
+ *
+ * @param bookInfo The book's details.
+ * @returns The book's image URL.
+ */
+export function getBookImageURL(bookInfo: NBBook): string {
+  return `/image/${bookInfo.imageID}?${new Date().getTime()}`;
 }
 
 /**

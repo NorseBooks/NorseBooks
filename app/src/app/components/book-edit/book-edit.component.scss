@@ -1,0 +1,22 @@
+@use '../../../globals';
+
+.book-edit {
+  background-image: url('/assets/img/backgrounds/book-edit.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .book-edit-card {
+    max-width: 600px;
+    margin: auto;
+
+    .book-edit-line-1 > *,
+    .book-edit-line-2 > *,
+    .book-edit-line-3 > *,
+    .book-edit-line-4 > * {
+      @include globals.col(6, 6, 12);
+    }
+  }
+}
