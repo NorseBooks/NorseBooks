@@ -15,7 +15,8 @@ import { QueryParameters, queryDefaults } from './parameter';
  */
 export const QueryString = createParamDecorator(
   (params: QueryParameters<string>, ctx: ExecutionContext) => {
-    const { name, required, defaultValue, scope } = queryDefaults(params);
+    const { name, required, defaultValue, scope, parseNull } =
+      queryDefaults(params);
 
     const request = ctx.switchToHttp().getRequest();
     const value =
@@ -33,6 +34,10 @@ export const QueryString = createParamDecorator(
       }
     }
 
-    return value;
+    if (parseNull && value === 'null') {
+      return null;
+    } else {
+      return value;
+    }
   },
 );
