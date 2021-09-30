@@ -40,8 +40,10 @@ export class FeedbackService {
    *
    * @returns The user feedback.
    */
-  public async getUserFeedback(): Promise<NBFeedback> {
-    return this.apiService.get<NBFeedback>('feedback/user-feedback');
+  public async getUserFeedback(): Promise<NBFeedback | undefined> {
+    return this.apiService.get<NBFeedback | undefined>(
+      'feedback/user-feedback',
+    );
   }
 
   /**

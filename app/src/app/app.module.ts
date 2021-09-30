@@ -57,6 +57,7 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { BookEditComponent } from './components/book-edit/book-edit.component';
 import { AboutComponent } from './components/about/about.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
 
 /**
  * The app module.
@@ -84,6 +85,7 @@ import { AboutComponent } from './components/about/about.component';
     ForbiddenComponent,
     BookEditComponent,
     AboutComponent,
+    FeedbackComponent,
   ],
   imports: [
     BrowserModule,

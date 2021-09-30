@@ -1,0 +1,64 @@
+<div *ngIf="done; else loading" class="feedback">
+  <mat-card class="feedback-card">
+    <mat-card-title class="text-center">Provide feedback</mat-card-title>
+    <mat-card-content>
+      <div *ngIf="canProvideFeedback; else cannotProvideFeedback">
+        <div *ngIf="!sentFeedback; else sentFeedbackSuccess">
+          <p class="text-justified">
+            Please provide any feedback you have regarding the site below.
+          </p>
+          <form
+            #sendFeedbackForm="ngForm"
+            (ngSubmit)="sendFeedback(sendFeedbackForm.value)"
+          >
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>Feedback</mat-label>
+              <textarea
+                matInput
+                type="text"
+                id="feedback"
+                name="feedback"
+                [maxLength]="feedbackMaxLength"
+                rows="4"
+                required
+                ngModel
+              >
+              </textarea>
+            </mat-form-field>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="submittingSendFeedback"
+            >
+              Send feedback
+            </button>
+            <div *ngIf="sendFeedbackError" class="form-error">
+              <span>{{ sendFeedbackError }}</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ng-template #cannotProvideFeedback>
+  <p class="text-justified">
+    You have recently sent us feedback. Once we review your feedback, you will
+    be able to provide more.
+  </p>
+</ng-template>
+
+<ng-template #sentFeedbackSuccess>
+  <p class="text-justified">
+    Success! We have received your feedback. If you have requested changes be
+    made to the site we will consider your request and may make the changes.
+  </p>
+</ng-template>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>
