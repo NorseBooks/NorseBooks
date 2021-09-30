@@ -12,6 +12,7 @@ import { BookCreateComponent } from './components/book-create/book-create.compon
 import { BookViewComponent } from './components/book-view/book-view.component';
 import { BookEditComponent } from './components/book-edit/book-edit.component';
 import { AboutComponent } from './components/about/about.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'book/:bookID', component: BookViewComponent },
   { path: 'edit/:bookID', component: BookEditComponent },
   { path: 'about', component: AboutComponent },
+  { path: 'feedback', component: FeedbackComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'forbidden', component: ForbiddenComponent },
   { path: '**', component: NotFoundComponent },
