@@ -56,6 +56,7 @@ import { BookListComponent } from './components/book-list/book-list.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { BookEditComponent } from './components/book-edit/book-edit.component';
+import { AboutComponent } from './components/about/about.component';
 
 /**
  * The app module.
@@ -82,6 +83,7 @@ import { BookEditComponent } from './components/book-edit/book-edit.component';
     UnauthorizedComponent,
     ForbiddenComponent,
     BookEditComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
