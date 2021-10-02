@@ -66,7 +66,10 @@ export class MessageComponent implements OnInit {
     this.unreadThreadUsers = [];
 
     for (let i = 0; i < this.threads.length; i++) {
-      if (this.threads[i].read) {
+      if (
+        this.threads[i].read ||
+        this.threads[i].fromUserID === this.thisUser.id
+      ) {
         this.readThreads.push(this.threads[i]);
         this.readThreadUsers.push(this.threadUsers[i]);
       } else {

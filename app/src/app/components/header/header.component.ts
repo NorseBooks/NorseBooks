@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { filter, pairwise } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
+import { MessageService } from '../../services/message/message.service';
+import { UserInfo } from '../../services/user/user.interface';
+import { NBMessage } from '../../services/message/message.interface';
 
 /**
  * The global site header.
@@ -12,13 +15,17 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  private readonly updateUnreadMessagesInterval = 60 * 1000;
   public loggedIn = false;
   public admin = false;
+  public thisUser!: UserInfo;
+  public unreadMessages: NBMessage[] = [];
   public loginLogoutAfter = window.location.pathname || '/';
 
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
+    private readonly messageService: MessageService,
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -35,9 +42,17 @@ export class HeaderComponent implements OnInit {
     });
 
     if (this.loggedIn) {
-      const userInfo = await this.userService.getUserInfo();
-      this.admin = userInfo.admin;
+      this.thisUser = await this.userService.getUserInfo();
+      this.admin = this.thisUser.admin;
+
+      await this.updateUnreadMessages();
     }
+
+    setInterval(() => {
+      if (this.loggedIn) {
+        this.updateUnreadMessages();
+      }
+    }, this.updateUnreadMessagesInterval);
 
     this.router.events
       .pipe(
@@ -47,5 +62,15 @@ export class HeaderComponent implements OnInit {
       .subscribe((events) => {
         this.loginLogoutAfter = (events[1] as any)?.urlAfterRedirects || '/';
       });
+  }
+
+  /**
+   * Update the user's unread messages.
+   */
+  public async updateUnreadMessages(): Promise<void> {
+    const threads = await this.messageService.getMessageThreads();
+    this.unreadMessages = threads.filter(
+      (message) => !message.read && message.fromUserID !== this.thisUser.id,
+    );
   }
 }
