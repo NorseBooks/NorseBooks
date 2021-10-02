@@ -58,6 +58,8 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { BookEditComponent } from './components/book-edit/book-edit.component';
 import { AboutComponent } from './components/about/about.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
+import { MessageComponent } from './components/message/message.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
 
 /**
  * The app module.
@@ -86,6 +88,8 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
     BookEditComponent,
     AboutComponent,
     FeedbackComponent,
+    MessageComponent,
+    AvatarComponent,
   ],
   imports: [
     BrowserModule,
