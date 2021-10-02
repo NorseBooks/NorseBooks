@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { MessageService } from '../../services/message/message.service';
-import { OtherUserInfo } from '../../services/user/user.interface';
+import { UserInfo, OtherUserInfo } from '../../services/user/user.interface';
 import { NBMessage } from '../../services/message/message.interface';
 
 /**
@@ -14,7 +14,9 @@ import { NBMessage } from '../../services/message/message.interface';
   styleUrls: ['./message.component.scss'],
 })
 export class MessageComponent implements OnInit {
+  private readonly updateThreadsInterval = 60 * 1000;
   public done = false;
+  public thisUser!: UserInfo;
   public threads: NBMessage[] = [];
   public threadUsers: OtherUserInfo[] = [];
   public readThreads: NBMessage[] = [];
@@ -35,17 +37,33 @@ export class MessageComponent implements OnInit {
       });
     }
 
-    const thisUser = await this.userService.getUserInfo();
+    this.thisUser = await this.userService.getUserInfo();
+
+    await this.updateThreads();
+    setInterval(() => this.updateThreads(), this.updateThreadsInterval);
+
+    this.done = true;
+  }
+
+  /**
+   * Update info on threads.
+   */
+  public async updateThreads(): Promise<void> {
     this.threads = await this.messageService.getMessageThreads();
     this.threadUsers = await Promise.all(
       this.threads.map((message) =>
         this.userService.getOtherUserInfo(
-          message.fromUserID === thisUser.id
+          message.fromUserID === this.thisUser.id
             ? message.toUserID
             : message.fromUserID,
         ),
       ),
     );
+
+    this.readThreads = [];
+    this.readThreadUsers = [];
+    this.unreadThreads = [];
+    this.unreadThreadUsers = [];
 
     for (let i = 0; i < this.threads.length; i++) {
       if (this.threads[i].read) {
@@ -56,7 +74,5 @@ export class MessageComponent implements OnInit {
         this.unreadThreadUsers.push(this.threadUsers[i]);
       }
     }
-
-    this.done = true;
   }
 }
