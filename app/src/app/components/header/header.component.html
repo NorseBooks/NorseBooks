@@ -98,6 +98,24 @@
         <span>Profile</span>
       </a>
       <a
+        *ngIf="loggedIn && unreadMessages.length === 0"
+        mat-menu-item
+        routerLink="/message"
+      >
+        <mat-icon>chat</mat-icon>
+        <span>Messages</span>
+      </a>
+      <a
+        *ngIf="loggedIn && unreadMessages.length > 0"
+        mat-menu-item
+        routerLink="/message"
+      >
+        <mat-icon [matBadge]="unreadMessages.length" matBadgeColor="warn"
+          >chat</mat-icon
+        >
+        <span>Messages</span>
+      </a>
+      <a
         *ngIf="loggedIn"
         mat-menu-item
         routerLink="/logout"
