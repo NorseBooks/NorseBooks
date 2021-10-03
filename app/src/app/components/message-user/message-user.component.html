@@ -1,5 +1,58 @@
 <div *ngIf="done; else loading" class="user-messages">
-  <pre>{{ messages | json }}</pre>
+  <div class="messages-header">
+    <div class="messages-back">
+      <a mat-icon-button routerLink="/message" matTooltip="Back to messages">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+    </div>
+    <div class="messages-user-avatar">
+      <nb-avatar [userInfo]="otherUser"></nb-avatar>
+    </div>
+  </div>
+  <div class="messages-body">
+    <div *ngFor="let message of messages" class="message-row">
+      <div
+        *ngIf="message.fromUserID === otherUserID"
+        class="message other-user-message"
+      >
+        <div class="message-body">
+          {{ message.content }}
+        </div>
+      </div>
+      <div
+        *ngIf="message.fromUserID !== otherUserID"
+        class="message this-user-message"
+      >
+        <div class="message-body">
+          {{ message.content }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="new-message">
+    <form #newMessageForm="ngForm" (ngSubmit)="onSendMessage()">
+      <mat-form-field [appearance]="inputAppearance" class="max-width">
+        <mat-label>Message</mat-label>
+        <input
+          matInput
+          type="text"
+          id="content"
+          name="content"
+          [maxLength]="messageContentMaxLength"
+          [(ngModel)]="messageContent"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="submit"
+          matTooltip="Send message"
+          [disabled]="submittingSendMessage"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </div>
 </div>
 
 <ng-template #loading>

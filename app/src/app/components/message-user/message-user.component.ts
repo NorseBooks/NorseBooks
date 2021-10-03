@@ -6,6 +6,7 @@ import { UserService } from '../../services/user/user.service';
 import { MessageService } from '../../services/message/message.service';
 import { OtherUserInfo } from '../../services/user/user.interface';
 import { NBMessage } from '../../services/message/message.interface';
+import { inputAppearance } from '../../globals';
 
 /**
  * The page to view and send messages to another user.
@@ -23,6 +24,7 @@ export class MessageUserComponent implements OnInit {
   public messages: NBMessage[] = [];
   public messageContent = '';
   public submittingSendMessage = false;
+  public readonly inputAppearance = inputAppearance;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -83,25 +85,26 @@ export class MessageUserComponent implements OnInit {
    * @param form The send message form.
    */
   public async onSendMessage(): Promise<void> {
-    this.submittingSendMessage = true;
+    if (this.messageContent.length > 0) {
+      this.submittingSendMessage = true;
 
-    try {
-      await this.messageService.sendMessage(
-        this.otherUserID,
-        this.messageContent,
-      );
-      await this.updateMessages();
-      this.messageContent = '';
-    } catch (err: any) {
-      this.snackBar.open('Failed to send message', undefined, {
-        duration: 3000,
-        panelClass: 'alert-panel-center',
-      });
+      try {
+        const content = this.messageContent;
+        this.messageContent = '';
 
-      console.error(err);
+        await this.messageService.sendMessage(this.otherUserID, content);
+        await this.updateMessages();
+      } catch (err: any) {
+        this.snackBar.open('Failed to send message', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        console.error(err);
+      }
+
+      this.submittingSendMessage = false;
     }
-
-    this.submittingSendMessage = false;
   }
 
   /**
