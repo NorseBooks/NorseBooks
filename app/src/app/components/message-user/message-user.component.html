@@ -1,0 +1,9 @@
+<div *ngIf="done; else loading" class="user-messages">
+  <pre>{{ messages | json }}</pre>
+</div>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>

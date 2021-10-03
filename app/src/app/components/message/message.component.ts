@@ -14,7 +14,6 @@ import { NBMessage } from '../../services/message/message.interface';
   styleUrls: ['./message.component.scss'],
 })
 export class MessageComponent implements OnInit {
-  private readonly updateThreadsInterval = 60 * 1000;
   public done = false;
   public thisUser!: UserInfo;
   public threads: NBMessage[] = [];
@@ -40,7 +39,8 @@ export class MessageComponent implements OnInit {
     this.thisUser = await this.userService.getUserInfo();
 
     await this.updateThreads();
-    setInterval(() => this.updateThreads(), this.updateThreadsInterval);
+    await this.messageService.updateThreads();
+    this.messageService.threadsChange.subscribe(() => this.updateThreads());
 
     this.done = true;
   }

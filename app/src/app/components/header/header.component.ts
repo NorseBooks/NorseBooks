@@ -15,7 +15,6 @@ import { NBMessage } from '../../services/message/message.interface';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  private readonly updateUnreadMessagesInterval = 60 * 1000;
   public loggedIn = false;
   public admin = false;
   public thisUser!: UserInfo;
@@ -45,14 +44,17 @@ export class HeaderComponent implements OnInit {
       this.thisUser = await this.userService.getUserInfo();
       this.admin = this.thisUser.admin;
 
-      await this.updateUnreadMessages();
+      const threads = await this.messageService.getMessageThreads();
+      this.unreadMessages = threads.filter(
+        (message) => !message.read && message.fromUserID !== this.thisUser.id,
+      );
     }
 
-    setInterval(() => {
-      if (this.loggedIn) {
-        this.updateUnreadMessages();
-      }
-    }, this.updateUnreadMessagesInterval);
+    this.messageService.threadsChange.subscribe(async (threads) => {
+      this.unreadMessages = threads.filter(
+        (message) => !message.read && message.fromUserID !== this.thisUser.id,
+      );
+    });
 
     this.router.events
       .pipe(
@@ -62,15 +64,5 @@ export class HeaderComponent implements OnInit {
       .subscribe((events) => {
         this.loginLogoutAfter = (events[1] as any)?.urlAfterRedirects || '/';
       });
-  }
-
-  /**
-   * Update the user's unread messages.
-   */
-  public async updateUnreadMessages(): Promise<void> {
-    const threads = await this.messageService.getMessageThreads();
-    this.unreadMessages = threads.filter(
-      (message) => !message.read && message.fromUserID !== this.thisUser.id,
-    );
   }
 }
