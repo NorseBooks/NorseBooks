@@ -46,27 +46,50 @@ export class MessageUserComponent implements OnInit {
         this.otherUserID,
       );
 
-      await this.updateMessages();
-
       this.messageService.threadsChange.subscribe(async () => {
         await this.updateMessages();
       });
 
       await this.messageService.updateThreads();
 
+      await this.updateMessages();
+
       this.done = true;
     });
+
+    setTimeout(() => {
+      const messageArea = document.getElementsByClassName('messages-body')[0];
+      messageArea.scrollTo(0, messageArea.scrollHeight);
+    }, 500);
   }
 
   /**
    * Update the message history.
    */
   public async updateMessages(): Promise<void> {
+    const messageArea =
+      this.messages.length > 0
+        ? document.getElementsByClassName('messages-body')[0]
+        : undefined;
+    const atBottom =
+      messageArea !== undefined
+        ? messageArea.clientHeight + messageArea.scrollTop >=
+          messageArea.scrollHeight
+        : undefined;
+
     this.messages = await this.messageService.getMessageHistory(
       this.otherUserID,
     );
 
     await this.markThreadRead();
+
+    if (messageArea !== undefined) {
+      setTimeout(() => {
+        if (atBottom) {
+          messageArea.scrollTo(0, messageArea.scrollHeight);
+        }
+      }, 500);
+    }
   }
 
   /**
@@ -74,6 +97,7 @@ export class MessageUserComponent implements OnInit {
    */
   public async markThreadRead(): Promise<void> {
     const lastMessage = this.messages[this.messages.length - 1];
+
     if (lastMessage.fromUserID === this.otherUserID && !lastMessage.read) {
       await this.messageService.markRead(lastMessage.id);
     }
