@@ -15,7 +15,10 @@
         *ngIf="message.fromUserID === otherUserID"
         class="message other-user-message"
       >
-        <div class="message-body">
+        <div
+          class="message-body"
+          matTooltip="{{ message.sendTime | date: 'short' }}"
+        >
           {{ message.content }}
         </div>
       </div>
@@ -23,7 +26,10 @@
         *ngIf="message.fromUserID !== otherUserID"
         class="message this-user-message"
       >
-        <div class="message-body">
+        <div
+          class="message-body"
+          matTooltip="{{ message.sendTime | date: 'short' }}"
+        >
           {{ message.content }}
         </div>
       </div>
