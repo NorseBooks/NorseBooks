@@ -1,6 +1,6 @@
 <div *ngIf="done; else loading" class="user-messages">
   <div class="messages-header">
-    <div class="messages-back">
+    <div class="messages-menu">
       <a mat-icon-button routerLink="/message" matTooltip="Back to messages">
         <mat-icon>arrow_back</mat-icon>
       </a>
@@ -38,6 +38,7 @@
           type="text"
           id="content"
           name="content"
+          autocomplete="off"
           [maxLength]="messageContentMaxLength"
           [(ngModel)]="messageContent"
         />
