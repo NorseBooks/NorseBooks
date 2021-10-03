@@ -39,6 +39,7 @@
       .message {
         display: flex;
         flex-direction: row;
+        align-items: center;
 
         .message-body {
           padding: 8px 12px;
