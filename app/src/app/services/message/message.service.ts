@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { APIService } from '../api/api.service';
+import { UserService } from '../user/user.service';
 import { NBMessage } from './message.interface';
 
 /**
@@ -9,7 +11,23 @@ import { NBMessage } from './message.interface';
   providedIn: 'root',
 })
 export class MessageService {
-  constructor(private readonly apiService: APIService) {}
+  private readonly updateThreadsInterval = 60 * 1000;
+  public threadsChange = new Subject<NBMessage[]>();
+
+  constructor(
+    private readonly apiService: APIService,
+    private readonly userService: UserService,
+  ) {
+    if (this.userService.loggedIn()) {
+      this.updateThreads();
+    }
+
+    setInterval(() => {
+      if (this.userService.loggedIn()) {
+        this.updateThreads();
+      }
+    }, this.updateThreadsInterval);
+  }
 
   /**
    * Send a message to another user.
@@ -74,5 +92,13 @@ export class MessageService {
    */
   public async deleteMessage(messageID: string): Promise<void> {
     await this.apiService.delete('message', { query: { messageID } });
+  }
+
+  /**
+   * Update the user's message threads.
+   */
+  public async updateThreads(): Promise<void> {
+    const threads = await this.getMessageThreads();
+    this.threadsChange.next(threads);
   }
 }

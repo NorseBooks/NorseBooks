@@ -1,0 +1,86 @@
+<div *ngIf="done; else loading" class="user-messages">
+  <div class="messages-header">
+    <div class="messages-menu">
+      <a mat-icon-button routerLink="/message" matTooltip="Back to messages">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+    </div>
+    <div class="messages-user-avatar">
+      <nb-avatar [userInfo]="otherUser"></nb-avatar>
+    </div>
+  </div>
+  <div class="messages-body">
+    <div *ngFor="let message of messages" class="message-row">
+      <div
+        *ngIf="message.fromUserID === otherUserID"
+        class="message other-user-message"
+      >
+        <div
+          class="message-body"
+          matTooltip="{{ message.sendTime | date: 'short' }}"
+        >
+          {{ message.content }}
+        </div>
+      </div>
+      <div
+        *ngIf="message.fromUserID !== otherUserID"
+        class="message this-user-message"
+      >
+        <button
+          mat-icon-button
+          matTooltip="Options"
+          [matMenuTriggerFor]="messageMenu"
+          [matMenuTriggerData]="{ messageID: message.id }"
+        >
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <div
+          class="message-body"
+          matTooltip="{{ message.sendTime | date: 'short' }}"
+        >
+          {{ message.content }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="new-message">
+    <form #newMessageForm="ngForm" (ngSubmit)="onSendMessage()">
+      <mat-form-field [appearance]="inputAppearance" class="max-width">
+        <mat-label>Message</mat-label>
+        <input
+          matInput
+          type="text"
+          id="content"
+          name="content"
+          autocomplete="off"
+          [maxLength]="messageContentMaxLength"
+          [(ngModel)]="messageContent"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="submit"
+          matTooltip="Send message"
+          [disabled]="submittingSendMessage"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>
+
+<mat-menu #messageMenu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-messageID="messageID">
+    <button mat-menu-item (click)="onDeleteMessage(messageID)">
+      <mat-icon>delete</mat-icon>
+      <span>Delete</span>
+    </button>
+  </ng-template>
+</mat-menu>

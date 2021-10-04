@@ -1,5 +1,5 @@
 import { MatFormFieldAppearance } from '@angular/material/form-field';
-import { UserInfo } from './services/user/user.interface';
+import { UserInfo, OtherUserInfo } from './services/user/user.interface';
 import { NBBook } from './services/book/book.interface';
 
 /**
@@ -27,7 +27,7 @@ export async function wait(ms: number): Promise<void> {
  * @param userInfo The user's details.
  * @returns The user's image URL.
  */
-export function getUserImageURL(userInfo: UserInfo): string {
+export function getUserImageURL(userInfo: UserInfo | OtherUserInfo): string {
   if (userInfo.imageID) {
     return `/image/${userInfo.imageID}?${new Date().getTime()}`;
   } else {

@@ -65,7 +65,7 @@ export class FeedbackComponent implements OnInit {
     this.submittingSendFeedback = true;
 
     try {
-      this.feedbackService.sendFeedback(form.feedback);
+      await this.feedbackService.sendFeedback(form.feedback);
       this.sentFeedback = true;
     } catch (err: any) {
       this.sendFeedbackError = err;

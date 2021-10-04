@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -58,6 +59,9 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { BookEditComponent } from './components/book-edit/book-edit.component';
 import { AboutComponent } from './components/about/about.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
+import { MessageComponent } from './components/message/message.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
+import { MessageUserComponent } from './components/message-user/message-user.component';
 
 /**
  * The app module.
@@ -86,6 +90,9 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
     BookEditComponent,
     AboutComponent,
     FeedbackComponent,
+    MessageComponent,
+    AvatarComponent,
+    MessageUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,6 +100,7 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
