@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Dialog } from '../dialog/dialog.component';
 import { ResourceService } from '../../services/resource/resource.service';
@@ -37,15 +37,23 @@ export class BookViewComponent implements OnInit {
   public bookDepartment = '';
   public bookCondition = '';
   public reason = '';
+  public bookSold = false;
   public reportedBook = false;
   public reportedRecently = false;
   public reportBookError = '';
   public reportingBook = false;
+  public deleteBookError = '';
+  public deletingBook = false;
   public readonly inputAppearance = inputAppearance;
   @ViewChild('reportReasonDialog') reportReasonDialog!: Dialog;
   @ViewChild('reportReasonTemplate') reportReasonTemplate!: TemplateRef<any>;
+  @ViewChild('deleteBookConfirmationDialog')
+  deleteBookConfirmationDialog!: Dialog;
+  @ViewChild('deleteBookConfirmationTemplate')
+  deleteBookConfirmationTemplate!: TemplateRef<any>;
 
   constructor(
+    private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly snackBar: MatSnackBar,
     private readonly resourceService: ResourceService,
@@ -118,9 +126,11 @@ export class BookViewComponent implements OnInit {
 
   /**
    * Report the book.
+   *
+   * @param confirm Whether the action was confirmed.
    */
-  public async reportBook(report: boolean): Promise<void> {
-    if (report) {
+  public async reportBook(confirm: boolean): Promise<void> {
+    if (confirm) {
       this.reportBookError = '';
       this.reportingBook = true;
 
@@ -132,6 +142,42 @@ export class BookViewComponent implements OnInit {
       }
 
       this.reportingBook = false;
+    }
+  }
+
+  /**
+   * Open the delete confirmation dialog.
+   */
+  public openDeleteConfirmationDialog(): void {
+    this.deleteBookConfirmationDialog.openDialog(
+      this.deleteBookConfirmationTemplate,
+    );
+  }
+
+  /**
+   * Delete the book.
+   *
+   * @param confirm Whether the action was confirmed.
+   */
+  public async deleteBook(confirm: boolean): Promise<void> {
+    if (confirm) {
+      this.deleteBookError = '';
+      this.deletingBook = true;
+
+      try {
+        await this.bookService.removeBook(this.bookID, this.bookSold);
+
+        this.snackBar.open('Book deleted', undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+
+        await this.router.navigate(['/']);
+      } catch (err: any) {
+        this.deleteBookError = err;
+      }
+
+      this.deletingBook = false;
     }
   }
 

@@ -73,6 +73,9 @@
     <div *ngIf="reportBookError" class="form-error">
       <span>{{ reportBookError }}</span>
     </div>
+    <div *ngIf="deleteBookError" class="form-error">
+      <span>{{ deleteBookError }}</span>
+    </div>
   </mat-card>
 
   <nb-dialog
@@ -81,6 +84,14 @@
     doneButtonLabel="Submit report"
     width="500px"
     (close)="reportBook($event)"
+  ></nb-dialog>
+
+  <nb-dialog
+    #deleteBookConfirmationDialog
+    title="Delete book"
+    doneButtonLabel="Delete"
+    width="500px"
+    (close)="deleteBook($event)"
   ></nb-dialog>
 </div>
 
@@ -119,6 +130,14 @@
   >
     <mat-icon>edit</mat-icon>
   </a>
+  <button
+    mat-icon-button
+    (click)="openDeleteConfirmationDialog()"
+    matTooltip="Delete book"
+    [disabled]="deletingBook"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
 </ng-template>
 
 <ng-template #cannotReportButton>
@@ -154,6 +173,16 @@
       [(ngModel)]="reason"
     />
   </mat-form-field>
+</ng-template>
+
+<ng-template #deleteBookConfirmationTemplate>
+  <p>
+    Are you certain you want to delete this book? If so, let us know below
+    whether or not the book sold.
+  </p>
+  <mat-checkbox color="primary" id="sold" name="sold" [(ngModel)]="bookSold"
+    >The book sold</mat-checkbox
+  >
 </ng-template>
 
 <ng-template #loading>
