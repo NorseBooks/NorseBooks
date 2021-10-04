@@ -41,11 +41,11 @@ export interface EditBookOptions {
   title?: string;
   author?: string;
   description?: string;
-  ISBN10?: string;
-  ISBN13?: string;
+  ISBN10?: string | null;
+  ISBN13?: string | null;
   imageData?: string;
   departmentID?: number;
-  courseNumber?: number;
+  courseNumber?: number | null;
   price?: number;
   conditionID?: number;
 }

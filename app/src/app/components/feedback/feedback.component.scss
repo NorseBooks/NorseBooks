@@ -1,0 +1,15 @@
+@use '../../../globals';
+
+.feedback {
+  background-image: url('/assets/img/backgrounds/feedback.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .feedback-card {
+    max-width: 600px;
+    margin: auto;
+  }
+}

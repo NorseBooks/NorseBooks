@@ -9,10 +9,10 @@ import {
   UseInterceptors,
   Get,
   Post,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ReferralService } from '../../services/referral/referral.service';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
-import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
@@ -61,9 +61,16 @@ export class ReferralController {
    * @returns All referral records associated with the user.
    */
   @Get('user-referrals')
-  @UseGuards(AdminGuard)
-  public async getReferrals(@QueryString({ name: 'userID' }) userID: string) {
-    return this.referralService.getReferrals(userID);
+  @UseGuards(SessionRequiredGuard)
+  public async getReferrals(
+    @UserSession() user: NBUser,
+    @QueryString({ name: 'userID' }) userID: string,
+  ) {
+    if (userID === user.id || user.admin) {
+      return this.referralService.getReferrals(userID);
+    } else {
+      throw new ForbiddenException();
+    }
   }
 
   /**

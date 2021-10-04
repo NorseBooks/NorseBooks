@@ -40,6 +40,24 @@
       <mat-icon>account_circle</mat-icon>
     </a>
     <a
+      *ngIf="loggedIn && unreadMessages.length === 0"
+      mat-icon-button
+      routerLink="/message"
+      matTooltip="Messages"
+    >
+      <mat-icon>chat</mat-icon>
+    </a>
+    <a
+      *ngIf="loggedIn && unreadMessages.length > 0"
+      mat-icon-button
+      routerLink="/message"
+      matTooltip="Messages"
+    >
+      <mat-icon [matBadge]="unreadMessages.length" matBadgeColor="warn"
+        >chat</mat-icon
+      >
+    </a>
+    <a
       *ngIf="loggedIn"
       mat-icon-button
       routerLink="/logout"
@@ -78,6 +96,24 @@
       <a *ngIf="loggedIn" mat-menu-item routerLink="/profile">
         <mat-icon>account_circle</mat-icon>
         <span>Profile</span>
+      </a>
+      <a
+        *ngIf="loggedIn && unreadMessages.length === 0"
+        mat-menu-item
+        routerLink="/message"
+      >
+        <mat-icon>chat</mat-icon>
+        <span>Messages</span>
+      </a>
+      <a
+        *ngIf="loggedIn && unreadMessages.length > 0"
+        mat-menu-item
+        routerLink="/message"
+      >
+        <mat-icon [matBadge]="unreadMessages.length" matBadgeColor="warn"
+          >chat</mat-icon
+        >
+        <span>Messages</span>
       </a>
       <a
         *ngIf="loggedIn"

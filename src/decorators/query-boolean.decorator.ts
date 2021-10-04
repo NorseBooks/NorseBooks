@@ -15,7 +15,8 @@ import { QueryParameters, queryDefaults } from './parameter';
  */
 export const QueryBoolean = createParamDecorator(
   (params: QueryParameters<boolean>, ctx: ExecutionContext) => {
-    const { name, required, defaultValue, scope } = queryDefaults(params);
+    const { name, required, defaultValue, scope, parseNull } =
+      queryDefaults(params);
 
     const request = ctx.switchToHttp().getRequest();
     const value =
@@ -33,14 +34,18 @@ export const QueryBoolean = createParamDecorator(
       }
     }
 
-    if (value === 'true') {
-      return true;
-    } else if (value === 'false') {
-      return false;
+    if (parseNull && value === 'null') {
+      return null;
     } else {
-      throw new BadRequestException(
-        `Expected boolean value for query parameter '${name}'`,
-      );
+      if (value === 'true') {
+        return true;
+      } else if (value === 'false') {
+        return false;
+      } else {
+        throw new BadRequestException(
+          `Expected boolean value for query parameter '${name}'`,
+        );
+      }
     }
   },
 );

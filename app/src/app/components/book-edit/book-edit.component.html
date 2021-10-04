@@ -1,12 +1,9 @@
-<div *ngIf="done; else loading" class="book-create">
-  <mat-card class="book-create-card">
-    <mat-card-title class="text-center">New book</mat-card-title>
+<div *ngIf="done; else loading" class="book-edit">
+  <mat-card class="book-edit-card">
+    <mat-card-title class="text-center">Edit book</mat-card-title>
     <mat-card-content>
-      <form
-        #bookCreateForm="ngForm"
-        (ngSubmit)="onCreateBook(bookCreateForm.value)"
-      >
-        <div class="form-row book-create-line-1">
+      <form #bookEditForm="ngForm" (ngSubmit)="onEditBook()">
+        <div class="form-row book-edit-line-1">
           <div>
             <div>
               <mat-form-field [appearance]="inputAppearance" class="max-width">
@@ -18,7 +15,7 @@
                   name="title"
                   [maxLength]="bookTitleMaxLength"
                   required
-                  ngModel
+                  [(ngModel)]="newBook.title"
                 />
               </mat-form-field>
             </div>
@@ -34,13 +31,13 @@
                   name="author"
                   [maxLength]="bookAuthorMaxLength"
                   required
-                  ngModel
+                  [(ngModel)]="newBook.author"
                 />
               </mat-form-field>
             </div>
           </div>
         </div>
-        <div class="form-row book-create-line-2">
+        <div class="form-row book-edit-line-2">
           <div>
             <div>
               <mat-form-field [appearance]="inputAppearance" class="max-width">
@@ -51,7 +48,7 @@
                   id="ISBN10"
                   name="ISBN10"
                   [maxLength]="19"
-                  ngModel
+                  [(ngModel)]="newBook.ISBN10"
                 />
               </mat-form-field>
             </div>
@@ -66,13 +63,13 @@
                   id="ISBN13"
                   name="ISBN13"
                   [maxLength]="25"
-                  ngModel
+                  [(ngModel)]="newBook.ISBN13"
                 />
               </mat-form-field>
             </div>
           </div>
         </div>
-        <div class="form-row book-create-line-3">
+        <div class="form-row book-edit-line-3">
           <div>
             <div>
               <mat-form-field [appearance]="inputAppearance" class="max-width">
@@ -81,7 +78,7 @@
                   id="departmentID"
                   name="departmentID"
                   required
-                  ngModel
+                  [(ngModel)]="newBook.departmentID"
                 >
                   <mat-option
                     *ngFor="let department of departments"
@@ -102,13 +99,13 @@
                   id="courseNumber"
                   name="courseNumber"
                   [maxLength]="3"
-                  ngModel
+                  [(ngModel)]="newBook.courseNumber"
                 />
               </mat-form-field>
             </div>
           </div>
         </div>
-        <div class="form-row book-create-line-4">
+        <div class="form-row book-edit-line-4">
           <div>
             <div>
               <mat-form-field [appearance]="inputAppearance" class="max-width">
@@ -117,7 +114,7 @@
                   id="conditionID"
                   name="conditionID"
                   required
-                  ngModel
+                  [(ngModel)]="newBook.conditionID"
                 >
                   <mat-option
                     *ngFor="let bookCondition of bookConditions"
@@ -139,7 +136,7 @@
                   name="price"
                   [maxLength]="6"
                   required
-                  ngModel
+                  [(ngModel)]="newBook.price"
                 />
                 <span matPrefix>$&nbsp;</span>
               </mat-form-field>
@@ -156,27 +153,32 @@
             [maxLength]="bookDescriptionMaxLength"
             rows="3"
             required
-            ngModel
+            [(ngModel)]="newBook.description"
           ></textarea>
         </mat-form-field>
         <div class="vertical-align mb">
           <nb-file-input
             [acceptTypes]="acceptImageTypes"
             (fileChange)="imageSelected($event)"
-            >Select book image</nb-file-input
+            >Select new book image</nb-file-input
           >
           <span *ngIf="imageData.length > 0" class="ml">Image selected</span>
         </div>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="submittingCreateBookForm"
-        >
-          List book
-        </button>
-        <div *ngIf="createBookError" class="form-error">
-          <span>{{ createBookError }}</span>
+        <div class="vertical-align">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="submittingEditBookForm"
+          >
+            Update book
+          </button>
+          <a mat-raised-button routerLink="/book/{{ bookID }}" class="ml"
+            >Cancel</a
+          >
+        </div>
+        <div *ngIf="editBookError" class="form-error">
+          <span>{{ editBookError }}</span>
         </div>
       </form>
     </mat-card-content>

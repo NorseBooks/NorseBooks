@@ -1,0 +1,15 @@
+@use '../../../globals';
+
+.about {
+  background-image: url('/assets/img/backgrounds/about.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .about-card {
+    max-width: 600px;
+    margin: auto;
+  }
+}

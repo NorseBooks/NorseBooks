@@ -16,10 +16,26 @@
         <p class="user-email">{{ userInfo.email }}</p>
         <p>Joined {{ userInfo.joinTime | date }}</p>
         <ul class="inline-list">
-          <li>Listed {{ userInfo.numBooksListed }} books</li>
-          <li>Sold {{ userInfo.numBooksSold }} books</li>
+          <li>
+            Listed {{ userInfo.numBooksListed }}
+            {{ userInfo.numBooksListed === 1 ? 'book' : 'books' }}
+          </li>
+          <li>
+            Sold {{ userInfo.numBooksSold }}
+            {{ userInfo.numBooksSold === 1 ? 'book' : 'books' }}
+          </li>
           <li>Made {{ userInfo.moneyMade | currency }}</li>
+          <li>
+            Referred {{ referrals.length }}
+            {{ referrals.length === 1 ? 'user' : 'users' }}
+          </li>
         </ul>
+        <p>
+          <span
+            matTooltip="When you direct new people to the site, give them this code"
+            >Referral code: {{ userInfo.id }}</span
+          >
+        </p>
       </mat-card-content>
     </mat-card>
     <mat-card class="settings-card">
@@ -104,6 +120,46 @@
           </button>
           <div *ngIf="setPasswordError" class="form-error">
             <span>{{ setPasswordError }}</span>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="settings-card">
+      <mat-card-title class="text-center">Note user referral</mat-card-title>
+      <mat-card-content>
+        <p class="text-justified">
+          You can support a user who referred you to the site by entering their
+          referral code below. Note that you can only do this once.
+        </p>
+        <p *ngIf="!canRefer" class="text-justified">
+          You have already noted a user who referred you.
+        </p>
+        <form
+          #referUserForm="ngForm"
+          (ngSubmit)="onReferUser(referUserForm.value)"
+        >
+          <mat-form-field [appearance]="inputAppearance" class="max-width">
+            <mat-label>Referral code</mat-label>
+            <input
+              matInput
+              type="text"
+              id="referralID"
+              name="referralID"
+              [disabled]="!canRefer"
+              required
+              ngModel
+            />
+          </mat-form-field>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="submittingReferUserForm || !canRefer"
+          >
+            Note referral
+          </button>
+          <div *ngIf="referUserError" class="form-error">
+            <span>{{ referUserError }}</span>
           </div>
         </form>
       </mat-card-content>

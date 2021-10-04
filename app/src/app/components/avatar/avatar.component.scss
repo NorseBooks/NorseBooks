@@ -1,0 +1,49 @@
+@use '../../../globals';
+
+$image-size: 48px;
+
+.avatar-container {
+  padding: 8px;
+
+  .avatar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .avatar-image {
+      flex: 0 0 auto;
+      border-radius: 9999px;
+      overflow: hidden;
+      width: $image-size;
+      height: $image-size;
+
+      img {
+        width: $image-size;
+        height: $image-size;
+        object-fit: cover;
+      }
+    }
+
+    .avatar-content {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      padding-left: 12px;
+
+      .avatar-title {
+        color: black;
+        @include globals.line-cutoff(1);
+      }
+
+      .avatar-subtitle {
+        color: rgba(0, 0, 0, 0.54);
+        @include globals.line-cutoff(1);
+      }
+    }
+
+    .avatar-extra {
+      flex: 0 0 auto;
+    }
+  }
+}

@@ -8,9 +8,14 @@ import { DepartmentService } from '../../services/department/department.service'
 import { BookConditionService } from '../../services/book-condition/book-condition.service';
 import { BookService } from '../../services/book/book.service';
 import { ReportService } from '../../services/report/report.service';
-import { OtherUserInfo } from '../../services/user/user.interface';
+import { UserInfo, OtherUserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
-import { inputAppearance, copyMessage } from '../../globals';
+import {
+  inputAppearance,
+  copyMessage,
+  getBookImageURL,
+  wait,
+} from '../../globals';
 
 /**
  * The book view page.
@@ -27,6 +32,8 @@ export class BookViewComponent implements OnInit {
   public bookID = '';
   public bookInfo!: NBBook;
   public userInfo!: OtherUserInfo;
+  public thisUserInfo!: UserInfo;
+  public bookImageURL = '';
   public bookDepartment = '';
   public bookCondition = '';
   public reason = '';
@@ -60,7 +67,14 @@ export class BookViewComponent implements OnInit {
       this.loggedIn = this.userService.loggedIn();
       await this.updateBookInfo();
 
+      if (this.loggedIn) {
+        this.thisUserInfo = await this.userService.getUserInfo();
+      }
+
       this.done = true;
+
+      await wait(100);
+      this.updateBookImage();
     });
   }
 
@@ -119,5 +133,14 @@ export class BookViewComponent implements OnInit {
 
       this.reportingBook = false;
     }
+  }
+
+  /**
+   * Update the book's image.
+   */
+  public updateBookImage(): void {
+    this.bookImageURL = getBookImageURL(this.bookInfo);
+    (document.getElementById('book-image') as HTMLImageElement).src =
+      this.bookImageURL;
   }
 }

@@ -16,6 +16,7 @@ export interface QueryParameters<T> {
   required?: boolean;
   defaultValue?: T;
   scope?: ParameterScope;
+  parseNull?: boolean;
 }
 
 /**
@@ -26,6 +27,7 @@ interface QueryParametersFull<T> {
   required: boolean;
   defaultValue: T;
   scope: ParameterScope;
+  parseNull: boolean;
 }
 
 /**
@@ -42,5 +44,6 @@ export function queryDefaults<T>(
     required: params.required ?? true,
     defaultValue: params.defaultValue ?? undefined,
     scope: params.scope ?? 'query',
+    parseNull: params.parseNull ?? false,
   };
 }

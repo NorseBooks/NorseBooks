@@ -1,0 +1,61 @@
+<div *ngIf="done; else loading">
+  <div class="messages">
+    <div class="message-section">
+      <h2>Unread messages</h2>
+      <div
+        *ngIf="unreadThreads.length > 0; else noUnreadMessages"
+        class="message-threads"
+      >
+        <div
+          *ngFor="let message of unreadThreads; let i = index"
+          [attr.data-index]="i"
+          class="message-thread"
+        >
+          <a
+            routerLink="/message/{{ unreadThreadUsers[i].id }}"
+            class="standard-link message-link"
+          >
+            <nb-avatar
+              [userInfo]="unreadThreadUsers[i]"
+              [text]="message.content"
+            ></nb-avatar>
+          </a>
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="message-section">
+      <h2>Other threads</h2>
+      <div
+        *ngIf="readThreads.length > 0; else noReadMessages"
+        class="message-threads"
+      >
+        <div
+          *ngFor="let message of readThreads; let i = index"
+          [attr.data-index]="i"
+          class="message-thread"
+        >
+          <a
+            routerLink="/message/{{ readThreadUsers[i].id }}"
+            class="standard-link message-link"
+          >
+            <nb-avatar
+              [userInfo]="readThreadUsers[i]"
+              [text]="message.content"
+            ></nb-avatar>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noUnreadMessages>You have no unread messages.</ng-template>
+
+<ng-template #noReadMessages>You have no other threads.</ng-template>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>

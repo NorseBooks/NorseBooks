@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -55,6 +56,12 @@ import { Dialog, DialogComponent } from './components/dialog/dialog.component';
 import { BookListComponent } from './components/book-list/book-list.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { BookEditComponent } from './components/book-edit/book-edit.component';
+import { AboutComponent } from './components/about/about.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
+import { MessageComponent } from './components/message/message.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
+import { MessageUserComponent } from './components/message-user/message-user.component';
 
 /**
  * The app module.
@@ -80,6 +87,12 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
     BookListComponent,
     UnauthorizedComponent,
     ForbiddenComponent,
+    BookEditComponent,
+    AboutComponent,
+    FeedbackComponent,
+    MessageComponent,
+    AvatarComponent,
+    MessageUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,6 +100,7 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
     FormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,

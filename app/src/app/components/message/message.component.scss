@@ -1,0 +1,28 @@
+@use '../../../globals';
+
+.messages {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 32px;
+  display: block;
+
+  .message-section {
+    padding: 32px 0;
+
+    .message-threads {
+      .message-thread {
+        transition: background-color 0.1s;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .message-link {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}

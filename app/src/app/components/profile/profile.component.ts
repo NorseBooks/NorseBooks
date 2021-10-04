@@ -4,8 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
 import { ReportService } from '../../services/report/report.service';
+import { ReferralService } from '../../services/referral/referral.service';
 import { UserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
+import { NBReferral } from '../../services/referral/referral.interface';
 import {
   inputAppearance,
   acceptImageTypes,
@@ -19,6 +21,13 @@ import {
 interface SetPasswordForm {
   password: string;
   confirmPassword: string;
+}
+
+/**
+ * The refer user form.
+ */
+interface ReferUserForm {
+  referralID: string;
 }
 
 /**
@@ -39,13 +48,17 @@ export class ProfileComponent implements OnInit {
   public userBooks: NBBook[] = [];
   public recommended: NBBook[] = [];
   public reported: NBBook[] = [];
+  public referrals: NBReferral[] = [];
   public submittingSetPasswordForm = false;
+  public submittingReferUserForm = false;
   public logoutEverywhereClicked = false;
   public setImageError = '';
   public setPasswordError = '';
+  public referUserError = '';
   public logoutEverywhereError = '';
   public hidePassword = true;
   public hideConfirmPassword = true;
+  public canRefer = false;
   public readonly inputAppearance = inputAppearance;
   public readonly acceptImageTypes = acceptImageTypes;
 
@@ -55,6 +68,7 @@ export class ProfileComponent implements OnInit {
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
     private readonly reportService: ReportService,
+    private readonly referralService: ReferralService,
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -78,6 +92,12 @@ export class ProfileComponent implements OnInit {
       this.userBooks = await this.userService.getCurrentBooks();
       this.recommended = await this.userService.getRecommendations();
       this.reported = await this.reportService.getUserReportedBooks();
+      this.referrals = await this.referralService.getReferrals(
+        this.userInfo.id,
+      );
+
+      const referral = await this.referralService.getReferral();
+      this.canRefer = referral === undefined;
     } catch (err) {
       await this.userService.logout();
       this.loggedIn = false;
@@ -168,6 +188,30 @@ export class ProfileComponent implements OnInit {
 
       this.submittingSetPasswordForm = false;
     }
+  }
+
+  /**
+   * Note a user's referral.
+   *
+   * @param form The refer user form.
+   */
+  public async onReferUser(form: ReferUserForm): Promise<void> {
+    this.referUserError = '';
+    this.submittingReferUserForm = true;
+
+    try {
+      await this.referralService.referUser(form.referralID);
+
+      this.canRefer = false;
+      this.snackBar.open('Noted user referral', undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+    } catch (err: any) {
+      this.referUserError = err;
+    }
+
+    this.submittingReferUserForm = false;
   }
 
   /**
