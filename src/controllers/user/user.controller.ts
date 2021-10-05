@@ -28,6 +28,11 @@ import { NBUser } from '../../services/user/user.interface';
 import { sendFormattedEmail } from '../../emailer';
 
 /**
+ * Milliseconds in four years (counting leap day).
+ */
+const cookieAge = (4 * 365 + 1) * 24 * 60 * 60 * 1000;
+
+/**
  * User controller.
  */
 @Controller('api/user')
@@ -83,7 +88,7 @@ export class UserController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const session = await this.userService.login(email, password);
-    res.cookie('sessionID', session.id);
+    res.cookie('sessionID', session.id, { maxAge: cookieAge });
   }
 
   /**
