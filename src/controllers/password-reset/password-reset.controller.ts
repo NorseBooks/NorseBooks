@@ -32,10 +32,12 @@ export class PasswordResetController {
     @QueryString({ name: 'email' }) email: string,
     @Hostname() hostname: string,
   ) {
-    const userExists = await this.userService.userExistsByEmail(email);
+    const emailAddress = email.includes('@') ? email : `${email}@luther.edu`;
+
+    const userExists = await this.userService.userExistsByEmail(emailAddress);
 
     if (userExists) {
-      const user = await this.userService.getUserByEmail(email);
+      const user = await this.userService.getUserByEmail(emailAddress);
 
       const resetExists =
         await this.passwordResetService.passwordResetExistsByUserID(user.id);
@@ -45,10 +47,15 @@ export class PasswordResetController {
           user.id,
         );
 
-        await sendFormattedEmail(email, 'Password Reset', 'password-reset', {
-          hostname,
-          resetID: reset.id,
-        });
+        await sendFormattedEmail(
+          emailAddress,
+          'Password Reset',
+          'password-reset',
+          {
+            hostname,
+            resetID: reset.id,
+          },
+        );
       }
     }
   }
