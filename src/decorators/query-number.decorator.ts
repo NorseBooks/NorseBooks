@@ -15,7 +15,7 @@ import { QueryParameters, queryDefaults } from './parameter';
  */
 export const QueryNumber = createParamDecorator(
   (params: QueryParameters<number>, ctx: ExecutionContext) => {
-    const { name, required, defaultValue, scope, parseNull } =
+    const { name, required, defaultValue, scope, parseNull, allowDecimal } =
       queryDefaults(params);
 
     const request = ctx.switchToHttp().getRequest();
@@ -38,7 +38,11 @@ export const QueryNumber = createParamDecorator(
       return null;
     } else {
       if (!isNaN(parseFloat(value))) {
-        return parseFloat(value);
+        if (allowDecimal) {
+          return parseFloat(value);
+        } else {
+          return parseInt(value);
+        }
       } else {
         throw new BadRequestException(
           `Expected number value for query parameter '${name}'`,
