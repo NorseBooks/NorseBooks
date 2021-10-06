@@ -70,7 +70,12 @@ describe('UserService', () => {
       userService.createUser(firstname, '', email, password),
     ).rejects.toThrow(ServiceException);
     await expect(
-      userService.createUser(firstname, lastname, 'fake', password),
+      userService.createUser(
+        firstname,
+        lastname,
+        '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+        password,
+      ),
     ).rejects.toThrow(ServiceException);
     await expect(
       userService.createUser(firstname, lastname, email, 'bad_pw'),
