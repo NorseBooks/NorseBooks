@@ -62,6 +62,7 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
 import { MessageComponent } from './components/message/message.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { MessageUserComponent } from './components/message-user/message-user.component';
+import { CreditsComponent } from './components/credits/credits.component';
 
 /**
  * The app module.
@@ -93,6 +94,7 @@ import { MessageUserComponent } from './components/message-user/message-user.com
     MessageComponent,
     AvatarComponent,
     MessageUserComponent,
+    CreditsComponent,
   ],
   imports: [
     BrowserModule,
