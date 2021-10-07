@@ -5,7 +5,6 @@
 
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
-import { ResourceService } from '../resource/resource.service';
 import { ReportService } from '../report/report.service';
 import { FeedbackService } from '../feedback/feedback.service';
 import { userTableName } from '../user/user.service';
@@ -22,8 +21,6 @@ export class AdminService {
   constructor(
     @Inject(forwardRef(() => DBService))
     private readonly dbService: DBService,
-    @Inject(forwardRef(() => ResourceService))
-    private readonly resourceService: ResourceService,
     @Inject(forwardRef(() => ReportService))
     private readonly reportService: ReportService,
     @Inject(forwardRef(() => FeedbackService))
@@ -49,27 +46,27 @@ export class AdminService {
 
     const booksListedSql = `
       SELECT SUM("numBooksListed") AS sum
-        FROM ${userTableName};`;
+        FROM "${userTableName}";`;
     const booksListedRes = await this.dbService.execute<{ sum: number }>(
       booksListedSql,
     );
-    const booksListed = booksListedRes[0].sum;
+    const booksListed = booksListedRes[0].sum ?? 0;
 
     const booksSoldSql = `
       SELECT SUM("numBooksSold") AS sum
-        FROM ${userTableName};`;
+        FROM "${userTableName}";`;
     const booksSoldRes = await this.dbService.execute<{ sum: number }>(
       booksSoldSql,
     );
-    const booksSold = booksSoldRes[0].sum;
+    const booksSold = booksSoldRes[0].sum ?? 0;
 
     const moneyMadeSql = `
       SELECT SUM("moneyMade") AS sum
-        FROM ${userTableName};`;
+        FROM "${userTableName}";`;
     const moneyMadeRes = await this.dbService.execute<{ sum: number }>(
       moneyMadeSql,
     );
-    const moneyMade = moneyMadeRes[0].sum;
+    const moneyMade = moneyMadeRes[0].sum ?? 0;
 
     const reports = await this.reportService.getReports();
     const feedback = await this.feedbackService.getAllFeedback();
