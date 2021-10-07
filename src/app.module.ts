@@ -23,6 +23,7 @@ import { SearchSortService } from './services/search-sort/search-sort.service';
 import { FeedbackService } from './services/feedback/feedback.service';
 import { UserInterestService } from './services/user-interest/user-interest.service';
 import { ReferralService } from './services/referral/referral.service';
+import { AdminService } from './services/admin/admin.service';
 
 import { ResourceController } from './controllers/resource/resource.controller';
 import { ImageController } from './controllers/image/image.controller';
@@ -78,6 +79,7 @@ import { ReferralController } from './controllers/referral/referral.controller';
     FeedbackService,
     UserInterestService,
     ReferralService,
+    AdminService,
   ],
 })
 export class AppModule {}
