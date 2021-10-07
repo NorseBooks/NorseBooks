@@ -50,7 +50,10 @@ export class AdminService {
     const booksListedRes = await this.dbService.execute<{ sum: number }>(
       booksListedSql,
     );
-    const booksListed = booksListedRes[0].sum ?? 0;
+    const booksListed =
+      typeof booksListedRes[0].sum === 'string'
+        ? parseInt(booksListedRes[0].sum)
+        : booksListedRes[0].sum ?? 0;
 
     const booksSoldSql = `
       SELECT SUM("numBooksSold") AS sum
@@ -58,7 +61,10 @@ export class AdminService {
     const booksSoldRes = await this.dbService.execute<{ sum: number }>(
       booksSoldSql,
     );
-    const booksSold = booksSoldRes[0].sum ?? 0;
+    const booksSold =
+      typeof booksSoldRes[0].sum === 'string'
+        ? parseInt(booksSoldRes[0].sum)
+        : booksSoldRes[0].sum ?? 0;
 
     const moneyMadeSql = `
       SELECT SUM("moneyMade") AS sum
@@ -66,7 +72,10 @@ export class AdminService {
     const moneyMadeRes = await this.dbService.execute<{ sum: number }>(
       moneyMadeSql,
     );
-    const moneyMade = moneyMadeRes[0].sum ?? 0;
+    const moneyMade =
+      typeof moneyMadeRes[0].sum === 'string'
+        ? parseFloat(moneyMadeRes[0].sum)
+        : moneyMadeRes[0].sum ?? 0;
 
     const reports = await this.reportService.getReports();
     const feedback = await this.feedbackService.getAllFeedback();
