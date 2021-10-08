@@ -38,6 +38,7 @@ import { SearchSortService } from './services/search-sort/search-sort.service';
 import { FeedbackService } from './services/feedback/feedback.service';
 import { UserInterestService } from './services/user-interest/user-interest.service';
 import { ReferralService } from './services/referral/referral.service';
+import { AdminService } from './services/admin/admin.service';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -134,6 +135,7 @@ import { CreditsComponent } from './components/credits/credits.component';
     FeedbackService,
     UserInterestService,
     ReferralService,
+    AdminService,
   ],
   bootstrap: [AppComponent],
 })
