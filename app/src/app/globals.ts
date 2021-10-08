@@ -58,7 +58,6 @@ export function updateImages(): void {
 
     if (image) {
       image.src += '?' + new Date().getTime();
-      console.log(image.src);
     }
   }
 }

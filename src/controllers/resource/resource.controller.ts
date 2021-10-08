@@ -62,6 +62,18 @@ export class ResourceController {
   }
 
   /**
+   * Reset a resource's value.
+   *
+   * @param name The resource name.
+   * @returns The updated resource.
+   */
+  @Patch('reset')
+  @UseGuards(AdminGuard)
+  public async resetResource(@QueryString({ name: 'name' }) name: string) {
+    return this.resourceService.resetResource(name);
+  }
+
+  /**
    * Get all resources.
    *
    * @returns All resources.
