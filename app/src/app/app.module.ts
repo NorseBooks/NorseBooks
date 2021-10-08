@@ -67,6 +67,8 @@ import { MessageUserComponent } from './components/message-user/message-user.com
 import { CreditsComponent } from './components/credits/credits.component';
 import { AdminComponent } from './components/admin/admin.component';
 
+import { ChartsModule } from 'ng2-charts';
+
 /**
  * The app module.
  */
@@ -123,6 +125,7 @@ import { AdminComponent } from './components/admin/admin.component';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    ChartsModule,
   ],
   providers: [
     APIService,

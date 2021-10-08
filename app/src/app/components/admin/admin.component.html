@@ -74,6 +74,18 @@
             <span class="stats-item-value">{{ stats.feedback }}</span>
           </div>
         </div>
+        <div class="db-usage">
+          <canvas
+            baseChart
+            [data]="chartData"
+            [labels]="chartLabels"
+            [chartType]="chartType"
+            [options]="chartOptions"
+            [plugins]="chartPlugins"
+            [legend]="chartLegend"
+            [colors]="chartColors"
+          ></canvas>
+        </div>
       </mat-tab>
       <mat-tab label="Resources"></mat-tab>
       <mat-tab label="Reports"></mat-tab>

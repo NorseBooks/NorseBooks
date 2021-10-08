@@ -15,6 +15,14 @@ import {
   AdminDatabaseUsage,
   AdminUser,
 } from '../../services/admin/admin.interface';
+import { ChartType, ChartOptions } from 'chart.js';
+import {
+  SingleDataSet,
+  Label,
+  Color,
+  monkeyPatchChartJsLegend,
+  monkeyPatchChartJsTooltip,
+} from 'ng2-charts';
 
 /**
  * The admin control panel.
@@ -34,6 +42,13 @@ export class AdminComponent implements OnInit {
   public feedback: NBFeedback[] = [];
   public users: AdminUser[] = [];
   public books: NBBook[] = [];
+  public chartOptions: ChartOptions = { responsive: true };
+  public chartLabels: Label[] = [];
+  public chartData: SingleDataSet = [];
+  public chartType: ChartType = 'pie';
+  public chartLegend = true;
+  public chartPlugins = [];
+  public chartColors: Color[] = [];
 
   constructor(
     private readonly router: Router,
@@ -46,6 +61,9 @@ export class AdminComponent implements OnInit {
   ) {}
 
   public async ngOnInit(): Promise<void> {
+    monkeyPatchChartJsTooltip();
+    monkeyPatchChartJsLegend();
+
     const loggedIn = this.userService.loggedIn();
 
     if (!loggedIn) {
@@ -66,6 +84,9 @@ export class AdminComponent implements OnInit {
     this.done = true;
   }
 
+  /**
+   * Update the viewable info.
+   */
   public async updateInfo(): Promise<void> {
     this.stats = await this.adminService.getStats();
     this.dbUsage = await this.adminService.getDatabaseUsage();
@@ -74,5 +95,23 @@ export class AdminComponent implements OnInit {
     this.feedback = await this.feedbackService.getAllFeedback();
     this.users = await this.adminService.getUsers();
     this.books = await this.adminService.getBooks();
+
+    this.chartLabels = Object.keys(this.dbUsage);
+    this.chartData = Object.values(this.dbUsage);
+    this.chartColors = [this.generateColors(Object.keys(this.dbUsage).length)];
+  }
+
+  /**
+   * Generate a set of distinct colors.
+   *
+   * @param numColors The number of colors to generate.
+   * @returns The generated colors.
+   */
+  private generateColors(numColors: number): Color {
+    return {
+      backgroundColor: Array.from(Array(numColors).keys()).map(
+        (value) => `hsl(${Math.round(value * 137.508) % 360}, 100%, 50%)`,
+      ),
+    };
   }
 }
