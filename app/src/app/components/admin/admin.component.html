@@ -88,8 +88,30 @@
         </div>
       </mat-tab>
       <mat-tab label="Resources"></mat-tab>
-      <mat-tab label="Reports"></mat-tab>
-      <mat-tab label="Feedback"></mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span
+            *ngIf="reports.length > 0"
+            [matBadge]="reports.length"
+            matBadgeColor="warn"
+            matBadgeOverlap="false"
+            >Reports</span
+          >
+          <span *ngIf="reports.length === 0">Reports</span>
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span
+            *ngIf="feedback.length > 0"
+            [matBadge]="feedback.length"
+            matBadgeColor="warn"
+            matBadgeOverlap="false"
+            >Feedback</span
+          >
+          <span *ngIf="feedback.length === 0">Feedback</span>
+        </ng-template>
+      </mat-tab>
       <mat-tab label="Users"></mat-tab>
       <mat-tab label="Books"></mat-tab>
     </mat-tab-group>
