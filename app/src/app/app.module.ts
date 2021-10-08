@@ -21,6 +21,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -64,6 +65,7 @@ import { MessageComponent } from './components/message/message.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { MessageUserComponent } from './components/message-user/message-user.component';
 import { CreditsComponent } from './components/credits/credits.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 /**
  * The app module.
@@ -96,6 +98,7 @@ import { CreditsComponent } from './components/credits/credits.component';
     AvatarComponent,
     MessageUserComponent,
     CreditsComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -110,13 +113,14 @@ import { CreditsComponent } from './components/credits/credits.component';
     MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatMenuModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatIconModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
   ],

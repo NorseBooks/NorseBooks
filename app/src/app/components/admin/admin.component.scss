@@ -1,0 +1,31 @@
+.admin {
+  max-width: 100vw;
+
+  .admin-container {
+    padding: 32px;
+
+    .stats {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      margin-top: 8px;
+
+      .stats-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px 16px;
+
+        .stats-item-label {
+          font-size: 1.2em;
+          margin-bottom: 8px;
+        }
+
+        .stats-item-value {
+          font-size: 2em;
+        }
+      }
+    }
+  }
+}

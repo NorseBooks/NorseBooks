@@ -46,6 +46,8 @@ export class AdminController {
       numBooksListed: user.numBooksListed,
       numBooksSold: user.numBooksSold,
       moneyMade: user.moneyMade,
+      verified: user.verified,
+      admin: user.admin,
       joinTime: user.joinTime,
     }));
   }

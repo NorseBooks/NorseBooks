@@ -33,5 +33,7 @@ export interface AdminUser {
   numBooksListed: number;
   numBooksSold: number;
   moneyMade: number;
+  verified: boolean;
+  admin: boolean;
   joinTime: number;
 }

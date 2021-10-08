@@ -1,0 +1,91 @@
+<div *ngIf="done; else loading" class="admin">
+  <div class="admin-container">
+    <h1 class="text-center">Admin Control Panel</h1>
+    <mat-tab-group dynamicHeight mat-align-tabs="center">
+      <mat-tab label="Statistics">
+        <div class="stats">
+          <div class="stats-item" matTooltip="The number of users signed up">
+            <span class="stats-item-label">Users</span>
+            <span class="stats-item-value">{{ stats.users }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of books currently listed"
+          >
+            <span class="stats-item-label">Books</span>
+            <span class="stats-item-value">{{ stats.books }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of total books ever listed"
+          >
+            <span class="stats-item-label">Books listed</span>
+            <span class="stats-item-value">{{ stats.booksListed }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of books that have sold"
+          >
+            <span class="stats-item-label">Books sold</span>
+            <span class="stats-item-value">{{ stats.booksSold }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The total amount of money made from selling books"
+          >
+            <span class="stats-item-label">Money made</span>
+            <span class="stats-item-value">{{
+              stats.moneyMade | currency
+            }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of tables in the database"
+          >
+            <span class="stats-item-label">Tables</span>
+            <span class="stats-item-value">{{ stats.tables }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of rows currently occupying the database"
+          >
+            <span class="stats-item-label">Rows</span>
+            <span class="stats-item-value">{{ stats.rows }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The current capacity of the database"
+          >
+            <span class="stats-item-label">Capacity</span>
+            <span class="stats-item-value">{{ stats.capacity * 100 }}%</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of active book reports"
+          >
+            <span class="stats-item-label">Reports</span>
+            <span class="stats-item-value">{{ stats.reports }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of active user feedback submissions"
+          >
+            <span class="stats-item-label">Feedback</span>
+            <span class="stats-item-value">{{ stats.feedback }}</span>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Resources"></mat-tab>
+      <mat-tab label="Reports"></mat-tab>
+      <mat-tab label="Feedback"></mat-tab>
+      <mat-tab label="Users"></mat-tab>
+      <mat-tab label="Books"></mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>

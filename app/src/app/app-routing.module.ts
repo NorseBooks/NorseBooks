@@ -16,6 +16,7 @@ import { FeedbackComponent } from './components/feedback/feedback.component';
 import { MessageComponent } from './components/message/message.component';
 import { MessageUserComponent } from './components/message-user/message-user.component';
 import { CreditsComponent } from './components/credits/credits.component';
+import { AdminComponent } from './components/admin/admin.component';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'message', component: MessageComponent },
   { path: 'message/:userID', component: MessageUserComponent },
   { path: 'credits', component: CreditsComponent },
+  { path: 'admin', component: AdminComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'forbidden', component: ForbiddenComponent },
   { path: '**', component: NotFoundComponent },
