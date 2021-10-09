@@ -21,6 +21,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -127,6 +128,7 @@ import { ChartsModule } from 'ng2-charts';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatSortModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,

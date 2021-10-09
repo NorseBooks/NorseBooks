@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Sort } from '@angular/material/sort';
 import { Dialog } from '../dialog/dialog.component';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
@@ -50,6 +51,8 @@ export class AdminComponent implements OnInit {
   public reportUsers: OtherUserInfo[] = [];
   public reportBooks: NBBook[] = [];
   public feedbackUsers: OtherUserInfo[] = [];
+  public sortedUsers: AdminUser[] = [];
+  public sortedBooks: NBBook[] = [];
   public deletingReportID = '';
   public settingResource = false;
   public resettingResource = false;
@@ -100,6 +103,8 @@ export class AdminComponent implements OnInit {
     await this.updateInfo();
     setInterval(() => this.updateInfo(), this.updateInfoInterval);
     this.newResources = Object.assign({}, this.resources);
+    this.sortedUsers = this.users.slice();
+    this.sortedBooks = this.books.slice();
 
     this.done = true;
   }
@@ -264,6 +269,64 @@ export class AdminComponent implements OnInit {
     this.deletingFeedback = false;
 
     await this.adminService.updateAdminNotifications();
+  }
+
+  /**
+   * Compare two values.
+   *
+   * @param a The first value.
+   * @param b The second value.
+   * @param isAsc Whether to sort ascending.
+   * @returns The comparison result.
+   */
+  private sortCompare(
+    a: number | string,
+    b: number | string,
+    isAsc: boolean,
+  ): number {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+
+  /**
+   * Sort a set of data.
+   *
+   * @param currentData The data.
+   * @param sort The sort parameters.
+   * @returns The sorted data.
+   */
+  private sortData<T>(currentData: T[], sort: Sort): T[] {
+    const data = currentData.slice();
+
+    if (!sort.active || sort.direction === '') {
+      return data;
+    } else {
+      return data.sort((a, b) => {
+        const isAsc = sort.direction === 'asc';
+        return this.sortCompare(
+          (a as any)[sort.active],
+          (b as any)[sort.active],
+          isAsc,
+        );
+      });
+    }
+  }
+
+  /**
+   * Sort the users.
+   *
+   * @param sort The sort parameters.
+   */
+  public sortUsers(sort: Sort): void {
+    this.sortedUsers = this.sortData(this.users, sort);
+  }
+
+  /**
+   * Sort the books.
+   *
+   * @param sort The sort parameters.
+   */
+  public sortBooks(sort: Sort): void {
+    this.sortedBooks = this.sortData(this.books, sort);
   }
 
   /**

@@ -225,8 +225,70 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Users"></mat-tab>
-      <mat-tab label="Books"></mat-tab>
+      <mat-tab label="Users">
+        <div class="users">
+          <table matSort (matSortChange)="sortUsers($event)" class="center">
+            <tr>
+              <th mat-sort-header="id">ID</th>
+              <th mat-sort-header="firstname">First name</th>
+              <th mat-sort-header="lastname">Last name</th>
+              <th mat-sort-header="email">Email</th>
+              <th mat-sort-header="numBooksListed">Books listed</th>
+              <th mat-sort-header="numBooksSold">Books sold</th>
+              <th mat-sort-header="moneyMade">Money made</th>
+              <th mat-sort-header="verified">Verified</th>
+              <th mat-sort-header="admin">Admin</th>
+              <th mat-sort-header="joinTime">Join time</th>
+            </tr>
+            <tr *ngFor="let user of sortedUsers">
+              <td>{{ user.id }}</td>
+              <td>{{ user.firstname }}</td>
+              <td>{{ user.lastname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.numBooksListed }}</td>
+              <td>{{ user.numBooksSold }}</td>
+              <td>{{ user.moneyMade | currency }}</td>
+              <td>
+                <mat-icon *ngIf="user.verified">check_box</mat-icon>
+              </td>
+              <td>
+                <mat-icon *ngIf="user.admin">check_box</mat-icon>
+              </td>
+              <td>{{ user.joinTime | date }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+      <mat-tab label="Books">
+        <div class="books">
+          <table matSort (matSortChange)="sortBooks($event)" class="center">
+            <tr>
+              <th mat-sort-header="id">ID</th>
+              <th mat-sort-header="title">Title</th>
+              <th mat-sort-header="author">Author</th>
+              <th mat-sort-header="ISBN10">ISBN-10</th>
+              <th mat-sort-header="ISBN13">ISBN-13</th>
+              <th mat-sort-header="price">Price</th>
+              <th mat-sort-header="listTime">List time</th>
+              <th mat-sort-header="editTime">Edit time</th>
+            </tr>
+            <tr *ngFor="let book of sortedBooks">
+              <td>
+                <a routerLink="/book/{{ book.id }}" class="standard-link">{{
+                  book.id
+                }}</a>
+              </td>
+              <td>{{ book.title }}</td>
+              <td>{{ book.author }}</td>
+              <td>{{ book.ISBN10 }}</td>
+              <td>{{ book.ISBN13 }}</td>
+              <td>{{ book.price | currency }}</td>
+              <td>{{ book.listTime | date }}</td>
+              <td>{{ book.editTime | date }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
     </mat-tab-group>
   </div>
 
