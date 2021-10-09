@@ -22,7 +22,7 @@ describe('ResourceService', () => {
     expect(exists2).toBe(false);
   });
 
-  it('should get and set a resource', async () => {
+  it('should get, set, and reset a resource', async () => {
     // get resource
     const resource1 = await resourceService.getResource<number>('SALT_ROUNDS');
     expect(resource1).toBeDefined();
@@ -52,7 +52,6 @@ describe('ResourceService', () => {
     expect(resource6).toBeDefined();
     expect(resource6).toBe('2.0.1');
     await resourceService.setResource('SALT_ROUNDS', 12);
-    await resourceService.setResource('VERSION', '2.0.0');
     await expect(
       resourceService.setResource('FAKE_RESOURCE', 1),
     ).rejects.toThrow(ServiceException);
@@ -64,6 +63,14 @@ describe('ResourceService', () => {
     await expect(
       resourceService.setResource('SALT_ROUNDS', 'test'),
     ).rejects.toThrow(ServiceException);
+
+    // reset resource
+    const resource7 = await resourceService.resetResource('VERSION');
+    expect(resource7).toBeDefined();
+    expect(resource7).not.toEqual(resource6);
+    expect(resource7).toHaveProperty('name', 'VERSION');
+    expect(resource7).toHaveProperty('value', '2.0.0');
+    expect(resource7).toHaveProperty('type', 'STRING');
   });
 
   it('should get all resources', async () => {

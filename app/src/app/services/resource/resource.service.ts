@@ -74,4 +74,20 @@ export class ResourceService {
   ): Promise<void> {
     await this.apiService.patch('resource', { query: { name, value } });
   }
+
+  /**
+   * Reset a resource's value.
+   *
+   * @param name The resource name.
+   */
+  public async reset(name: string): Promise<void> {
+    await this.apiService.patch('resource/reset', { query: { name } });
+  }
+
+  /**
+   * Update resources.
+   */
+  public async update(): Promise<void> {
+    this.resources = await this.apiService.get<Resources>('resource/all');
+  }
 }

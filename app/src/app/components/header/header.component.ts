@@ -3,6 +3,7 @@ import { Router, RoutesRecognized } from '@angular/router';
 import { filter, pairwise } from 'rxjs/operators';
 import { UserService } from '../../services/user/user.service';
 import { MessageService } from '../../services/message/message.service';
+import { AdminService } from '../../services/admin/admin.service';
 import { UserInfo } from '../../services/user/user.interface';
 import { NBMessage } from '../../services/message/message.interface';
 
@@ -19,12 +20,14 @@ export class HeaderComponent implements OnInit {
   public admin = false;
   public thisUser!: UserInfo;
   public unreadMessages: NBMessage[] = [];
+  public adminNotifications = 0;
   public loginLogoutAfter = window.location.pathname || '/';
 
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
     private readonly messageService: MessageService,
+    private readonly adminService: AdminService,
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -48,13 +51,22 @@ export class HeaderComponent implements OnInit {
       this.unreadMessages = threads.filter(
         (message) => !message.read && message.fromUserID !== this.thisUser.id,
       );
+
+      if (this.thisUser.admin) {
+        this.adminNotifications =
+          await this.adminService.getAdminNotifications();
+      }
     }
 
-    this.messageService.threadsChange.subscribe(async (threads) => {
+    this.messageService.threadsChange.subscribe((threads) => {
       this.unreadMessages = threads.filter(
         (message) => !message.read && message.fromUserID !== this.thisUser.id,
       );
     });
+
+    this.adminService.adminNotificationsChange.subscribe(
+      (notifications) => (this.adminNotifications = notifications),
+    );
 
     this.router.events
       .pipe(

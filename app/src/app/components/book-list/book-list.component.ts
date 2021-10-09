@@ -26,6 +26,7 @@ interface DepartmentMap {
 })
 export class BookListComponent implements OnInit, OnChanges {
   @Input() books: NBBook[] = [];
+  @Input() paginate = true;
   public currentPage = 0;
   public booksPerPage = 24;
   public pageSizeOptions = [3, 6, 12, 24, 48];
@@ -40,7 +41,9 @@ export class BookListComponent implements OnInit, OnChanges {
       acc[current.id] = current.name;
       return acc;
     }, {} as DepartmentMap);
-    this.visibleBooks = this.books.slice(0, this.booksPerPage);
+    this.visibleBooks = this.paginate
+      ? this.books.slice(0, this.booksPerPage)
+      : this.books;
   }
 
   public async ngOnChanges(changes: SimpleChanges): Promise<void> {

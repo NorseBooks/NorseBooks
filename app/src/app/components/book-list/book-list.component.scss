@@ -54,6 +54,7 @@ $card-size: 250px;
             }
 
             .book-author {
+              color: rgba(0, 0, 0, 0.625);
               @include globals.line-cutoff(1);
             }
 

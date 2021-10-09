@@ -143,6 +143,37 @@ export class ResourceService {
   }
 
   /**
+   * Reset an app resource's value.
+   *
+   * @param name The name of the resource.
+   * @returns The updated resource record.
+   */
+  public async resetResource<T extends boolean | number | string>(
+    name: string,
+  ): Promise<NBResource<T>> {
+    const resourceArray = await this.dbService.getStaticTable(
+      resourceTableName,
+    );
+    const defaultResources = resourceArray.reduce((acc, resource) => {
+      switch (resource.type) {
+        case 'BOOLEAN':
+          acc[resource.name] = resource.value === 'true' ? true : false;
+          break;
+        case 'NUMBER':
+          acc[resource.name] = parseFloat(resource.value as string);
+          break;
+        case 'STRING':
+          acc[resource.name] = resource.value;
+          break;
+      }
+
+      return acc;
+    }, {});
+
+    return this.setResource<T>(name, defaultResources[name]);
+  }
+
+  /**
    * Get all app resources.
    *
    * @returns All resources.

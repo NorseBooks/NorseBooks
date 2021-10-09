@@ -333,6 +333,26 @@ export class DBService {
   }
 
   /**
+   * Get a static table's values.
+   *
+   * @param tableName The table name.
+   * @returns The table values.
+   */
+  public async getStaticTable(tableName: string): Promise<any[]> {
+    const data = await fs.promises.readFile(
+      path.join('src', 'sql', 'tables', `${tableName}.csv`),
+    );
+    const parser = csv.parse(data, { columns: true });
+    const table = [];
+
+    for await (const row of parser) {
+      table.push(row);
+    }
+
+    return table;
+  }
+
+  /**
    * Prune records from the database.
    */
   private async pruneRecords(): Promise<void> {
