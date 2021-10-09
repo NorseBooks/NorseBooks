@@ -211,6 +211,11 @@ export class AdminComponent implements OnInit {
     await this.adminService.updateAdminNotifications();
   }
 
+  /**
+   * Open the delete reported book confirmation dialog.
+   *
+   * @param reportID The report ID.
+   */
   public openDeleteReportBookConfirmationDialog(reportID: string): void {
     this.deletingReportID = reportID;
 
