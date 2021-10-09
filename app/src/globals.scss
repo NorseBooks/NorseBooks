@@ -233,6 +233,14 @@ mat-card {
   }
 }
 
+mat-card.flex-card {
+  display: flex;
+
+  mat-card-content {
+    display: flex;
+  }
+}
+
 mat-dialog-container {
   box-shadow: 0 0 16px #1e1e1e !important;
   border-radius: 12px !important;

@@ -1,3 +1,7 @@
+@use '../../../globals';
+
+$card-size: 400px;
+
 .admin {
   max-width: 100vw;
 
@@ -39,6 +43,60 @@
 
       .resource {
       }
+    }
+
+    .reports {
+      @include globals.flex-grid($card-size, 2.5rem);
+      margin: 16px 0;
+      padding: 16px;
+
+      .report {
+        display: flex;
+
+        .report-card {
+          overflow: hidden;
+          width: 100%;
+          @include globals.hover-zoom();
+
+          .report-card-content {
+            display: flex;
+            flex-direction: column;
+
+            .report-info {
+              flex: 1;
+              display: flex;
+
+              .report-link {
+                color: black;
+
+                &:hover {
+                  text-decoration: none;
+                }
+
+                .reported-book-title {
+                  margin-bottom: 12px;
+                  @include globals.line-cutoff(3);
+                }
+
+                .reported-by {
+                  color: rgba(0, 0, 0, 0.625);
+                  margin-bottom: 8px;
+                }
+
+                .report-reason {
+                }
+              }
+            }
+
+            .report-actions {
+              flex: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .feedback {
     }
   }
 }

@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Dialog } from '../dialog/dialog.component';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
+import { BookService } from '../../services/book/book.service';
 import { ReportService } from '../../services/report/report.service';
 import { FeedbackService } from '../../services/feedback/feedback.service';
 import { AdminService } from '../../services/admin/admin.service';
 import { Resources } from '../../services/resource/resource.interface';
+import { OtherUserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
 import { NBReport } from '../../services/report/report.interface';
 import { NBFeedback } from '../../services/feedback/feedback.interface';
@@ -44,8 +47,12 @@ export class AdminComponent implements OnInit {
   public users: AdminUser[] = [];
   public books: NBBook[] = [];
   public newResources: Resources = {};
+  public reportUsers: OtherUserInfo[] = [];
+  public reportBooks: NBBook[] = [];
+  public deletingReportID = '';
   public settingResource = false;
   public resettingResource = false;
+  public deletingReport = false;
   public chartOptions: ChartOptions = { responsive: true };
   public chartLabels: Label[] = [];
   public chartData: SingleDataSet = [];
@@ -54,12 +61,17 @@ export class AdminComponent implements OnInit {
   public chartPlugins = [];
   public chartColors: Color[] = [];
   public readonly inputAppearance = inputAppearance;
+  @ViewChild('deleteReportedBookConfirmationDialog')
+  deleteReportedBookConfirmationDialog!: Dialog;
+  @ViewChild('deleteReportedBookConfirmationTemplate')
+  deleteReportedBookConfirmationTemplate!: TemplateRef<any>;
 
   constructor(
     private readonly router: Router,
     private readonly snackBar: MatSnackBar,
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
+    private readonly bookService: BookService,
     private readonly reportService: ReportService,
     private readonly feedbackService: FeedbackService,
     private readonly adminService: AdminService,
@@ -102,6 +114,15 @@ export class AdminComponent implements OnInit {
     this.users = await this.adminService.getUsers();
     this.books = await this.adminService.getBooks();
 
+    this.reportUsers = await Promise.all(
+      this.reports.map((report) =>
+        this.userService.getOtherUserInfo(report.userID),
+      ),
+    );
+    this.reportBooks = await Promise.all(
+      this.reports.map((report) => this.bookService.getBook(report.bookID)),
+    );
+
     this.chartLabels = Object.keys(this.dbUsage);
     this.chartData = Object.values(this.dbUsage);
     this.chartColors = [this.generateColors(Object.keys(this.dbUsage).length)];
@@ -124,10 +145,10 @@ export class AdminComponent implements OnInit {
       });
     }
 
-    this.settingResource = false;
-
     await this.resourceService.update();
     await this.updateInfo();
+
+    this.settingResource = false;
   }
 
   /**
@@ -147,11 +168,67 @@ export class AdminComponent implements OnInit {
       });
     }
 
-    this.resettingResource = false;
-
     await this.resourceService.update();
     await this.updateInfo();
     this.newResources[name] = this.resources[name];
+
+    this.resettingResource = false;
+  }
+
+  /**
+   * Delete a report.
+   *
+   * @param reportID The report ID.
+   */
+  public async onDeleteReport(reportID: string): Promise<void> {
+    this.deletingReport = true;
+
+    try {
+      await this.reportService.deleteReport(reportID);
+    } catch (err: any) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+
+    await this.updateInfo();
+
+    this.deletingReport = false;
+  }
+
+  public openDeleteReportBookConfirmationDialog(reportID: string): void {
+    this.deletingReportID = reportID;
+
+    this.deleteReportedBookConfirmationDialog.openDialog(
+      this.deleteReportedBookConfirmationTemplate,
+    );
+  }
+
+  /**
+   * Delete a reported book.
+   *
+   * @param reportID The report ID.
+   */
+  public async onDeleteReportedBook(confirm: boolean): Promise<void> {
+    if (confirm) {
+      this.deletingReport = true;
+
+      try {
+        await this.reportService.deleteReportedBook(this.deletingReportID);
+      } catch (err: any) {
+        this.snackBar.open(`Error: ${err}`, undefined, {
+          duration: 3000,
+          panelClass: 'alert-panel-center',
+        });
+      }
+
+      await this.updateInfo();
+
+      this.deletingReport = false;
+    }
+
+    this.deletingReportID = '';
   }
 
   /**

@@ -130,6 +130,53 @@
           >
           <span *ngIf="reports.length === 0">Reports</span>
         </ng-template>
+        <div *ngIf="reports.length > 0; else noReports" class="reports">
+          <div
+            *ngFor="let report of reports; let i = index"
+            [attr.data-index]="i"
+            class="report"
+          >
+            <mat-card class="report-card flex-card">
+              <mat-card-content class="report-card-content">
+                <div class="report-info">
+                  <a
+                    routerLink="/book/{{ report.bookID }}"
+                    class="standard-link report-link"
+                  >
+                    <h2 class="reported-book-title">
+                      {{ reportBooks[i].title }}
+                    </h2>
+                    <div class="reported-by">
+                      Reported by
+                      {{ reportUsers[i].firstname }}
+                      {{ reportUsers[i].lastname }} on
+                      {{ report.reportTime | date }}
+                    </div>
+                    <div class="report-reason">{{ report.reason }}</div>
+                  </a>
+                </div>
+                <div class="report-actions">
+                  <button
+                    mat-icon-button
+                    matTooltip="Discard report"
+                    (click)="onDeleteReport(report.id)"
+                    [disabled]="deletingReport"
+                  >
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    matTooltip="Delete reported book"
+                    (click)="openDeleteReportBookConfirmationDialog(report.id)"
+                    [disabled]="deletingReport"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
@@ -142,12 +189,38 @@
           >
           <span *ngIf="feedback.length === 0">Feedback</span>
         </ng-template>
+        <div
+          *ngIf="feedback.length > 0; else noFeedback"
+          class="feedback"
+        ></div>
       </mat-tab>
       <mat-tab label="Users"></mat-tab>
       <mat-tab label="Books"></mat-tab>
     </mat-tab-group>
   </div>
+
+  <nb-dialog
+    #deleteReportedBookConfirmationDialog
+    title="Delete reported book"
+    doneButtonLabel="Delete"
+    width="500px"
+    (close)="onDeleteReportedBook($event)"
+  ></nb-dialog>
 </div>
+
+<ng-template #noReports>
+  <div class="reports text-center">There are no active book reports.</div>
+</ng-template>
+
+<ng-template #noFeedback>
+  <div class="feedback text-center">There is no active user feedback.</div>
+</ng-template>
+
+<ng-template #deleteReportedBookConfirmationTemplate>
+  <p>
+    Are you certain you want to delete this book and the corresponding report?
+  </p>
+</ng-template>
 
 <ng-template #loading>
   <div class="center">

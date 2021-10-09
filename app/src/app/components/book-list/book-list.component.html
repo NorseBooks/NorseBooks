@@ -1,5 +1,6 @@
 <div class="book-list">
   <mat-paginator
+    *ngIf="paginate"
     color="primary"
     [length]="books.length"
     [pageSize]="24"
@@ -28,6 +29,9 @@
               {{ departments[book.departmentID]
               }}<span *ngIf="book.courseNumber"> {{ book.courseNumber }}</span>
             </p>
+            <div class="book-extra">
+              <ng-content></ng-content>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
