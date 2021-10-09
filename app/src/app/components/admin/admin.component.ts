@@ -279,11 +279,7 @@ export class AdminComponent implements OnInit {
    * @param isAsc Whether to sort ascending.
    * @returns The comparison result.
    */
-  private sortCompare(
-    a: number | string,
-    b: number | string,
-    isAsc: boolean,
-  ): number {
+  private sortCompare(a: any, b: any, isAsc: boolean): number {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 
