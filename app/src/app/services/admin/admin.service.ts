@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { APIService } from '../api/api.service';
+import { UserService } from '../user/user.service';
+import { ReportService } from '../report/report.service';
+import { FeedbackService } from '../feedback/feedback.service';
 import { AdminStats, AdminDatabaseUsage, AdminUser } from './admin.interface';
 import { NBBook } from '../book/book.interface';
 
@@ -10,7 +14,33 @@ import { NBBook } from '../book/book.interface';
   providedIn: 'root',
 })
 export class AdminService {
-  constructor(private readonly apiService: APIService) {}
+  private readonly updateAdminNotificationsInterval = 60 * 1000;
+  public adminNotificationsChange = new Subject<number>();
+
+  constructor(
+    private readonly apiService: APIService,
+    private readonly userService: UserService,
+    private readonly reportService: ReportService,
+    private readonly feedbackService: FeedbackService,
+  ) {
+    if (this.userService.loggedIn()) {
+      this.userService.getUserInfo().then((user) => {
+        if (user.admin) {
+          this.updateAdminNotifications();
+        }
+      });
+    }
+
+    setInterval(() => {
+      if (this.userService.loggedIn()) {
+        this.userService.getUserInfo().then((user) => {
+          if (user.admin) {
+            this.updateAdminNotifications();
+          }
+        });
+      }
+    }, this.updateAdminNotificationsInterval);
+  }
 
   /**
    * Get site statistics.
@@ -46,5 +76,24 @@ export class AdminService {
    */
   public async getDatabaseUsage(): Promise<AdminDatabaseUsage> {
     return this.apiService.get<AdminDatabaseUsage>('admin/database-usage');
+  }
+
+  /**
+   * Get the user's admin notification count.
+   *
+   * @returns The number of admin notifications.
+   */
+  public async getAdminNotifications(): Promise<number> {
+    const reports = await this.reportService.getAllReports();
+    const feedback = await this.feedbackService.getAllFeedback();
+    return reports.length + feedback.length;
+  }
+
+  /**
+   * Update the user's admin notification count.
+   */
+  public async updateAdminNotifications(): Promise<void> {
+    const count = await this.getAdminNotifications();
+    this.adminNotificationsChange.next(count);
   }
 }

@@ -16,12 +16,22 @@
       <mat-icon>help_outline</mat-icon>
     </a>
     <a
-      *ngIf="admin"
+      *ngIf="admin && adminNotifications === 0"
       mat-icon-button
       routerLink="/admin"
       matTooltip="Admin control panel"
     >
       <mat-icon>admin_panel_settings</mat-icon>
+    </a>
+    <a
+      *ngIf="admin && adminNotifications > 0"
+      mat-icon-button
+      routerLink="/admin"
+      matTooltip="Admin control panel"
+    >
+      <mat-icon [matBadge]="adminNotifications" matBadgeColor="warn"
+        >admin_panel_settings</mat-icon
+      >
     </a>
     <a
       *ngIf="loggedIn"
@@ -85,8 +95,22 @@
         <mat-icon>help_outline</mat-icon>
         <span>Help</span>
       </a>
-      <a *ngIf="admin" mat-menu-item routerLink="/admin">
+      <a
+        *ngIf="admin && adminNotifications === 0"
+        mat-menu-item
+        routerLink="/admin"
+      >
         <mat-icon>admin_panel_settings</mat-icon>
+        <span>Admin control panel</span>
+      </a>
+      <a
+        *ngIf="admin && adminNotifications > 0"
+        mat-menu-item
+        routerLink="/admin"
+      >
+        <mat-icon [matBadge]="adminNotifications" matBadgeColor="warn"
+          >admin_panel_settings</mat-icon
+        >
         <span>Admin control panel</span>
       </a>
       <a *ngIf="loggedIn" mat-menu-item routerLink="/book">

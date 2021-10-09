@@ -195,6 +195,8 @@ export class AdminComponent implements OnInit {
     await this.updateInfo();
 
     this.deletingReport = false;
+
+    await this.adminService.updateAdminNotifications();
   }
 
   public openDeleteReportBookConfirmationDialog(reportID: string): void {
@@ -226,6 +228,8 @@ export class AdminComponent implements OnInit {
       await this.updateInfo();
 
       this.deletingReport = false;
+
+      await this.adminService.updateAdminNotifications();
     }
 
     this.deletingReportID = '';
