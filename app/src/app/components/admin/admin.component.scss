@@ -65,6 +65,7 @@ $card-size: 400px;
             .report-info {
               flex: 1;
               display: flex;
+              flex-direction: column;
 
               .report-link {
                 color: black;
@@ -97,6 +98,42 @@ $card-size: 400px;
     }
 
     .feedback {
+      @include globals.flex-grid($card-size, 2.5rem);
+      margin: 16px 0;
+      padding: 16px;
+
+      .feedback-item {
+        display: flex;
+
+        .feedback-card {
+          overflow: hidden;
+          width: 100%;
+          @include globals.hover-zoom();
+
+          .feedback-card-content {
+            display: flex;
+            flex-direction: column;
+
+            .feedback-info {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+
+              .feedback-by {
+                color: rgba(0, 0, 0, 0.625);
+                margin-bottom: 8px;
+              }
+
+              .feedback-feedback {
+              }
+            }
+
+            .feedback-actions {
+              flex: 0;
+            }
+          }
+        }
+      }
     }
   }
 }

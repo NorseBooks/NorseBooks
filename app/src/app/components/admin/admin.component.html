@@ -57,7 +57,9 @@
             matTooltip="The current capacity of the database"
           >
             <span class="stats-item-label">Capacity</span>
-            <span class="stats-item-value">{{ stats.capacity * 100 }}%</span>
+            <span class="stats-item-value"
+              >{{ stats.capacity * 100 | round: 5 }}%</span
+            >
           </div>
           <div
             class="stats-item"
@@ -189,10 +191,39 @@
           >
           <span *ngIf="feedback.length === 0">Feedback</span>
         </ng-template>
-        <div
-          *ngIf="feedback.length > 0; else noFeedback"
-          class="feedback"
-        ></div>
+        <div *ngIf="feedback.length > 0; else noFeedback" class="feedback">
+          <div
+            *ngFor="let feedbackItem of feedback; let i = index"
+            [attr.data-index]="i"
+            class="feedback-item"
+          >
+            <mat-card class="feedback-card flex-card">
+              <mat-card-content class="feedback-card-content">
+                <div class="feedback-info">
+                  <div class="feedback-by">
+                    Submitted by
+                    {{ feedbackUsers[i].firstname }}
+                    {{ feedbackUsers[i].lastname }} on
+                    {{ feedbackItem.submitTime | date }}
+                  </div>
+                  <div class="feedback-feedback">
+                    {{ feedbackItem.feedback }}
+                  </div>
+                </div>
+                <div class="feedback-actions">
+                  <button
+                    mat-icon-button
+                    matTooltip="Discard feedback"
+                    (click)="onDeleteFeedback(feedbackItem.id)"
+                    [disabled]="deletingFeedback"
+                  >
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
       </mat-tab>
       <mat-tab label="Users"></mat-tab>
       <mat-tab label="Books"></mat-tab>

@@ -68,6 +68,7 @@ import { CreditsComponent } from './components/credits/credits.component';
 import { AdminComponent } from './components/admin/admin.component';
 
 import { ResourceNamePipe } from './pipes/resource-name/resource-name.pipe';
+import { RoundPipe } from './pipes/round/round.pipe';
 
 import { ChartsModule } from 'ng2-charts';
 
@@ -104,6 +105,7 @@ import { ChartsModule } from 'ng2-charts';
     CreditsComponent,
     AdminComponent,
     ResourceNamePipe,
+    RoundPipe,
   ],
   imports: [
     BrowserModule,

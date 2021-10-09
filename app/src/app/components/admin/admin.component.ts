@@ -49,10 +49,12 @@ export class AdminComponent implements OnInit {
   public newResources: Resources = {};
   public reportUsers: OtherUserInfo[] = [];
   public reportBooks: NBBook[] = [];
+  public feedbackUsers: OtherUserInfo[] = [];
   public deletingReportID = '';
   public settingResource = false;
   public resettingResource = false;
   public deletingReport = false;
+  public deletingFeedback = false;
   public chartOptions: ChartOptions = { responsive: true };
   public chartLabels: Label[] = [];
   public chartData: SingleDataSet = [];
@@ -121,6 +123,11 @@ export class AdminComponent implements OnInit {
     );
     this.reportBooks = await Promise.all(
       this.reports.map((report) => this.bookService.getBook(report.bookID)),
+    );
+    this.feedbackUsers = await Promise.all(
+      this.feedback.map((feedbackItem) =>
+        this.userService.getOtherUserInfo(feedbackItem.userID),
+      ),
     );
 
     this.chartLabels = Object.keys(this.dbUsage);
@@ -233,6 +240,30 @@ export class AdminComponent implements OnInit {
     }
 
     this.deletingReportID = '';
+  }
+
+  /**
+   * Delete a feedback submission.
+   *
+   * @param feedbackID The feedback ID.
+   */
+  public async onDeleteFeedback(feedbackID: string): Promise<void> {
+    this.deletingFeedback = true;
+
+    try {
+      await this.feedbackService.deleteFeedback(feedbackID);
+    } catch (err: any) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+
+    await this.updateInfo();
+
+    this.deletingFeedback = false;
+
+    await this.adminService.updateAdminNotifications();
   }
 
   /**
