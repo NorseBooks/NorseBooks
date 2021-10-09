@@ -15,6 +15,7 @@ import {
   AdminDatabaseUsage,
   AdminUser,
 } from '../../services/admin/admin.interface';
+import { inputAppearance } from '../../globals';
 import { ChartType, ChartOptions } from 'chart.js';
 import {
   SingleDataSet,
@@ -42,6 +43,9 @@ export class AdminComponent implements OnInit {
   public feedback: NBFeedback[] = [];
   public users: AdminUser[] = [];
   public books: NBBook[] = [];
+  public newResources: Resources = {};
+  public settingResource = false;
+  public resettingResource = false;
   public chartOptions: ChartOptions = { responsive: true };
   public chartLabels: Label[] = [];
   public chartData: SingleDataSet = [];
@@ -49,6 +53,7 @@ export class AdminComponent implements OnInit {
   public chartLegend = true;
   public chartPlugins = [];
   public chartColors: Color[] = [];
+  public readonly inputAppearance = inputAppearance;
 
   constructor(
     private readonly router: Router,
@@ -80,6 +85,7 @@ export class AdminComponent implements OnInit {
 
     await this.updateInfo();
     setInterval(() => this.updateInfo(), this.updateInfoInterval);
+    this.newResources = Object.assign({}, this.resources);
 
     this.done = true;
   }
@@ -99,6 +105,53 @@ export class AdminComponent implements OnInit {
     this.chartLabels = Object.keys(this.dbUsage);
     this.chartData = Object.values(this.dbUsage);
     this.chartColors = [this.generateColors(Object.keys(this.dbUsage).length)];
+  }
+
+  /**
+   * Set a resource's value.
+   *
+   * @param name The resource name.
+   */
+  public async onSetResource(name: string): Promise<void> {
+    this.settingResource = true;
+
+    try {
+      await this.resourceService.set(name, this.newResources[name]);
+    } catch (err: any) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+
+    this.settingResource = false;
+
+    await this.resourceService.update();
+    await this.updateInfo();
+  }
+
+  /**
+   * Reset a resource's value.
+   *
+   * @param name The resource name.
+   */
+  public async onResetResource(name: string): Promise<void> {
+    this.resettingResource = true;
+
+    try {
+      await this.resourceService.reset(name);
+    } catch (err: any) {
+      this.snackBar.open(`Error: ${err}`, undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+    }
+
+    this.resettingResource = false;
+
+    await this.resourceService.update();
+    await this.updateInfo();
+    this.newResources[name] = this.resources[name];
   }
 
   /**

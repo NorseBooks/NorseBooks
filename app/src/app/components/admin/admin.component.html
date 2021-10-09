@@ -87,7 +87,38 @@
           ></canvas>
         </div>
       </mat-tab>
-      <mat-tab label="Resources"></mat-tab>
+      <mat-tab label="Resources">
+        <div class="resources">
+          <div *ngFor="let resource of resources | keyvalue" class="resource">
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>{{ resource.key | resourceName }}</mat-label>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="newResources[resource.key]"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                matTooltip="Save"
+                (click)="onSetResource(resource.key)"
+                [disabled]="settingResource"
+              >
+                <mat-icon>save</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matSuffix
+                matTooltip="Reset"
+                (click)="onResetResource(resource.key)"
+                [disabled]="resettingResource"
+              >
+                <mat-icon>settings_backup_restore</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
           <span
