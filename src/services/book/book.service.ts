@@ -111,6 +111,8 @@ export class BookService {
     const ISBN13 = !options.ISBN13
       ? undefined
       : options.ISBN13.replace(/[- ]/g, '');
+    const ISBN10Num = !options.ISBN10 ? undefined : parseInt(ISBN10);
+    const ISBN13Num = !options.ISBN13 ? undefined : parseInt(ISBN13);
 
     const userExists = await this.userService.userExists(options.userID);
 
@@ -132,8 +134,14 @@ export class BookService {
               options.description.length >= 1 &&
               options.description.length <= bookDescriptionMaxLength
             ) {
-              if (ISBN10 === undefined || ISBN10.length === 10) {
-                if (ISBN13 === undefined || ISBN13.length === 13) {
+              if (
+                ISBN10 === undefined ||
+                (ISBN10.length === 10 && !isNaN(ISBN10Num))
+              ) {
+                if (
+                  ISBN13 === undefined ||
+                  (ISBN13.length === 13 && !isNaN(ISBN13Num))
+                ) {
                   const departmentExists =
                     await this.departmentService.departmentExists(
                       options.departmentID,
@@ -198,12 +206,12 @@ export class BookService {
                   }
                 } else {
                   throw new ServiceException(
-                    'ISBN 13 must be exactly 13 characters',
+                    'ISBN 13 must contain 13 numeric characters',
                   );
                 }
               } else {
                 throw new ServiceException(
-                  'ISBN 10 must be exactly 10 characters',
+                  'ISBN 10 must contain 10 numeric characters',
                 );
               }
             } else {
@@ -259,6 +267,14 @@ export class BookService {
       options.ISBN13 === undefined || options.ISBN13 === null
         ? options.ISBN13
         : options.ISBN13.replace(/[- ]/g, '');
+    const ISBN10Num =
+      options.ISBN10 === undefined || options.ISBN10 === null
+        ? undefined
+        : parseInt(ISBN10);
+    const ISBN13Num =
+      options.ISBN13 === undefined || options.ISBN13 === null
+        ? undefined
+        : parseInt(ISBN13);
 
     const book = await this.getBook(bookID);
 
@@ -276,11 +292,15 @@ export class BookService {
           (options.description.length >= 1 &&
             options.description.length <= bookDescriptionMaxLength)
         ) {
-          if (ISBN10 === undefined || ISBN10 === null || ISBN10.length === 10) {
+          if (
+            ISBN10 === undefined ||
+            ISBN10 === null ||
+            (ISBN10.length === 10 && !isNaN(ISBN10Num))
+          ) {
             if (
               ISBN13 === undefined ||
               ISBN13 === null ||
-              ISBN13.length === 13
+              (ISBN13.length === 13 && !isNaN(ISBN13Num))
             ) {
               const departmentExists =
                 options.departmentID === undefined
@@ -373,11 +393,13 @@ export class BookService {
               }
             } else {
               throw new ServiceException(
-                'ISBN 13 must be exactly 13 characters',
+                'ISBN 13 must contain 13 numeric characters',
               );
             }
           } else {
-            throw new ServiceException('ISBN 10 must be exactly 10 characters');
+            throw new ServiceException(
+              'ISBN 10 must contain 10 numeric characters',
+            );
           }
         } else {
           throw new ServiceException(

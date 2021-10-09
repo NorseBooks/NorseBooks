@@ -71,19 +71,19 @@ export class UserService {
       );
 
     const emailAddressWithoutDomain = email.replace('@luther.edu', '');
+    const emailAddress = `${emailAddressWithoutDomain}@luther.edu`;
 
     if (firstname.length > 0 && firstname.length <= userNameMaxLength) {
       if (lastname.length > 0 && lastname.length <= userNameMaxLength) {
         if (
-          emailAddressWithoutDomain.length >= userEmailMinLength &&
-          emailAddressWithoutDomain.length <= userEmailMaxLength
+          emailAddress.length >= userEmailMinLength &&
+          emailAddress.length <= userEmailMaxLength
         ) {
           if (!emailAddressWithoutDomain.includes('@')) {
             if (
               password.length >= userPasswordMinLength &&
               password.length <= userPasswordMaxLength
             ) {
-              const emailAddress = `${emailAddressWithoutDomain}@luther.edu`;
               const emailExists = await this.userExistsByEmail(emailAddress);
 
               if (!emailExists) {
@@ -390,10 +390,12 @@ export class UserService {
    * @returns The new user session.
    */
   public async login(email: string, password: string): Promise<NBSession> {
-    const userExists = await this.userExistsByEmail(email);
+    const emailAddress = email.includes('@') ? email : `${email}@luther.edu`;
+
+    const userExists = await this.userExistsByEmail(emailAddress);
 
     if (userExists) {
-      const user = await this.getUserByEmail(email);
+      const user = await this.getUserByEmail(emailAddress);
       const passwordMatch = await this.passwordMatch(
         password,
         user.passwordHash,

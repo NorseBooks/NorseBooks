@@ -1,0 +1,322 @@
+<div *ngIf="done; else loading" class="admin">
+  <div class="admin-container">
+    <h1 class="text-center">Admin Control Panel</h1>
+    <mat-tab-group dynamicHeight mat-align-tabs="center">
+      <mat-tab label="Statistics">
+        <div class="stats">
+          <div class="stats-item" matTooltip="The number of users signed up">
+            <span class="stats-item-label">Users</span>
+            <span class="stats-item-value">{{ stats.users }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of books currently listed"
+          >
+            <span class="stats-item-label">Books</span>
+            <span class="stats-item-value">{{ stats.books }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of total books ever listed"
+          >
+            <span class="stats-item-label">Books listed</span>
+            <span class="stats-item-value">{{ stats.booksListed }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of books that have sold"
+          >
+            <span class="stats-item-label">Books sold</span>
+            <span class="stats-item-value">{{ stats.booksSold }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The total amount of money made from selling books"
+          >
+            <span class="stats-item-label">Money made</span>
+            <span class="stats-item-value">{{
+              stats.moneyMade | currency
+            }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of tables in the database"
+          >
+            <span class="stats-item-label">Tables</span>
+            <span class="stats-item-value">{{ stats.tables }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of rows currently occupying the database"
+          >
+            <span class="stats-item-label">Rows</span>
+            <span class="stats-item-value">{{ stats.rows }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The current capacity of the database"
+          >
+            <span class="stats-item-label">Capacity</span>
+            <span class="stats-item-value"
+              >{{ stats.capacity * 100 | round: 5 }}%</span
+            >
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of active book reports"
+          >
+            <span class="stats-item-label">Reports</span>
+            <span class="stats-item-value">{{ stats.reports }}</span>
+          </div>
+          <div
+            class="stats-item"
+            matTooltip="The number of active user feedback submissions"
+          >
+            <span class="stats-item-label">Feedback</span>
+            <span class="stats-item-value">{{ stats.feedback }}</span>
+          </div>
+        </div>
+        <div class="db-usage">
+          <canvas
+            baseChart
+            [data]="chartData"
+            [labels]="chartLabels"
+            [chartType]="chartType"
+            [options]="chartOptions"
+            [plugins]="chartPlugins"
+            [legend]="chartLegend"
+            [colors]="chartColors"
+          ></canvas>
+        </div>
+      </mat-tab>
+      <mat-tab label="Resources">
+        <div class="resources">
+          <div *ngFor="let resource of resources | keyvalue" class="resource">
+            <mat-form-field [appearance]="inputAppearance" class="max-width">
+              <mat-label>{{ resource.key | resourceName }}</mat-label>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="newResources[resource.key]"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                matTooltip="Save"
+                (click)="onSetResource(resource.key)"
+                [disabled]="settingResource"
+              >
+                <mat-icon>save</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                matSuffix
+                matTooltip="Reset"
+                (click)="onResetResource(resource.key)"
+                [disabled]="resettingResource"
+              >
+                <mat-icon>settings_backup_restore</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span
+            *ngIf="reports.length > 0"
+            [matBadge]="reports.length"
+            matBadgeColor="warn"
+            matBadgeOverlap="false"
+            >Reports</span
+          >
+          <span *ngIf="reports.length === 0">Reports</span>
+        </ng-template>
+        <div *ngIf="reports.length > 0; else noReports" class="reports">
+          <div
+            *ngFor="let report of reports; let i = index"
+            [attr.data-index]="i"
+            class="report"
+          >
+            <mat-card class="report-card flex-card">
+              <mat-card-content class="report-card-content">
+                <div class="report-info">
+                  <a
+                    routerLink="/book/{{ report.bookID }}"
+                    class="standard-link report-link"
+                  >
+                    <h2 class="reported-book-title">
+                      {{ reportBooks[i].title }}
+                    </h2>
+                    <div class="reported-by">
+                      Reported by
+                      {{ reportUsers[i].firstname }}
+                      {{ reportUsers[i].lastname }} on
+                      {{ report.reportTime | date }}
+                    </div>
+                    <div class="report-reason">{{ report.reason }}</div>
+                  </a>
+                </div>
+                <div class="report-actions">
+                  <button
+                    mat-icon-button
+                    matTooltip="Discard report"
+                    (click)="onDeleteReport(report.id)"
+                    [disabled]="deletingReport"
+                  >
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    matTooltip="Delete reported book"
+                    (click)="openDeleteReportBookConfirmationDialog(report.id)"
+                    [disabled]="deletingReport"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span
+            *ngIf="feedback.length > 0"
+            [matBadge]="feedback.length"
+            matBadgeColor="warn"
+            matBadgeOverlap="false"
+            >Feedback</span
+          >
+          <span *ngIf="feedback.length === 0">Feedback</span>
+        </ng-template>
+        <div *ngIf="feedback.length > 0; else noFeedback" class="feedback">
+          <div
+            *ngFor="let feedbackItem of feedback; let i = index"
+            [attr.data-index]="i"
+            class="feedback-item"
+          >
+            <mat-card class="feedback-card flex-card">
+              <mat-card-content class="feedback-card-content">
+                <div class="feedback-info">
+                  <div class="feedback-by">
+                    Submitted by
+                    {{ feedbackUsers[i].firstname }}
+                    {{ feedbackUsers[i].lastname }} on
+                    {{ feedbackItem.submitTime | date }}
+                  </div>
+                  <div class="feedback-feedback">
+                    {{ feedbackItem.feedback }}
+                  </div>
+                </div>
+                <div class="feedback-actions">
+                  <button
+                    mat-icon-button
+                    matTooltip="Discard feedback"
+                    (click)="onDeleteFeedback(feedbackItem.id)"
+                    [disabled]="deletingFeedback"
+                  >
+                    <mat-icon>clear</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Users">
+        <div class="users">
+          <table matSort (matSortChange)="sortUsers($event)" class="center">
+            <tr>
+              <th mat-sort-header="id">ID</th>
+              <th mat-sort-header="firstname">First name</th>
+              <th mat-sort-header="lastname">Last name</th>
+              <th mat-sort-header="email">Email</th>
+              <th mat-sort-header="numBooksListed">Books listed</th>
+              <th mat-sort-header="numBooksSold">Books sold</th>
+              <th mat-sort-header="moneyMade">Money made</th>
+              <th mat-sort-header="verified">Verified</th>
+              <th mat-sort-header="admin">Admin</th>
+              <th mat-sort-header="joinTime">Join time</th>
+            </tr>
+            <tr *ngFor="let user of sortedUsers">
+              <td>{{ user.id }}</td>
+              <td>{{ user.firstname }}</td>
+              <td>{{ user.lastname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.numBooksListed }}</td>
+              <td>{{ user.numBooksSold }}</td>
+              <td>{{ user.moneyMade | currency }}</td>
+              <td>
+                <mat-icon *ngIf="user.verified">check_box</mat-icon>
+              </td>
+              <td>
+                <mat-icon *ngIf="user.admin">check_box</mat-icon>
+              </td>
+              <td>{{ user.joinTime | date }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+      <mat-tab label="Books">
+        <div class="books">
+          <table matSort (matSortChange)="sortBooks($event)" class="center">
+            <tr>
+              <th mat-sort-header="id">ID</th>
+              <th mat-sort-header="title">Title</th>
+              <th mat-sort-header="author">Author</th>
+              <th mat-sort-header="ISBN10">ISBN-10</th>
+              <th mat-sort-header="ISBN13">ISBN-13</th>
+              <th mat-sort-header="price">Price</th>
+              <th mat-sort-header="listTime">List time</th>
+              <th mat-sort-header="editTime">Edit time</th>
+            </tr>
+            <tr *ngFor="let book of sortedBooks">
+              <td>
+                <a routerLink="/book/{{ book.id }}" class="standard-link">{{
+                  book.id
+                }}</a>
+              </td>
+              <td>{{ book.title }}</td>
+              <td>{{ book.author }}</td>
+              <td>{{ book.ISBN10 }}</td>
+              <td>{{ book.ISBN13 }}</td>
+              <td>{{ book.price | currency }}</td>
+              <td>{{ book.listTime | date }}</td>
+              <td>{{ book.editTime | date }}</td>
+            </tr>
+          </table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <nb-dialog
+    #deleteReportedBookConfirmationDialog
+    title="Delete reported book"
+    doneButtonLabel="Delete"
+    width="500px"
+    (close)="onDeleteReportedBook($event)"
+  ></nb-dialog>
+</div>
+
+<ng-template #noReports>
+  <div class="text-center padded">There are no active book reports.</div>
+</ng-template>
+
+<ng-template #noFeedback>
+  <div class="text-center padded">There is no active user feedback.</div>
+</ng-template>
+
+<ng-template #deleteReportedBookConfirmationTemplate>
+  <p>
+    Are you certain you want to delete this book and the corresponding report?
+  </p>
+</ng-template>
+
+<ng-template #loading>
+  <div class="center">
+    <mat-spinner class="spinner"></mat-spinner>
+  </div>
+</ng-template>

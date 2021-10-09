@@ -1,0 +1,15 @@
+@use '../../../globals';
+
+.credits {
+  background-image: url('/assets/img/backgrounds/credits.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 48px;
+
+  .credits-card {
+    max-width: 600px;
+    margin: auto;
+  }
+}

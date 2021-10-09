@@ -17,6 +17,7 @@ export interface QueryParameters<T> {
   defaultValue?: T;
   scope?: ParameterScope;
   parseNull?: boolean;
+  allowDecimal?: boolean;
 }
 
 /**
@@ -28,6 +29,7 @@ interface QueryParametersFull<T> {
   defaultValue: T;
   scope: ParameterScope;
   parseNull: boolean;
+  allowDecimal: boolean;
 }
 
 /**
@@ -45,5 +47,6 @@ export function queryDefaults<T>(
     defaultValue: params.defaultValue ?? undefined,
     scope: params.scope ?? 'query',
     parseNull: params.parseNull ?? false,
+    allowDecimal: params.allowDecimal ?? true,
   };
 }

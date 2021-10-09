@@ -56,7 +56,7 @@ export class BookController {
     @QueryString({ name: 'ISBN13', required: false }) ISBN13: string,
     @QueryString({ name: 'imageData', scope: 'body' }) imageData: string,
     @QueryNumber({ name: 'departmentID' }) departmentID: number,
-    @QueryNumber({ name: 'courseNumber', required: false })
+    @QueryNumber({ name: 'courseNumber', required: false, allowDecimal: false })
     courseNumber: number,
     @QueryNumber({ name: 'price' }) price: number,
     @QueryNumber({ name: 'conditionID' }) conditionID: number,
@@ -109,7 +109,12 @@ export class BookController {
     imageData: string,
     @QueryNumber({ name: 'departmentID', required: false })
     departmentID: number,
-    @QueryNumber({ name: 'courseNumber', required: false, parseNull: true })
+    @QueryNumber({
+      name: 'courseNumber',
+      required: false,
+      parseNull: true,
+      allowDecimal: false,
+    })
     courseNumber: number,
     @QueryNumber({ name: 'price', required: false }) price: number,
     @QueryNumber({ name: 'conditionID', required: false }) conditionID: number,
