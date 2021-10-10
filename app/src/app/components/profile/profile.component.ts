@@ -3,10 +3,14 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
+import { DepartmentService } from '../../services/department/department.service';
 import { ReportService } from '../../services/report/report.service';
+import { UserInterestService } from '../../services/user-interest/user-interest.service';
 import { ReferralService } from '../../services/referral/referral.service';
 import { UserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
+import { NBDepartment } from '../../services/department/department.interface';
+import { NBUserInterest } from '../../services/user-interest/user-interest.interface';
 import { NBReferral } from '../../services/referral/referral.interface';
 import {
   inputAppearance,
@@ -49,11 +53,18 @@ export class ProfileComponent implements OnInit {
   public recommended: NBBook[] = [];
   public reported: NBBook[] = [];
   public referrals: NBReferral[] = [];
+  public departments: NBDepartment[] = [];
+  public departmentsMap: { [id: number]: string } = {};
+  public userInterests: NBUserInterest[] = [];
+  public userInterestsIDs: number[] = [];
+  public newUserInterestsIDs: number[] = [];
   public submittingSetPasswordForm = false;
+  public savingUserInterests = false;
   public submittingReferUserForm = false;
   public logoutEverywhereClicked = false;
   public setImageError = '';
   public setPasswordError = '';
+  public saveUserInterestsError = '';
   public referUserError = '';
   public logoutEverywhereError = '';
   public hidePassword = true;
@@ -67,7 +78,9 @@ export class ProfileComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
+    private readonly departmentService: DepartmentService,
     private readonly reportService: ReportService,
+    private readonly userInterestService: UserInterestService,
     private readonly referralService: ReferralService,
   ) {}
 
@@ -95,6 +108,17 @@ export class ProfileComponent implements OnInit {
       this.referrals = await this.referralService.getReferrals(
         this.userInfo.id,
       );
+      this.departments = await this.departmentService.getDepartments();
+      this.userInterests = await this.userInterestService.getInterests();
+      this.userInterestsIDs = this.userInterests.map(
+        (interest) => interest.departmentID,
+      );
+      this.newUserInterestsIDs = this.userInterestsIDs.slice();
+
+      this.departmentsMap = this.departments.reduce((acc, current) => {
+        acc[current.id] = current.name;
+        return acc;
+      }, {} as { [id: number]: string });
 
       const referral = await this.referralService.getReferral();
       this.canRefer = referral === undefined;
@@ -188,6 +212,44 @@ export class ProfileComponent implements OnInit {
 
       this.submittingSetPasswordForm = false;
     }
+  }
+
+  /**
+   * Save the user's new interests.
+   */
+  public async onSaveUserInterests(): Promise<void> {
+    this.saveUserInterestsError = '';
+    this.savingUserInterests = true;
+
+    const addUserInterests = this.newUserInterestsIDs.filter(
+      (departmentID) => !this.userInterestsIDs.includes(departmentID),
+    );
+    const removeUserInterests = this.userInterestsIDs.filter(
+      (departmentID) => !this.newUserInterestsIDs.includes(departmentID),
+    );
+
+    try {
+      await Promise.all(
+        addUserInterests.map((departmentID) =>
+          this.userInterestService.noteInterest(departmentID),
+        ),
+      );
+      await Promise.all(
+        removeUserInterests.map((departmentID) =>
+          this.userInterestService.dropInterest(departmentID),
+        ),
+      );
+
+      this.userInterests = await this.userInterestService.getInterests();
+      this.userInterestsIDs = this.userInterests.map(
+        (interest) => interest.departmentID,
+      );
+      this.newUserInterestsIDs = this.userInterestsIDs.slice();
+    } catch (err: any) {
+      this.saveUserInterestsError = err;
+    }
+
+    this.savingUserInterests = false;
   }
 
   /**
