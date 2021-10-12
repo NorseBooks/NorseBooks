@@ -23,6 +23,7 @@ import { SearchSortService } from './search-sort/search-sort.service';
 import { FeedbackService } from './feedback/feedback.service';
 import { UserInterestService } from './user-interest/user-interest.service';
 import { ReferralService } from './referral/referral.service';
+import { BlockService } from './block/block.service';
 import { AdminService } from './admin/admin.service';
 
 /**
@@ -67,6 +68,7 @@ export async function getService<TInput = any, TResult = TInput>(
       FeedbackService,
       UserInterestService,
       ReferralService,
+      BlockService,
       AdminService,
     ],
   }).compile();

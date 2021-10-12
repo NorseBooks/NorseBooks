@@ -23,6 +23,7 @@ import { SearchSortService } from './services/search-sort/search-sort.service';
 import { FeedbackService } from './services/feedback/feedback.service';
 import { UserInterestService } from './services/user-interest/user-interest.service';
 import { ReferralService } from './services/referral/referral.service';
+import { BlockService } from './services/block/block.service';
 import { AdminService } from './services/admin/admin.service';
 
 import { ResourceController } from './controllers/resource/resource.controller';
@@ -81,6 +82,7 @@ import { AdminController } from './controllers/admin/admin.controller';
     FeedbackService,
     UserInterestService,
     ReferralService,
+    BlockService,
     AdminService,
   ],
 })

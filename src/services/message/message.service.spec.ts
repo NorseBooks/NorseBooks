@@ -5,6 +5,7 @@
 
 import { MessageService } from './message.service';
 import { UserService } from '../user/user.service';
+import { BlockService } from '../block/block.service';
 import { getService } from '../test-util';
 import { ServiceException } from '../service.exception';
 import { NBUser } from '../user/user.interface';
@@ -12,6 +13,7 @@ import { NBUser } from '../user/user.interface';
 describe('MessageService', () => {
   let messageService: MessageService;
   let userService: UserService;
+  let blockService: BlockService;
   let user1: NBUser;
   let user2: NBUser;
 
@@ -27,6 +29,7 @@ describe('MessageService', () => {
   beforeAll(async () => {
     messageService = await getService(MessageService);
     userService = await getService(UserService);
+    blockService = await getService(BlockService);
   });
 
   beforeEach(async () => {
@@ -62,6 +65,13 @@ describe('MessageService', () => {
     await expect(
       messageService.sendMessage(user1.id, user2.id, ''),
     ).rejects.toThrow(ServiceException);
+
+    // send while blocked
+    await blockService.blockUser(user1.id, user2.id);
+    await expect(
+      messageService.sendMessage(user1.id, user2.id, content1),
+    ).rejects.toThrow(ServiceException);
+    await blockService.unblockUser(user1.id, user2.id);
 
     // check existence
     const messageExists1 = await messageService.messageExists(message1.id);

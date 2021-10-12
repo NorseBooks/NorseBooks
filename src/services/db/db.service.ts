@@ -82,6 +82,7 @@ export class DBService {
     'NB_FEEDBACK',
     'NB_USER_INTEREST',
     'NB_REFERRAL',
+    'NB_BLOCK',
   ];
 
   constructor(
