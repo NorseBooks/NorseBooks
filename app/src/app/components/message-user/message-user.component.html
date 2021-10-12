@@ -6,7 +6,15 @@
       </a>
     </div>
     <div class="messages-user-avatar">
-      <nb-avatar [userInfo]="otherUser"></nb-avatar>
+      <nb-avatar [userInfo]="otherUser">
+        <button
+          mat-icon-button
+          matTooltip="Options"
+          [matMenuTriggerFor]="userMessageMenu"
+        >
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+      </nb-avatar>
     </div>
   </div>
   <div class="messages-body">
@@ -54,6 +62,7 @@
           name="content"
           autocomplete="off"
           [maxLength]="messageContentMaxLength"
+          [disabled]="isBlocked || hasBlocked"
           [(ngModel)]="messageContent"
         />
         <button
@@ -61,7 +70,7 @@
           matSuffix
           type="submit"
           matTooltip="Send message"
-          [disabled]="submittingSendMessage"
+          [disabled]="submittingSendMessage || isBlocked || hasBlocked"
         >
           <mat-icon>send</mat-icon>
         </button>
@@ -83,4 +92,15 @@
       <span>Delete</span>
     </button>
   </ng-template>
+</mat-menu>
+
+<mat-menu #userMessageMenu="matMenu" xPosition="before">
+  <button *ngIf="!isBlocked" mat-menu-item (click)="onBlockUser()">
+    <mat-icon>block</mat-icon>
+    <span>Block</span>
+  </button>
+  <button *ngIf="isBlocked" mat-menu-item (click)="onUnblockUser()">
+    <mat-icon>block</mat-icon>
+    <span>Unblock</span>
+  </button>
 </mat-menu>
