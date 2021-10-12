@@ -46,8 +46,6 @@ describe('BlockService', () => {
     const block2 = await blockService.blockUser(user1.id, user2.id);
     expect(block2).toBeDefined();
     expect(block2).toEqual(block1);
-
-    // create invalid
     await expect(blockService.blockUser('', user2.id)).rejects.toThrow(
       ServiceException,
     );
@@ -62,12 +60,30 @@ describe('BlockService', () => {
     const blocked1 = await blockService.isBlocked(user1.id, user2.id);
     expect(blocked1).toBeDefined();
     expect(blocked1).toBe(true);
+    const blocked2 = await blockService.isBlocked(user2.id, user1.id);
+    expect(blocked2).toBeDefined();
+    expect(blocked2).toBe(false);
+    const blocked3 = await blockService.hasBlocked(user1.id, user2.id);
+    expect(blocked3).toBeDefined();
+    expect(blocked3).toBe(false);
+    const blocked4 = await blockService.hasBlocked(user2.id, user1.id);
+    expect(blocked4).toBeDefined();
+    expect(blocked4).toBe(true);
 
     // unblock
     await blockService.unblockUser(user1.id, user2.id);
-    const blocked2 = await blockService.isBlocked(user1.id, user2.id);
-    expect(blocked2).toBeDefined();
-    expect(blocked2).toBe(false);
+    const blocked5 = await blockService.isBlocked(user1.id, user2.id);
+    expect(blocked5).toBeDefined();
+    expect(blocked5).toBe(false);
+    const blocked6 = await blockService.isBlocked(user2.id, user1.id);
+    expect(blocked6).toBeDefined();
+    expect(blocked6).toBe(false);
+    const blocked7 = await blockService.hasBlocked(user1.id, user2.id);
+    expect(blocked7).toBeDefined();
+    expect(blocked7).toBe(false);
+    const blocked8 = await blockService.hasBlocked(user2.id, user1.id);
+    expect(blocked8).toBeDefined();
+    expect(blocked8).toBe(false);
   });
 
   it('should block, get blocks, get blocked users, and unblock users', async () => {

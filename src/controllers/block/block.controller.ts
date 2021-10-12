@@ -59,17 +59,33 @@ export class BlockController {
   /**
    * Get whether or not a user is blocked.
    *
-   * @param blockedUserID The ID of the blocked user.
+   * @param otherUserID The ID of the other user.
    * @param user The user.
    * @returns Whether or not the user is blocked.
    */
   @Get('blocked')
   @UseGuards(SessionRequiredGuard)
   public async isBlocked(
-    @QueryString({ name: 'userID' }) blockedUserID: string,
+    @QueryString({ name: 'userID' }) otherUserID: string,
     @UserSession() user: NBUser,
   ) {
-    return this.blockService.isBlocked(user.id, blockedUserID);
+    return this.blockService.isBlocked(user.id, otherUserID);
+  }
+
+  /**
+   * Get whether or not the other user has the user blocked.
+   *
+   * @param otherUserID The ID of the other user.
+   * @param user The user.
+   * @returns Whether or not the other user has the user blocked.
+   */
+  @Get('has-blocked')
+  @UseGuards(SessionRequiredGuard)
+  public async hasBlocked(
+    @QueryString({ name: 'userID' }) otherUserID: string,
+    @UserSession() user: NBUser,
+  ) {
+    return this.blockService.hasBlocked(user.id, otherUserID);
   }
 
   /**

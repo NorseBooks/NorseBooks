@@ -84,16 +84,34 @@ export class BlockService {
    * Determine whether or not a user is blocked.
    *
    * @param userID The user's ID.
-   * @param blockedUserID The other user's ID.
+   * @param otherUserID The other user's ID.
    * @returns Whether or not the user is blocked.
    */
   public async isBlocked(
     userID: string,
-    blockedUserID: string,
+    otherUserID: string,
   ): Promise<boolean> {
     const block = await this.dbService.getByFields<NBBlock>(blockTableName, {
       userID,
-      blockedUserID,
+      blockedUserID: otherUserID,
+    });
+    return !!block;
+  }
+
+  /**
+   * Determine whether or not the other user has the user blocked.
+   *
+   * @param userID The user's ID.
+   * @param otherUserID The other user's ID.
+   * @returns Whether or not the other user has the user blocked.
+   */
+  public async hasBlocked(
+    userID: string,
+    otherUserID: string,
+  ): Promise<boolean> {
+    const block = await this.dbService.getByFields<NBBlock>(blockTableName, {
+      userID: otherUserID,
+      blockedUserID: userID,
     });
     return !!block;
   }
