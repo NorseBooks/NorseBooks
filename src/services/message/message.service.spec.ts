@@ -71,6 +71,9 @@ describe('MessageService', () => {
     await expect(
       messageService.sendMessage(user1.id, user2.id, content1),
     ).rejects.toThrow(ServiceException);
+    await expect(
+      messageService.sendMessage(user2.id, user1.id, content1),
+    ).rejects.toThrow(ServiceException);
     await blockService.unblockUser(user1.id, user2.id);
 
     // check existence
