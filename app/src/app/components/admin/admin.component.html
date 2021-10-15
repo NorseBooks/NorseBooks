@@ -105,6 +105,7 @@
                 matTooltip="Save"
                 (click)="onSetResource(resource.key)"
                 [disabled]="settingResource"
+                aria-label="Save"
               >
                 <mat-icon>save</mat-icon>
               </button>
@@ -114,6 +115,7 @@
                 matTooltip="Reset"
                 (click)="onResetResource(resource.key)"
                 [disabled]="resettingResource"
+                aria-label="Reset"
               >
                 <mat-icon>settings_backup_restore</mat-icon>
               </button>
@@ -163,6 +165,7 @@
                     matTooltip="Discard report"
                     (click)="onDeleteReport(report.id)"
                     [disabled]="deletingReport"
+                    aria-label="Discard report"
                   >
                     <mat-icon>clear</mat-icon>
                   </button>
@@ -171,6 +174,7 @@
                     matTooltip="Delete reported book"
                     (click)="openDeleteReportBookConfirmationDialog(report.id)"
                     [disabled]="deletingReport"
+                    aria-label="Delete reported book"
                   >
                     <mat-icon>delete</mat-icon>
                   </button>
@@ -216,6 +220,7 @@
                     matTooltip="Discard feedback"
                     (click)="onDeleteFeedback(feedbackItem.id)"
                     [disabled]="deletingFeedback"
+                    aria-label="Discard feedback"
                   >
                     <mat-icon>clear</mat-icon>
                   </button>
