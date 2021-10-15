@@ -94,6 +94,7 @@
                     type="button"
                     matSuffix
                     (click)="hidePassword = !hidePassword"
+                    aria-label="Show password"
                   >
                     <mat-icon>{{
                       hidePassword ? 'visibility_off' : 'visibility'
@@ -123,6 +124,7 @@
                     type="button"
                     matSuffix
                     (click)="hideConfirmPassword = !hideConfirmPassword"
+                    aria-label="Show password"
                   >
                     <mat-icon>{{
                       hideConfirmPassword ? 'visibility_off' : 'visibility'

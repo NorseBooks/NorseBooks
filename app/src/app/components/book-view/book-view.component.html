@@ -7,7 +7,11 @@
     <mat-card-content>
       <div class="book-view-content">
         <div class="book-view-image">
-          <img src="/image/{{ bookInfo.imageID }}" id="book-image" />
+          <img
+            src="/image/{{ bookInfo.imageID }}"
+            alt="book image"
+            id="book-image"
+          />
         </div>
         <div class="book-view-details">
           <div class="book-view-info">
@@ -48,6 +52,7 @@
             mat-icon-button
             routerLink="/message/{{ bookInfo.userID }}"
             matTooltip="Request to purchase"
+            aria-label="Request to purchase"
           >
             <mat-icon>chat</mat-icon>
           </a>
@@ -55,6 +60,7 @@
             mat-icon-button
             (click)="copyBookLink()"
             matTooltip="Copy link to book"
+            aria-label="Copy link to book"
           >
             <mat-icon>link</mat-icon>
           </button>
@@ -64,6 +70,7 @@
             (click)="openReportBookDialog()"
             matTooltip="Report book"
             [disabled]="reportingBook"
+            aria-label="Report book"
           >
             <mat-icon>flag</mat-icon>
           </button>
@@ -97,7 +104,7 @@
 
 <ng-template #notLoggedInActions>
   <span matTooltip="Sign in to contact book owner">
-    <button mat-icon-button disabled>
+    <button mat-icon-button disabled aria-label="Request to purchase">
       <mat-icon>chat</mat-icon>
     </button>
   </span>
@@ -105,11 +112,12 @@
     mat-icon-button
     (click)="copyBookLink()"
     matTooltip="Copy link to book"
+    aria-label="Copy link to book"
   >
     <mat-icon>link</mat-icon>
   </button>
   <span matTooltip="Sign in to report book">
-    <button mat-icon-button disabled>
+    <button mat-icon-button disabled aria-label="Report book">
       <mat-icon>flag</mat-icon>
     </button>
   </span>
@@ -120,6 +128,7 @@
     mat-icon-button
     (click)="copyBookLink()"
     matTooltip="Copy link to book"
+    aria-label="Copy link to book"
   >
     <mat-icon>link</mat-icon>
   </button>
@@ -127,6 +136,7 @@
     mat-icon-button
     routerLink="/edit/{{ bookInfo.id }}"
     matTooltip="Edit book"
+    aria-label="Edit book"
   >
     <mat-icon>edit</mat-icon>
   </a>
@@ -135,6 +145,7 @@
     (click)="openDeleteConfirmationDialog()"
     matTooltip="Delete book"
     [disabled]="deletingBook"
+    aria-label="Delete book"
   >
     <mat-icon>delete</mat-icon>
   </button>
@@ -142,7 +153,7 @@
 
 <ng-template #cannotReportButton>
   <span *ngIf="reportedBook" matTooltip="You have already reported this book">
-    <button mat-icon-button disabled>
+    <button mat-icon-button disabled aria-label="Report book">
       <mat-icon>flag</mat-icon>
     </button>
   </span>
@@ -154,6 +165,7 @@
       mat-icon-button
       matTooltip="You have reported a book recently"
       disabled
+      aria-label="Report book"
     >
       <mat-icon>flag</mat-icon>
     </button>
