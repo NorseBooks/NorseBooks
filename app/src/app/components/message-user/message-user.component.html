@@ -1,12 +1,26 @@
 <div *ngIf="done; else loading" class="user-messages">
   <div class="messages-header">
     <div class="messages-menu">
-      <a mat-icon-button routerLink="/message" matTooltip="Back to messages">
+      <a
+        mat-icon-button
+        routerLink="/message"
+        matTooltip="Back to messages"
+        aria-label="Back to messages"
+      >
         <mat-icon>arrow_back</mat-icon>
       </a>
     </div>
     <div class="messages-user-avatar">
-      <nb-avatar [userInfo]="otherUser"></nb-avatar>
+      <nb-avatar [userInfo]="otherUser">
+        <button
+          mat-icon-button
+          matTooltip="Options"
+          [matMenuTriggerFor]="userMessageMenu"
+          aria-label="Options"
+        >
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+      </nb-avatar>
     </div>
   </div>
   <div class="messages-body">
@@ -31,6 +45,7 @@
           matTooltip="Options"
           [matMenuTriggerFor]="messageMenu"
           [matMenuTriggerData]="{ messageID: message.id }"
+          aria-label="Options"
         >
           <mat-icon>more_horiz</mat-icon>
         </button>
@@ -54,6 +69,7 @@
           name="content"
           autocomplete="off"
           [maxLength]="messageContentMaxLength"
+          [disabled]="isBlocked || hasBlocked"
           [(ngModel)]="messageContent"
         />
         <button
@@ -61,7 +77,8 @@
           matSuffix
           type="submit"
           matTooltip="Send message"
-          [disabled]="submittingSendMessage"
+          [disabled]="submittingSendMessage || isBlocked || hasBlocked"
+          aria-label="Send message"
         >
           <mat-icon>send</mat-icon>
         </button>
@@ -78,9 +95,34 @@
 
 <mat-menu #messageMenu="matMenu" xPosition="before">
   <ng-template matMenuContent let-messageID="messageID">
-    <button mat-menu-item (click)="onDeleteMessage(messageID)">
+    <button
+      mat-menu-item
+      (click)="onDeleteMessage(messageID)"
+      aria-label="Delete"
+    >
       <mat-icon>delete</mat-icon>
       <span>Delete</span>
     </button>
   </ng-template>
+</mat-menu>
+
+<mat-menu #userMessageMenu="matMenu" xPosition="before">
+  <button
+    *ngIf="!isBlocked"
+    mat-menu-item
+    (click)="onBlockUser()"
+    aria-label="Block"
+  >
+    <mat-icon>block</mat-icon>
+    <span>Block</span>
+  </button>
+  <button
+    *ngIf="isBlocked"
+    mat-menu-item
+    (click)="onUnblockUser()"
+    aria-label="Unblock"
+  >
+    <mat-icon>block</mat-icon>
+    <span>Unblock</span>
+  </button>
 </mat-menu>

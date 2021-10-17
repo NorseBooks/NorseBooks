@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
 import { MessageService } from '../../services/message/message.service';
+import { BlockService } from '../../services/block/block.service';
 import { OtherUserInfo } from '../../services/user/user.interface';
 import { NBMessage } from '../../services/message/message.interface';
 import { inputAppearance } from '../../globals';
@@ -22,16 +23,20 @@ export class MessageUserComponent implements OnInit {
   public otherUserID = '';
   public otherUser!: OtherUserInfo;
   public messages: NBMessage[] = [];
+  public isBlocked = false;
+  public hasBlocked = false;
   public messageContent = '';
   public submittingSendMessage = false;
   public readonly inputAppearance = inputAppearance;
 
   constructor(
+    private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly snackBar: MatSnackBar,
     private readonly resourceService: ResourceService,
     private readonly userService: UserService,
     private readonly messageService: MessageService,
+    private readonly blockService: BlockService,
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -41,6 +46,12 @@ export class MessageUserComponent implements OnInit {
 
     this.activatedRoute.paramMap.subscribe(async (paramMap) => {
       this.otherUserID = paramMap.get('userID') || '';
+
+      if (!this.userService.loggedIn()) {
+        await this.router.navigate(['unauthorized'], {
+          queryParams: { after: `message/${this.otherUserID}` },
+        });
+      }
 
       this.otherUser = await this.userService.getOtherUserInfo(
         this.otherUserID,
@@ -89,6 +100,15 @@ export class MessageUserComponent implements OnInit {
           messageArea.scrollTo(0, messageArea.scrollHeight);
         }
       }, 500);
+    }
+
+    this.isBlocked = await this.blockService.isBlocked(this.otherUserID);
+    this.hasBlocked = await this.blockService.hasBlocked(this.otherUserID);
+
+    if (this.isBlocked) {
+      this.messageContent = 'You have this user blocked';
+    } else if (this.hasBlocked) {
+      this.messageContent = 'This user has you blocked';
     }
   }
 
@@ -142,6 +162,41 @@ export class MessageUserComponent implements OnInit {
       await this.updateMessages();
     } catch (err: any) {
       this.snackBar.open('Failed to delete message', undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+
+      console.error(err);
+    }
+  }
+
+  /**
+   * Block the user.
+   */
+  public async onBlockUser(): Promise<void> {
+    try {
+      await this.blockService.blockUser(this.otherUserID);
+      await this.updateMessages();
+    } catch (err: any) {
+      this.snackBar.open('Failed to block user', undefined, {
+        duration: 3000,
+        panelClass: 'alert-panel-center',
+      });
+
+      console.error(err);
+    }
+  }
+
+  /**
+   * Unblock the user.
+   */
+  public async onUnblockUser(): Promise<void> {
+    try {
+      await this.blockService.unblockUser(this.otherUserID);
+      this.messageContent = '';
+      await this.updateMessages();
+    } catch (err: any) {
+      this.snackBar.open('Failed to unblock user', undefined, {
         duration: 3000,
         panelClass: 'alert-panel-center',
       });

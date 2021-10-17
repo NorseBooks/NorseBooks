@@ -40,7 +40,9 @@ import { SearchSortService } from './services/search-sort/search-sort.service';
 import { FeedbackService } from './services/feedback/feedback.service';
 import { UserInterestService } from './services/user-interest/user-interest.service';
 import { ReferralService } from './services/referral/referral.service';
+import { BlockService } from './services/block/block.service';
 import { AdminService } from './services/admin/admin.service';
+import { TermsService } from './services/terms/terms.service';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -67,11 +69,13 @@ import { AvatarComponent } from './components/avatar/avatar.component';
 import { MessageUserComponent } from './components/message-user/message-user.component';
 import { CreditsComponent } from './components/credits/credits.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { TermsComponent } from './components/terms/terms.component';
 
 import { ResourceNamePipe } from './pipes/resource-name/resource-name.pipe';
 import { RoundPipe } from './pipes/round/round.pipe';
 
 import { ChartsModule } from 'ng2-charts';
+import { MarkdownModule } from 'ngx-markdown';
 
 /**
  * The app module.
@@ -105,6 +109,7 @@ import { ChartsModule } from 'ng2-charts';
     MessageUserComponent,
     CreditsComponent,
     AdminComponent,
+    TermsComponent,
     ResourceNamePipe,
     RoundPipe,
   ],
@@ -133,6 +138,7 @@ import { ChartsModule } from 'ng2-charts';
     MatToolbarModule,
     MatTooltipModule,
     ChartsModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [
     APIService,
@@ -149,7 +155,9 @@ import { ChartsModule } from 'ng2-charts';
     FeedbackService,
     UserInterestService,
     ReferralService,
+    BlockService,
     AdminService,
+    TermsService,
   ],
   bootstrap: [AppComponent],
 })

@@ -7,6 +7,7 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
 import { ResourceService } from '../resource/resource.service';
 import { UserService } from '../user/user.service';
+import { BlockService } from '../block/block.service';
 import { NBMessage } from './message.interface';
 import { ServiceException } from '../service.exception';
 
@@ -27,6 +28,8 @@ export class MessageService {
     private readonly resourceService: ResourceService,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @Inject(forwardRef(() => BlockService))
+    private readonly blockService: BlockService,
   ) {}
 
   /**
@@ -51,21 +54,28 @@ export class MessageService {
     const toUserExists = await this.userService.userExists(toUserID);
 
     if (fromUserExists && toUserExists) {
-      if (content.length >= 1 && content.length <= messageContentMaxLength) {
-        const message = await this.dbService.create<NBMessage>(
-          messageTableName,
-          {
-            fromUserID,
-            toUserID,
-            content,
-          },
-        );
-        await this.deleteOldMessages(fromUserID, toUserID);
-        return message;
+      const blocked1 = await this.blockService.isBlocked(fromUserID, toUserID);
+      const blocked2 = await this.blockService.isBlocked(toUserID, fromUserID);
+
+      if (!blocked1 && !blocked2) {
+        if (content.length >= 1 && content.length <= messageContentMaxLength) {
+          const message = await this.dbService.create<NBMessage>(
+            messageTableName,
+            {
+              fromUserID,
+              toUserID,
+              content,
+            },
+          );
+          await this.deleteOldMessages(fromUserID, toUserID);
+          return message;
+        } else {
+          throw new ServiceException(
+            `Message content must be between 1 and ${messageContentMaxLength} characters`,
+          );
+        }
       } else {
-        throw new ServiceException(
-          `Message content must be between 1 and ${messageContentMaxLength} characters`,
-        );
+        throw new ServiceException('User is blocked');
       }
     } else {
       throw new ServiceException('User does not exist');

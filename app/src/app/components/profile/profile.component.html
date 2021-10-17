@@ -82,6 +82,7 @@
               type="button"
               matSuffix
               (click)="hidePassword = !hidePassword"
+              aria-label="Show password"
             >
               <mat-icon>{{
                 hidePassword ? 'visibility_off' : 'visibility'
@@ -104,6 +105,7 @@
               type="button"
               matSuffix
               (click)="hideConfirmPassword = !hideConfirmPassword"
+              aria-label="Show password"
             >
               <mat-icon>{{
                 hideConfirmPassword ? 'visibility_off' : 'visibility'
@@ -122,6 +124,47 @@
             <span>{{ setPasswordError }}</span>
           </div>
         </form>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="settings-card">
+      <mat-card-title class="text-center">Interests</mat-card-title>
+      <mat-card-content>
+        <p class="text-justified">
+          Note your departmental interests below, and we can recommend books to
+          you based on your needs.
+        </p>
+        <ul class="inline-list">
+          <li *ngFor="let interest of userInterests">
+            {{ departmentsMap[interest.departmentID] }}
+          </li>
+        </ul>
+        <mat-form-field [appearance]="inputAppearance" class="max-width">
+          <mat-label>Departments</mat-label>
+          <mat-select
+            id="userInterests"
+            name="userInterests"
+            multiple
+            [(ngModel)]="newUserInterestsIDs"
+          >
+            <mat-option
+              *ngFor="let department of departments"
+              [value]="department.id"
+              >{{ department.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="onSaveUserInterests()"
+          [disabled]="savingUserInterests"
+        >
+          Save
+        </button>
+        <div *ngIf="saveUserInterestsError" class="form-error">
+          <span>{{ saveUserInterestsError }}</span>
+        </div>
       </mat-card-content>
     </mat-card>
     <mat-card class="settings-card">

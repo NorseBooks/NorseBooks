@@ -12,7 +12,7 @@
     </div>
   </a>
   <div class="header-icons">
-    <a mat-icon-button routerLink="/about" matTooltip="Help">
+    <a mat-icon-button routerLink="/about" matTooltip="Help" aria-label="Help">
       <mat-icon>help_outline</mat-icon>
     </a>
     <a
@@ -20,6 +20,7 @@
       mat-icon-button
       routerLink="/admin"
       matTooltip="Admin control panel"
+      aria-label="Admin control panel"
     >
       <mat-icon>admin_panel_settings</mat-icon>
     </a>
@@ -28,6 +29,7 @@
       mat-icon-button
       routerLink="/admin"
       matTooltip="Admin control panel"
+      aria-label="Admin control panel"
     >
       <mat-icon [matBadge]="adminNotifications" matBadgeColor="warn"
         >admin_panel_settings</mat-icon
@@ -38,6 +40,7 @@
       mat-icon-button
       routerLink="/book"
       matTooltip="New listing"
+      aria-label="New listing"
     >
       <mat-icon>add</mat-icon>
     </a>
@@ -46,6 +49,7 @@
       mat-icon-button
       routerLink="/profile"
       matTooltip="Profile"
+      aria-label="Profile"
     >
       <mat-icon>account_circle</mat-icon>
     </a>
@@ -54,6 +58,7 @@
       mat-icon-button
       routerLink="/message"
       matTooltip="Messages"
+      aria-label="Messages"
     >
       <mat-icon>chat</mat-icon>
     </a>
@@ -62,6 +67,7 @@
       mat-icon-button
       routerLink="/message"
       matTooltip="Messages"
+      aria-label="Messages"
     >
       <mat-icon [matBadge]="unreadMessages.length" matBadgeColor="warn"
         >chat</mat-icon
@@ -73,6 +79,7 @@
       routerLink="/logout"
       [queryParams]="{ after: loginLogoutAfter }"
       matTooltip="Sign out"
+      aria-label="Sign out"
     >
       <mat-icon>logout</mat-icon>
     </a>
@@ -82,16 +89,17 @@
       routerLink="/login"
       [queryParams]="{ after: loginLogoutAfter }"
       matTooltip="Sign in"
+      aria-label="Sign in"
     >
       <mat-icon>login</mat-icon>
     </a>
   </div>
   <div class="header-icons-small">
-    <button mat-icon-button [matMenuTriggerFor]="headerMenu">
+    <button mat-icon-button [matMenuTriggerFor]="headerMenu" aria-label="Menu">
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #headerMenu="matMenu">
-      <a mat-menu-item routerLink="/about">
+      <a mat-menu-item routerLink="/about" aria-label="Help">
         <mat-icon>help_outline</mat-icon>
         <span>Help</span>
       </a>
@@ -99,6 +107,7 @@
         *ngIf="admin && adminNotifications === 0"
         mat-menu-item
         routerLink="/admin"
+        aria-label="Admin control panel"
       >
         <mat-icon>admin_panel_settings</mat-icon>
         <span>Admin control panel</span>
@@ -107,17 +116,28 @@
         *ngIf="admin && adminNotifications > 0"
         mat-menu-item
         routerLink="/admin"
+        aria-label="Admin control panel"
       >
         <mat-icon [matBadge]="adminNotifications" matBadgeColor="warn"
           >admin_panel_settings</mat-icon
         >
         <span>Admin control panel</span>
       </a>
-      <a *ngIf="loggedIn" mat-menu-item routerLink="/book">
+      <a
+        *ngIf="loggedIn"
+        mat-menu-item
+        routerLink="/book"
+        aria-label="New listing"
+      >
         <mat-icon>add</mat-icon>
         <span>New listing</span>
       </a>
-      <a *ngIf="loggedIn" mat-menu-item routerLink="/profile">
+      <a
+        *ngIf="loggedIn"
+        mat-menu-item
+        routerLink="/profile"
+        aria-label="Profile"
+      >
         <mat-icon>account_circle</mat-icon>
         <span>Profile</span>
       </a>
@@ -125,6 +145,7 @@
         *ngIf="loggedIn && unreadMessages.length === 0"
         mat-menu-item
         routerLink="/message"
+        aria-label="Messages"
       >
         <mat-icon>chat</mat-icon>
         <span>Messages</span>
@@ -133,6 +154,7 @@
         *ngIf="loggedIn && unreadMessages.length > 0"
         mat-menu-item
         routerLink="/message"
+        aria-label="Messages"
       >
         <mat-icon [matBadge]="unreadMessages.length" matBadgeColor="warn"
           >chat</mat-icon
@@ -144,6 +166,7 @@
         mat-menu-item
         routerLink="/logout"
         [queryParams]="{ after: loginLogoutAfter }"
+        aria-label="Sign out"
       >
         <mat-icon>logout</mat-icon>
         <span>Sign out</span>
@@ -153,6 +176,7 @@
         mat-menu-item
         routerLink="/login"
         [queryParams]="{ after: loginLogoutAfter }"
+        aria-label="Sign in"
       >
         <mat-icon>login</mat-icon>
         <span>Sign in</span>
