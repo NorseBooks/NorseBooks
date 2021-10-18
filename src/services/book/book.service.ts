@@ -114,6 +114,8 @@ export class BookService {
     const ISBN10Num = !options.ISBN10 ? undefined : parseInt(ISBN10);
     const ISBN13Num = !options.ISBN13 ? undefined : parseInt(ISBN13);
 
+    const price = Math.round(options.price * 100) / 100;
+
     const userExists = await this.userService.userExists(options.userID);
 
     if (userExists) {
@@ -153,7 +155,7 @@ export class BookService {
                       (options.courseNumber >= 101 &&
                         options.courseNumber <= 499)
                     ) {
-                      if (options.price >= 0 && options.price <= 999.99) {
+                      if (price >= 0 && price <= 999.99) {
                         const bookConditionExists =
                           await this.bookConditionService.bookConditionExists(
                             options.conditionID,
@@ -176,7 +178,7 @@ export class BookService {
                               imageID: bookImage.id,
                               departmentID: options.departmentID,
                               courseNumber: options.courseNumber,
-                              price: options.price,
+                              price,
                               conditionID: options.conditionID,
                             },
                           );
@@ -276,6 +278,11 @@ export class BookService {
         ? undefined
         : parseInt(ISBN13);
 
+    const price =
+      options.price === undefined
+        ? undefined
+        : Math.round(options.price * 100) / 100;
+
     const book = await this.getBook(bookID);
 
     if (
@@ -315,10 +322,7 @@ export class BookService {
                   options.courseNumber === null ||
                   (options.courseNumber >= 101 && options.courseNumber <= 499)
                 ) {
-                  if (
-                    options.price === undefined ||
-                    (options.price >= 0 && options.price <= 999.99)
-                  ) {
+                  if (price === undefined || (price >= 0 && price <= 999.99)) {
                     const bookConditionExists =
                       options.conditionID === undefined
                         ? true
@@ -357,6 +361,8 @@ export class BookService {
                             acc['ISBN10'] = ISBN10;
                           } else if (current === 'ISBN13') {
                             acc['ISBN13'] = ISBN13;
+                          } else if (current === 'price') {
+                            acc['price'] = price;
                           } else {
                             acc[current] = options[current];
                           }
