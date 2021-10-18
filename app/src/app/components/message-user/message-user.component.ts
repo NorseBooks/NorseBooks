@@ -20,6 +20,7 @@ import { inputAppearance } from '../../globals';
 export class MessageUserComponent implements OnInit {
   public messageContentMaxLength = 1;
   public done = false;
+  public otherUserExists = true;
   public otherUserID = '';
   public otherUser!: OtherUserInfo;
   public messages: NBMessage[] = [];
@@ -53,9 +54,14 @@ export class MessageUserComponent implements OnInit {
         });
       }
 
-      this.otherUser = await this.userService.getOtherUserInfo(
-        this.otherUserID,
-      );
+      try {
+        this.otherUser = await this.userService.getOtherUserInfo(
+          this.otherUserID,
+        );
+      } catch (err) {
+        this.otherUserExists = false;
+        return;
+      }
 
       this.messageService.threadsChange.subscribe(async () => {
         await this.updateMessages();
