@@ -13,6 +13,8 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ReportService } from '../../services/report/report.service';
+import { NBReport } from '../../services/report/report.interface';
+import { NBBook } from '../../services/book/book.interface';
 import { SessionOptionalGuard } from '../../guards/session-optional.guard';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { AdminGuard } from '../../guards/admin.guard';
@@ -43,7 +45,7 @@ export class ReportController {
     @QueryString({ name: 'bookID' }) bookID: string,
     @QueryString({ name: 'reason' }) reason: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBReport> {
     return this.reportService.reportBook(user.id, bookID, reason);
   }
 
@@ -59,7 +61,7 @@ export class ReportController {
   public async getReport(
     @QueryString({ name: 'reportID' }) reportID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBReport> {
     const report = await this.reportService.getReport(reportID);
 
     if (report.userID === user.id || user.admin) {
@@ -76,7 +78,7 @@ export class ReportController {
    */
   @Get('all')
   @UseGuards(AdminGuard)
-  public async getAllReports() {
+  public async getAllReports(): Promise<NBReport[]> {
     return this.reportService.getReports();
   }
 
@@ -92,7 +94,7 @@ export class ReportController {
   public async reportedBook(
     @QueryString({ name: 'bookID' }) bookID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<boolean> {
     return this.reportService.userReportedBook(user.id, bookID);
   }
 
@@ -108,7 +110,7 @@ export class ReportController {
   public async getBookReport(
     @QueryString({ name: 'bookID' }) bookID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBReport> {
     return this.reportService.getUserBookReport(user.id, bookID);
   }
 
@@ -120,7 +122,7 @@ export class ReportController {
    */
   @Get('reported-recently')
   @UseGuards(SessionRequiredGuard)
-  public async reportedRecently(@UserSession() user: NBUser) {
+  public async reportedRecently(@UserSession() user: NBUser): Promise<boolean> {
     return this.reportService.userReportedRecently(user.id);
   }
 
@@ -132,7 +134,9 @@ export class ReportController {
    */
   @Get('user-reports')
   @UseGuards(SessionRequiredGuard)
-  public async getUserReports(@UserSession() user: NBUser) {
+  public async getUserReports(
+    @UserSession() user: NBUser,
+  ): Promise<NBReport[]> {
     return this.reportService.getUserBookReports(user.id);
   }
 
@@ -144,7 +148,9 @@ export class ReportController {
    */
   @Get('user-reported-books')
   @UseGuards(SessionRequiredGuard)
-  public async getUserReportedBooks(@UserSession() user: NBUser) {
+  public async getUserReportedBooks(
+    @UserSession() user: NBUser,
+  ): Promise<NBBook[]> {
     return this.reportService.getUserReportedBooks(user.id);
   }
 
@@ -156,7 +162,9 @@ export class ReportController {
    */
   @Get('book-reports')
   @UseGuards(AdminGuard)
-  public async getBookReports(@QueryString({ name: 'bookID' }) bookID: string) {
+  public async getBookReports(
+    @QueryString({ name: 'bookID' }) bookID: string,
+  ): Promise<NBReport[]> {
     return this.reportService.getBookReports(bookID);
   }
 
@@ -171,7 +179,7 @@ export class ReportController {
   public async deleteReport(
     @QueryString({ name: 'reportID' }) reportID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     const report = await this.reportService.getReport(reportID);
 
     if (report.userID === user.id || user.admin) {
@@ -190,7 +198,7 @@ export class ReportController {
   @UseGuards(AdminGuard)
   public async deleteReportedBook(
     @QueryString({ name: 'reportID' }) reportID: string,
-  ) {
+  ): Promise<void> {
     await this.reportService.deleteReportedBook(reportID);
   }
 }

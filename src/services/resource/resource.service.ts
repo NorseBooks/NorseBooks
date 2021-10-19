@@ -5,7 +5,7 @@
 
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
-import { NBResource } from './resource.interface';
+import { NBResource, ResourceMap } from './resource.interface';
 import { ServiceException } from '../service.exception';
 
 /**
@@ -178,9 +178,7 @@ export class ResourceService {
    *
    * @returns All resources.
    */
-  public async getResources(): Promise<{
-    [name: string]: boolean | number | string;
-  }> {
+  public async getResources(): Promise<ResourceMap> {
     const resources = await this.dbService.list<
       NBResource<boolean | number | string>
     >(resourceTableName, { fieldName: 'name', sortOrder: 'ASC' });

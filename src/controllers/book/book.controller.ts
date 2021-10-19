@@ -14,13 +14,14 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { BookService } from '../../services/book/book.service';
+import { NBBook } from '../../services/book/book.interface';
+import { NBUser, OtherUserInfo } from '../../services/user/user.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryBoolean } from '../../decorators/query-boolean.decorator';
 import { QueryNumber } from '../../decorators/query-number.decorator';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
-import { NBUser } from '../../services/user/user.interface';
 
 /**
  * Book controller.
@@ -61,7 +62,7 @@ export class BookController {
     @QueryNumber({ name: 'price' }) price: number,
     @QueryNumber({ name: 'conditionID' }) conditionID: number,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBBook> {
     return this.bookService.createBook({
       userID: user.id,
       title,
@@ -119,7 +120,7 @@ export class BookController {
     @QueryNumber({ name: 'price', required: false }) price: number,
     @QueryNumber({ name: 'conditionID', required: false }) conditionID: number,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBBook> {
     const book = await this.bookService.getBook(bookID);
 
     if (book.userID === user.id) {
@@ -147,7 +148,9 @@ export class BookController {
    * @returns The book.
    */
   @Get()
-  public async getBook(@QueryString({ name: 'bookID' }) bookID: string) {
+  public async getBook(
+    @QueryString({ name: 'bookID' }) bookID: string,
+  ): Promise<NBBook> {
     return this.bookService.getBook(bookID);
   }
 
@@ -158,7 +161,9 @@ export class BookController {
    * @returns The book's owner.
    */
   @Get('owner')
-  public async getBookOwner(@QueryString({ name: 'bookID' }) bookID: string) {
+  public async getBookOwner(
+    @QueryString({ name: 'bookID' }) bookID: string,
+  ): Promise<OtherUserInfo> {
     const userInfo = await this.bookService.getBookUser(bookID);
 
     return {
@@ -183,7 +188,7 @@ export class BookController {
     @QueryString({ name: 'bookID' }) bookID: string,
     @QueryBoolean({ name: 'sold' }) sold: boolean,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     const book = await this.bookService.getBook(bookID);
 
     if (book.userID === user.id) {
@@ -210,7 +215,7 @@ export class BookController {
     @QueryNumber({ name: 'courseNumber', required: false })
     courseNumber: number,
     @QueryNumber({ name: 'sortID' }) sortID: number,
-  ) {
+  ): Promise<NBBook[]> {
     return this.bookService.searchBooks(
       { query, departmentID, courseNumber },
       sortID,

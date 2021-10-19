@@ -21,3 +21,30 @@ export interface NBUser {
   joinTime: number;
   lastLoginTime?: number;
 }
+
+/**
+ * The currently logged in user's info.
+ */
+export interface UserInfo {
+  id: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  imageID?: string;
+  numBooksListed: number;
+  numBooksSold: number;
+  moneyMade: number;
+  admin: boolean;
+  joinTime: number;
+}
+
+/**
+ * Another user's info.
+ */
+export interface OtherUserInfo {
+  id: string;
+  firstname: string;
+  lastname: string;
+  imageID?: string;
+  joinTime: number;
+}

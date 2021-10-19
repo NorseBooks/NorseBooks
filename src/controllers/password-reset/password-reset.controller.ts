@@ -31,7 +31,7 @@ export class PasswordResetController {
   public async requestPasswordReset(
     @QueryString({ name: 'email' }) email: string,
     @Hostname() hostname: string,
-  ) {
+  ): Promise<void> {
     const emailAddress = email.includes('@') ? email : `${email}@luther.edu`;
 
     const userExists = await this.userService.userExistsByEmail(emailAddress);
@@ -69,7 +69,7 @@ export class PasswordResetController {
   @Get('exists')
   public async passwordResetExists(
     @QueryString({ name: 'resetID' }) resetID: string,
-  ) {
+  ): Promise<boolean> {
     return this.passwordResetService.passwordResetExists(resetID);
   }
 
@@ -83,7 +83,7 @@ export class PasswordResetController {
   public async resetPassword(
     @QueryString({ name: 'resetID' }) resetID: string,
     @QueryString({ name: 'newPassword' }) newPassword: string,
-  ) {
+  ): Promise<void> {
     await this.passwordResetService.resetPassword(resetID, newPassword);
   }
 }

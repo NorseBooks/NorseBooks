@@ -25,15 +25,17 @@ export class ImageController {
   public async getImage(
     @Param('imageID') imageID: string,
     @Res() res: Response,
-  ) {
-    const image = await this.imageService.getImage(imageID);
-    const imageData = Buffer.from(image.data, 'base64');
+  ): Promise<void> {
+    return new Promise(async (resolve) => {
+      const image = await this.imageService.getImage(imageID);
+      const imageData = Buffer.from(image.data, 'base64');
 
-    return res
-      .writeHead(200, {
-        'Content-Type': 'image/png',
-        'Content-Length': imageData.length,
-      })
-      .end(imageData);
+      return res
+        .writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': imageData.length,
+        })
+        .end(imageData, resolve);
+    });
   }
 }

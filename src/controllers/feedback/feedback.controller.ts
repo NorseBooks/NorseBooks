@@ -13,6 +13,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { FeedbackService } from '../../services/feedback/feedback.service';
+import { NBFeedback } from '../../services/feedback/feedback.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
@@ -40,7 +41,7 @@ export class FeedbackController {
   public async sendFeedback(
     @QueryString({ name: 'feedback' }) feedback: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBFeedback> {
     return this.feedbackService.sendFeedback(user.id, feedback);
   }
 
@@ -56,7 +57,7 @@ export class FeedbackController {
   public async getFeedback(
     @QueryString({ name: 'feedbackID' }) feedbackID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBFeedback> {
     const feedback = await this.feedbackService.getFeedback(feedbackID);
 
     if (feedback.userID === user.id || user.admin) {
@@ -74,7 +75,9 @@ export class FeedbackController {
    */
   @Get('user-feedback')
   @UseGuards(SessionRequiredGuard)
-  public async getUserFeedback(@UserSession() user: NBUser) {
+  public async getUserFeedback(
+    @UserSession() user: NBUser,
+  ): Promise<NBFeedback | undefined> {
     return this.feedbackService.getUserFeedback(user.id);
   }
 
@@ -85,7 +88,7 @@ export class FeedbackController {
    */
   @Get('all')
   @UseGuards(AdminGuard)
-  public async getAllFeedback() {
+  public async getAllFeedback(): Promise<NBFeedback[]> {
     return this.feedbackService.getAllFeedback();
   }
 
@@ -100,7 +103,7 @@ export class FeedbackController {
   public async deleteFeedback(
     @QueryString({ name: 'feedbackID' }) feedbackID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     const feedback = await this.feedbackService.getFeedback(feedbackID);
 
     if (feedback.userID === user.id || user.admin) {
