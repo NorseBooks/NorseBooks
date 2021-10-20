@@ -12,6 +12,7 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  overflow-wrap: anywhere;
 }
 
 .app-body {
@@ -85,7 +86,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  overflow-wrap: anywhere;
 }
 
 @mixin hover-zoom($zoom-amount: 1.05) {

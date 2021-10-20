@@ -1,4 +1,4 @@
-<div *ngIf="done; else loading" class="user-messages">
+<div *ngIf="done && otherUserExists; else existsCheck" class="user-messages">
   <div class="messages-header">
     <div class="messages-menu">
       <a
@@ -86,6 +86,12 @@
     </form>
   </div>
 </div>
+
+<ng-template #existsCheck>
+  <ng-container *ngIf="!otherUserExists; else loading">
+    <nb-not-found style="display: flex"></nb-not-found>
+  </ng-container>
+</ng-template>
 
 <ng-template #loading>
   <div class="center">

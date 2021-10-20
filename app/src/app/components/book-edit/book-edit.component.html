@@ -1,4 +1,4 @@
-<div *ngIf="done; else loading" class="book-edit">
+<div *ngIf="done && bookExists; else existsCheck" class="book-edit">
   <mat-card class="book-edit-card">
     <mat-card-title class="text-center">Edit book</mat-card-title>
     <mat-card-content>
@@ -184,6 +184,12 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+<ng-template #existsCheck>
+  <ng-container *ngIf="!bookExists; else loading">
+    <nb-not-found style="display: flex"></nb-not-found>
+  </ng-container>
+</ng-template>
 
 <ng-template #loading>
   <div class="center">

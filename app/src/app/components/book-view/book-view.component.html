@@ -1,4 +1,4 @@
-<div *ngIf="done; else loading" class="book-view">
+<div *ngIf="done && bookExists; else existsCheck" class="book-view">
   <mat-card class="book-view-card">
     <mat-card-title class="text-center">{{ bookInfo.title }}</mat-card-title>
     <mat-card-subtitle class="text-center"
@@ -195,6 +195,12 @@
   <mat-checkbox color="primary" id="sold" name="sold" [(ngModel)]="bookSold"
     >The book sold</mat-checkbox
   >
+</ng-template>
+
+<ng-template #existsCheck>
+  <ng-container *ngIf="!bookExists; else loading">
+    <nb-not-found style="display: flex"></nb-not-found>
+  </ng-container>
 </ng-template>
 
 <ng-template #loading>

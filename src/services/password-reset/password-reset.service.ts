@@ -37,9 +37,9 @@ export class PasswordResetService {
    * @returns The new password reset record.
    */
   public async createPasswordReset(userID: string): Promise<NBPasswordReset> {
-    const userExists = await this.userService.userExists(userID);
+    const user = await this.userService.getUser(userID);
 
-    if (userExists) {
+    if (user.verified) {
       const passwordResetExists = await this.passwordResetExistsByUserID(
         userID,
       );
@@ -52,7 +52,7 @@ export class PasswordResetService {
         return this.getPasswordResetByUserID(userID);
       }
     } else {
-      throw new ServiceException('User does not exist');
+      throw new ServiceException('User is not verified');
     }
   }
 
@@ -107,7 +107,7 @@ export class PasswordResetService {
   /**
    * Get the password reset record associated with a user.
    *
-   * @param userID The ID of thhe user associated with the password reset record.
+   * @param userID The ID of the user associated with the password reset record.
    * @returns The password reset record associated with the user.
    */
   public async getPasswordResetByUserID(
