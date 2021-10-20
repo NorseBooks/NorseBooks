@@ -5,6 +5,7 @@
 
 import { Controller, UseInterceptors, Get } from '@nestjs/common';
 import { SearchSortService } from '../../services/search-sort/search-sort.service';
+import { NBSearchSort } from '../../services/search-sort/search-sort.interface';
 import { QueryNumber } from '../../decorators/query-number.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 
@@ -23,7 +24,9 @@ export class SearchSortController {
    * @returns The sort option.
    */
   @Get()
-  public async getSortOption(@QueryNumber({ name: 'sortID' }) sortID: number) {
+  public async getSortOption(
+    @QueryNumber({ name: 'sortID' }) sortID: number,
+  ): Promise<NBSearchSort> {
     return this.searchSortService.getSortOption(sortID);
   }
 
@@ -33,7 +36,7 @@ export class SearchSortController {
    * @returns All search sort options.
    */
   @Get('all')
-  public async getSortOptions() {
+  public async getSortOptions(): Promise<NBSearchSort[]> {
     return this.searchSortService.getSortOptions();
   }
 }

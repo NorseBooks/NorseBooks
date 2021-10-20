@@ -15,6 +15,12 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from '../../services/user/user.service';
+import {
+  NBUser,
+  UserInfo,
+  OtherUserInfo,
+} from '../../services/user/user.interface';
+import { NBBook } from '../../services/book/book.interface';
 import { SessionService } from '../../services/session/session.service';
 import { VerifyService } from '../../services/verify/verify.service';
 import { SessionOptionalGuard } from '../../guards/session-optional.guard';
@@ -24,7 +30,6 @@ import { Cookie } from '../../decorators/cookie.decorator';
 import { Hostname } from 'src/decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
-import { NBUser } from '../../services/user/user.interface';
 import { sendFormattedEmail } from '../../emailer';
 
 /**
@@ -59,7 +64,7 @@ export class UserController {
     @QueryString({ name: 'email' }) email: string,
     @QueryString({ name: 'password' }) password: string,
     @Hostname() hostname: string,
-  ) {
+  ): Promise<void> {
     const user = await this.userService.createUser(
       firstname,
       lastname,
@@ -86,7 +91,7 @@ export class UserController {
     @QueryString({ name: 'email' }) email: string,
     @QueryString({ name: 'password' }) password: string,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     const session = await this.userService.login(email, password);
     res.cookie('sessionID', session.id, { maxAge: cookieAge });
   }
@@ -100,7 +105,7 @@ export class UserController {
   public async logout(
     @Cookie('sessionID') sessionID: string,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     if (sessionID) {
       await this.sessionService.deleteSession(sessionID);
     }
@@ -119,7 +124,7 @@ export class UserController {
   public async logoutEverywhere(
     @UserSession() user: NBUser,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     if (user) {
       await this.sessionService.deleteUserSessions(user.id);
     }
@@ -135,7 +140,7 @@ export class UserController {
    */
   @Get()
   @UseGuards(SessionRequiredGuard)
-  public async getUserInfo(@UserSession() user: NBUser) {
+  public async getUserInfo(@UserSession() user: NBUser): Promise<UserInfo> {
     const userInfo = await this.userService.getUser(user.id);
 
     return {
@@ -161,7 +166,7 @@ export class UserController {
   @Get('other')
   public async getOtherUserInfo(
     @QueryString({ name: 'userID' }) userID: string,
-  ) {
+  ): Promise<OtherUserInfo> {
     const userInfo = await this.userService.getUser(userID);
 
     return {
@@ -181,7 +186,7 @@ export class UserController {
    */
   @Get('books')
   @UseGuards(SessionRequiredGuard)
-  public async getCurrentBooks(@UserSession() user: NBUser) {
+  public async getCurrentBooks(@UserSession() user: NBUser): Promise<NBBook[]> {
     return this.userService.getCurrentBooks(user.id);
   }
 
@@ -196,7 +201,7 @@ export class UserController {
   public async setPassword(
     @QueryString({ name: 'newPassword' }) newPassword: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     await this.userService.setPassword(user.id, newPassword);
   }
 
@@ -211,7 +216,7 @@ export class UserController {
   public async setImage(
     @QueryString({ name: 'imageData', scope: 'body' }) imageData: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     await this.userService.setUserImage(user.id, imageData);
   }
 
@@ -222,7 +227,7 @@ export class UserController {
    */
   @Delete('image')
   @UseGuards(SessionRequiredGuard)
-  public async deleteImage(@UserSession() user: NBUser) {
+  public async deleteImage(@UserSession() user: NBUser): Promise<void> {
     await this.userService.deleteUserImage(user.id);
   }
 
@@ -234,7 +239,9 @@ export class UserController {
    */
   @Get('recommendations')
   @UseGuards(SessionRequiredGuard)
-  public async getRecommendations(@UserSession() user: NBUser) {
+  public async getRecommendations(
+    @UserSession() user: NBUser,
+  ): Promise<NBBook[]> {
     return this.userService.recommendations(user.id);
   }
 }

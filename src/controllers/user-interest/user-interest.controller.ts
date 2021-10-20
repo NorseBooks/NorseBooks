@@ -12,6 +12,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserInterestService } from '../../services/user-interest/user-interest.service';
+import { NBUserInterest } from '../../services/user-interest/user-interest.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryNumber } from '../../decorators/query-number.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
@@ -38,7 +39,7 @@ export class UserInterestController {
   public async noteInterest(
     @QueryNumber({ name: 'departmentID' }) departmentID: number,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBUserInterest> {
     return this.userInterestService.noteInterest(user.id, departmentID);
   }
 
@@ -54,7 +55,7 @@ export class UserInterestController {
   public async isInterested(
     @QueryNumber({ name: 'departmentID' }) departmentID: number,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<boolean> {
     return this.userInterestService.isInterested(user.id, departmentID);
   }
 
@@ -66,7 +67,9 @@ export class UserInterestController {
    */
   @Get()
   @UseGuards(SessionRequiredGuard)
-  public async getInterests(@UserSession() user: NBUser) {
+  public async getInterests(
+    @UserSession() user: NBUser,
+  ): Promise<NBUserInterest[]> {
     return this.userInterestService.getUserInterests(user.id);
   }
 
@@ -81,7 +84,7 @@ export class UserInterestController {
   public async dropInterest(
     @QueryNumber({ name: 'departmentID' }) departmentID: number,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     await this.userInterestService.dropInterest(user.id, departmentID);
   }
 }

@@ -12,6 +12,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { BlockService } from '../../services/block/block.service';
+import { OtherUserInfo } from '../../services/user/user.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { UserSession } from 'src/decorators/user-session.decorator';
@@ -37,7 +38,7 @@ export class BlockController {
   public async blockUser(
     @QueryString({ name: 'userID' }) blockedUserID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     await this.blockService.blockUser(user.id, blockedUserID);
   }
 
@@ -52,7 +53,7 @@ export class BlockController {
   public async unblockUser(
     @QueryString({ name: 'userID' }) blockedUserID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     await this.blockService.unblockUser(user.id, blockedUserID);
   }
 
@@ -68,7 +69,7 @@ export class BlockController {
   public async isBlocked(
     @QueryString({ name: 'userID' }) otherUserID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<boolean> {
     return this.blockService.isBlocked(user.id, otherUserID);
   }
 
@@ -84,7 +85,7 @@ export class BlockController {
   public async hasBlocked(
     @QueryString({ name: 'userID' }) otherUserID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<boolean> {
     return this.blockService.hasBlocked(user.id, otherUserID);
   }
 
@@ -96,7 +97,9 @@ export class BlockController {
    */
   @Get('blocked-users')
   @UseGuards(SessionRequiredGuard)
-  public async getBlockedUsers(@UserSession() user: NBUser) {
+  public async getBlockedUsers(
+    @UserSession() user: NBUser,
+  ): Promise<OtherUserInfo[]> {
     const users = await this.blockService.getBlockedUsers(user.id);
 
     return users.map((user) => ({
