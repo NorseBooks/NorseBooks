@@ -108,6 +108,7 @@ export class ResourceService {
           ) {
             throw new ServiceException('Resource type must be boolean');
           }
+          break;
 
         case 'NUMBER':
           const numberValue = parseFloat(value.toString());
@@ -115,6 +116,7 @@ export class ResourceService {
           if (typeof value !== 'number' && isNaN(numberValue)) {
             throw new ServiceException('Resource type must be number');
           }
+          break;
       }
 
       const resources = await this.dbService.updateByFields<NBResource<T>>(
