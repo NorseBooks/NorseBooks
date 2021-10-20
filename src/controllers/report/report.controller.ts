@@ -15,13 +15,16 @@ import {
 import { ReportService } from '../../services/report/report.service';
 import { NBReport } from '../../services/report/report.interface';
 import { NBBook } from '../../services/book/book.interface';
+import { ResourceService } from '../../services/resource/resource.service';
 import { SessionOptionalGuard } from '../../guards/session-optional.guard';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
+import { Hostname } from 'src/decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { NBUser } from '../../services/user/user.interface';
+import { sendFormattedEmail, emailAddress } from '../../emailer';
 
 /**
  * Report controller.
@@ -29,7 +32,10 @@ import { NBUser } from '../../services/user/user.interface';
 @Controller('api/report')
 @UseInterceptors(new ResponseInterceptor())
 export class ReportController {
-  constructor(private readonly reportService: ReportService) {}
+  constructor(
+    private readonly reportService: ReportService,
+    private readonly resourceService: ResourceService,
+  ) {}
 
   /**
    * Report a book.
@@ -45,8 +51,24 @@ export class ReportController {
     @QueryString({ name: 'bookID' }) bookID: string,
     @QueryString({ name: 'reason' }) reason: string,
     @UserSession() user: NBUser,
+    @Hostname() hostname: string,
   ): Promise<NBReport> {
-    return this.reportService.reportBook(user.id, bookID, reason);
+    const report = await this.reportService.reportBook(user.id, bookID, reason);
+
+    const adminEmails = await this.resourceService.getResource<boolean>(
+      'ADMIN_EMAILS',
+    );
+
+    if (adminEmails) {
+      await sendFormattedEmail(
+        emailAddress,
+        'Admin notification',
+        'admin-notification',
+        { hostname, notificationType: 'book report' },
+      );
+    }
+
+    return report;
   }
 
   /**

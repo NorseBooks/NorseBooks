@@ -14,12 +14,15 @@ import {
 } from '@nestjs/common';
 import { FeedbackService } from '../../services/feedback/feedback.service';
 import { NBFeedback } from '../../services/feedback/feedback.interface';
+import { ResourceService } from '../../services/resource/resource.service';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
+import { Hostname } from 'src/decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { NBUser } from '../../services/user/user.interface';
+import { sendFormattedEmail, emailAddress } from '../../emailer';
 
 /**
  * Feedback controller.
@@ -27,7 +30,10 @@ import { NBUser } from '../../services/user/user.interface';
 @Controller('api/feedback')
 @UseInterceptors(new ResponseInterceptor())
 export class FeedbackController {
-  constructor(private readonly feedbackService: FeedbackService) {}
+  constructor(
+    private readonly feedbackService: FeedbackService,
+    private readonly resourceService: ResourceService,
+  ) {}
 
   /**
    * Send feedback to the admins.
@@ -41,8 +47,27 @@ export class FeedbackController {
   public async sendFeedback(
     @QueryString({ name: 'feedback' }) feedback: string,
     @UserSession() user: NBUser,
+    @Hostname() hostname: string,
   ): Promise<NBFeedback> {
-    return this.feedbackService.sendFeedback(user.id, feedback);
+    const feedbackRecord = await this.feedbackService.sendFeedback(
+      user.id,
+      feedback,
+    );
+
+    const adminEmails = await this.resourceService.getResource<boolean>(
+      'ADMIN_EMAILS',
+    );
+
+    if (adminEmails) {
+      await sendFormattedEmail(
+        emailAddress,
+        'Admin notification',
+        'admin-notification',
+        { hostname, notificationType: 'user feedback' },
+      );
+    }
+
+    return feedbackRecord;
   }
 
   /**

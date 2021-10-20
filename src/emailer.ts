@@ -9,7 +9,7 @@ import * as fs from 'fs';
 /**
  * Email address environment variable.
  */
-const emailAddress = process.env.EMAIL_ADDRESS;
+export const emailAddress = process.env.EMAIL_ADDRESS;
 
 /**
  * Email app password environment variable.
