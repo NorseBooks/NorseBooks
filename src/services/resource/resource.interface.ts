@@ -16,5 +16,8 @@ export interface NBResource<T extends boolean | number | string> {
  * Mapping of resource keys to values.
  */
 export interface ResourceMap {
-  [name: string]: boolean | number | string;
+  [name: string]: {
+    value: boolean | number | string;
+    type: string;
+  };
 }

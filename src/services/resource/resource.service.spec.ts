@@ -87,19 +87,31 @@ describe('ResourceService', () => {
     const resources1 = await resourceService.getResources();
     expect(resources1).toBeDefined();
     expect(Object.keys(resources1).length).toBeGreaterThan(0);
-    expect(resources1).toHaveProperty('SALT_ROUNDS', 12);
-    expect(resources1).toHaveProperty('ADMIN_EMAILS', true);
+    expect(resources1).toHaveProperty('SALT_ROUNDS', {
+      value: 12,
+      type: 'NUMBER',
+    });
+    expect(resources1).toHaveProperty('ADMIN_EMAILS', {
+      value: true,
+      type: 'BOOLEAN',
+    });
     await resourceService.setResource('ADMIN_EMAILS', false);
     const resources2 = await resourceService.getResources();
     expect(resources2).toBeDefined();
     expect(Object.keys(resources2).length).toBeGreaterThan(0);
     expect(resources2).not.toEqual(resources1);
-    expect(resources2).toHaveProperty('ADMIN_EMAILS', false);
+    expect(resources2).toHaveProperty('ADMIN_EMAILS', {
+      value: false,
+      type: 'BOOLEAN',
+    });
     await resourceService.resetResource('ADMIN_EMAILS');
     const resources3 = await resourceService.getResources();
     expect(resources3).toBeDefined();
     expect(Object.keys(resources3).length).toBeGreaterThan(0);
     expect(resources3).not.toEqual(resources2);
-    expect(resources3).toHaveProperty('ADMIN_EMAILS', true);
+    expect(resources3).toHaveProperty('ADMIN_EMAILS', {
+      value: true,
+      type: 'BOOLEAN',
+    });
   });
 });
