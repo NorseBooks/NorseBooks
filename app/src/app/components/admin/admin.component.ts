@@ -149,7 +149,7 @@ export class AdminComponent implements OnInit {
     this.settingResource = true;
 
     try {
-      await this.resourceService.set(name, this.newResources[name]);
+      await this.resourceService.set(name, this.newResources[name].value);
     } catch (err: any) {
       this.snackBar.open(`Error: ${err}`, undefined, {
         duration: 3000,

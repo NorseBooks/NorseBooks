@@ -59,7 +59,7 @@ export class ResourceService {
     name: string,
   ): Promise<T> {
     await this.awaitResources();
-    return this.resources[name] as T;
+    return this.resources[name].value as T;
   }
 
   /**

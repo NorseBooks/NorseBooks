@@ -1,0 +1,8 @@
+Hello, {appName} admin.
+
+An admin notification has been received: {notificationType}. Click the link below to check the admin notifications.
+
+{hostname}/admin
+
+Sincerely,
+The {appName} Dev Team

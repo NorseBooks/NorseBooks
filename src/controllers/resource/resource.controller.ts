@@ -11,7 +11,10 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ResourceService } from '../../services/resource/resource.service';
-import { NBResource } from '../../services/resource/resource.interface';
+import {
+  NBResource,
+  ResourceMap,
+} from '../../services/resource/resource.interface';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
@@ -86,9 +89,7 @@ export class ResourceController {
    * @returns All resources.
    */
   @Get('all')
-  public async getResources(): Promise<{
-    [name: string]: string | number | boolean;
-  }> {
+  public async getResources(): Promise<ResourceMap> {
     return this.resourceService.getResources();
   }
 }

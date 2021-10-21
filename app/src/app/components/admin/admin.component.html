@@ -94,10 +94,24 @@
           <div *ngFor="let resource of resources | keyvalue" class="resource">
             <mat-form-field [appearance]="inputAppearance" class="max-width">
               <mat-label>{{ resource.key | resourceName }}</mat-label>
+              <mat-select
+                *ngIf="resources[resource.key].type === 'BOOLEAN'"
+                [(ngModel)]="newResources[resource.key].value"
+              >
+                <mat-option [value]="true">true</mat-option>
+                <mat-option [value]="false">false</mat-option>
+              </mat-select>
               <input
+                *ngIf="resources[resource.key].type === 'NUMBER'"
+                matInput
+                type="number"
+                [(ngModel)]="newResources[resource.key].value"
+              />
+              <input
+                *ngIf="resources[resource.key].type === 'STRING'"
                 matInput
                 type="text"
-                [(ngModel)]="newResources[resource.key]"
+                [(ngModel)]="newResources[resource.key].value"
               />
               <button
                 mat-icon-button
