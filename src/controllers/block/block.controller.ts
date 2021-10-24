@@ -15,7 +15,7 @@ import { BlockService } from '../../services/block/block.service';
 import { OtherUserInfo } from '../../services/user/user.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
-import { UserSession } from 'src/decorators/user-session.decorator';
+import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { NBUser } from '../../services/user/user.interface';
 

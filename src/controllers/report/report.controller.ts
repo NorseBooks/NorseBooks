@@ -20,7 +20,7 @@ import { SessionOptionalGuard } from '../../guards/session-optional.guard';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
-import { Hostname } from 'src/decorators/hostname.decorator';
+import { Hostname } from '../../decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { NBUser } from '../../services/user/user.interface';
