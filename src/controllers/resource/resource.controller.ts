@@ -11,6 +11,10 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ResourceService } from '../../services/resource/resource.service';
+import {
+  NBResource,
+  ResourceMap,
+} from '../../services/resource/resource.interface';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
@@ -30,7 +34,9 @@ export class ResourceController {
    * @returns Whether or not the resource exists.
    */
   @Get('exists')
-  public async resourceExists(@QueryString({ name: 'name' }) name: string) {
+  public async resourceExists(
+    @QueryString({ name: 'name' }) name: string,
+  ): Promise<boolean> {
     return this.resourceService.resourceExists(name);
   }
 
@@ -41,7 +47,9 @@ export class ResourceController {
    * @returns The requested resource.
    */
   @Get()
-  public async getResource(@QueryString({ name: 'name' }) name: string) {
+  public async getResource(
+    @QueryString({ name: 'name' }) name: string,
+  ): Promise<boolean | number | string> {
     return this.resourceService.getResource(name);
   }
 
@@ -57,7 +65,7 @@ export class ResourceController {
   public async setResource(
     @QueryString({ name: 'name' }) name: string,
     @QueryString({ name: 'value' }) value: string,
-  ) {
+  ): Promise<NBResource<boolean | number | string>> {
     return this.resourceService.setResource(name, value);
   }
 
@@ -69,7 +77,9 @@ export class ResourceController {
    */
   @Patch('reset')
   @UseGuards(AdminGuard)
-  public async resetResource(@QueryString({ name: 'name' }) name: string) {
+  public async resetResource(
+    @QueryString({ name: 'name' }) name: string,
+  ): Promise<NBResource<boolean | number | string>> {
     return this.resourceService.resetResource(name);
   }
 
@@ -79,7 +89,7 @@ export class ResourceController {
    * @returns All resources.
    */
   @Get('all')
-  public async getResources() {
+  public async getResources(): Promise<ResourceMap> {
     return this.resourceService.getResources();
   }
 }

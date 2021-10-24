@@ -42,6 +42,7 @@ import { UserInterestController } from './controllers/user-interest/user-interes
 import { ReferralController } from './controllers/referral/referral.controller';
 import { BlockController } from './controllers/block/block.controller';
 import { AdminController } from './controllers/admin/admin.controller';
+import { MigrationController } from './controllers/migration/migration.controller';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { AdminController } from './controllers/admin/admin.controller';
     ReferralController,
     BlockController,
     AdminController,
+    MigrationController,
   ],
   providers: [
     DBService,

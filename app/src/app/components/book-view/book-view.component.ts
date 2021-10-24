@@ -28,6 +28,7 @@ import {
 export class BookViewComponent implements OnInit {
   public reportReasonMaxLength = 1;
   public done = false;
+  public bookExists = true;
   public loggedIn = false;
   public bookID = '';
   public bookInfo!: NBBook;
@@ -82,7 +83,10 @@ export class BookViewComponent implements OnInit {
       this.done = true;
 
       await wait(100);
-      this.updateBookImage();
+
+      if (this.bookExists) {
+        this.updateBookImage();
+      }
     });
   }
 
@@ -90,7 +94,13 @@ export class BookViewComponent implements OnInit {
    * Update the info on the book and report status.
    */
   public async updateBookInfo(): Promise<void> {
-    this.bookInfo = await this.bookService.getBook(this.bookID);
+    try {
+      this.bookInfo = await this.bookService.getBook(this.bookID);
+    } catch (err) {
+      this.bookExists = false;
+      return;
+    }
+
     this.userInfo = await this.bookService.getBookOwner(this.bookID);
     this.bookDepartment = await this.departmentService.getDepartment(
       this.bookInfo.departmentID,

@@ -5,7 +5,7 @@
 
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { DBService } from '../db/db.service';
-import { NBResource } from './resource.interface';
+import { NBResource, ResourceMap } from './resource.interface';
 import { ServiceException } from '../service.exception';
 
 /**
@@ -108,6 +108,7 @@ export class ResourceService {
           ) {
             throw new ServiceException('Resource type must be boolean');
           }
+          break;
 
         case 'NUMBER':
           const numberValue = parseFloat(value.toString());
@@ -115,6 +116,7 @@ export class ResourceService {
           if (typeof value !== 'number' && isNaN(numberValue)) {
             throw new ServiceException('Resource type must be number');
           }
+          break;
       }
 
       const resources = await this.dbService.updateByFields<NBResource<T>>(
@@ -178,9 +180,7 @@ export class ResourceService {
    *
    * @returns All resources.
    */
-  public async getResources(): Promise<{
-    [name: string]: boolean | number | string;
-  }> {
+  public async getResources(): Promise<ResourceMap> {
     const resources = await this.dbService.list<
       NBResource<boolean | number | string>
     >(resourceTableName, { fieldName: 'name', sortOrder: 'ASC' });
@@ -188,13 +188,19 @@ export class ResourceService {
     return resources.reduce((acc, resource) => {
       switch (resource.type) {
         case 'BOOLEAN':
-          acc[resource.name] = resource.value === 'true' ? true : false;
+          acc[resource.name] = {
+            value: resource.value === 'true' ? true : false,
+            type: resource.type,
+          };
           break;
         case 'NUMBER':
-          acc[resource.name] = parseFloat(resource.value as string);
+          acc[resource.name] = {
+            value: parseFloat(resource.value as string),
+            type: resource.type,
+          };
           break;
         case 'STRING':
-          acc[resource.name] = resource.value;
+          acc[resource.name] = { value: resource.value, type: resource.type };
           break;
       }
 

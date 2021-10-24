@@ -24,6 +24,7 @@ export class BookEditComponent implements OnInit {
   public bookAuthorMaxLength = 1;
   public bookDescriptionMaxLength = 1;
   public done = false;
+  public bookExists = true;
   public loggedIn = false;
   public bookID = '';
   public bookInfo!: NBBook;
@@ -62,7 +63,13 @@ export class BookEditComponent implements OnInit {
       this.bookID = paramMap.get('bookID') || '';
 
       this.loggedIn = this.userService.loggedIn();
-      this.bookInfo = await this.bookService.getBook(this.bookID);
+
+      try {
+        this.bookInfo = await this.bookService.getBook(this.bookID);
+      } catch (err) {
+        this.bookExists = false;
+        return;
+      }
 
       if (!this.loggedIn) {
         await this.router.navigate(['unauthorized'], {

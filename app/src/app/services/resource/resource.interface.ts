@@ -1,6 +1,9 @@
 /**
- * All resources.
+ * Mapping of resource keys to values.
  */
-export interface Resources {
-  [name: string]: boolean | number | string;
+export interface ResourceMap {
+  [name: string]: {
+    value: boolean | number | string;
+    type: string;
+  };
 }

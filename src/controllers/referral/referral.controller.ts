@@ -12,6 +12,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ReferralService } from '../../services/referral/referral.service';
+import { NBReferral } from '../../services/referral/referral.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
@@ -38,7 +39,7 @@ export class ReferralController {
   public async referUser(
     @QueryString({ name: 'userID' }) userID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBReferral> {
     return this.referralService.referUser(userID, user.id);
   }
 
@@ -50,7 +51,9 @@ export class ReferralController {
    */
   @Get()
   @UseGuards(SessionRequiredGuard)
-  public async getReferral(@UserSession() user: NBUser) {
+  public async getReferral(
+    @UserSession() user: NBUser,
+  ): Promise<NBReferral | undefined> {
     return this.referralService.getReferral(user.id);
   }
 
@@ -65,7 +68,7 @@ export class ReferralController {
   public async getReferrals(
     @UserSession() user: NBUser,
     @QueryString({ name: 'userID' }) userID: string,
-  ) {
+  ): Promise<NBReferral[]> {
     if (userID === user.id || user.admin) {
       return this.referralService.getReferrals(userID);
     } else {
@@ -81,7 +84,9 @@ export class ReferralController {
    */
   @Get('reached-threshold')
   @UseGuards(SessionRequiredGuard)
-  public async reachedReferralThreshold(@UserSession() user: NBUser) {
+  public async reachedReferralThreshold(
+    @UserSession() user: NBUser,
+  ): Promise<boolean> {
     return this.referralService.reachedReferralThreshold(user.id);
   }
 }

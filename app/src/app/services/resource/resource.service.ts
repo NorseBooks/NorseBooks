@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { APIService } from '../api/api.service';
-import { Resources } from './resource.interface';
+import { ResourceMap } from './resource.interface';
 
 /**
  * Resource service.
@@ -11,11 +11,11 @@ import { Resources } from './resource.interface';
 export class ResourceService {
   private gotResources = false;
   private getResourcesError = null;
-  private resources: Resources = {};
+  private resources: ResourceMap = {};
 
   constructor(private readonly apiService: APIService) {
     this.apiService
-      .get<Resources>('resource/all')
+      .get<ResourceMap>('resource/all')
       .then((resources) => {
         this.resources = resources;
         this.gotResources = true;
@@ -44,7 +44,7 @@ export class ResourceService {
    *
    * @returns All resources.
    */
-  public async getAll(): Promise<Resources> {
+  public async getAll(): Promise<ResourceMap> {
     await this.awaitResources();
     return this.resources;
   }
@@ -59,7 +59,7 @@ export class ResourceService {
     name: string,
   ): Promise<T> {
     await this.awaitResources();
-    return this.resources[name] as T;
+    return this.resources[name].value as T;
   }
 
   /**
@@ -88,6 +88,6 @@ export class ResourceService {
    * Update resources.
    */
   public async update(): Promise<void> {
-    this.resources = await this.apiService.get<Resources>('resource/all');
+    this.resources = await this.apiService.get<ResourceMap>('resource/all');
   }
 }

@@ -5,6 +5,12 @@
 
 import { Controller, UseGuards, UseInterceptors, Get } from '@nestjs/common';
 import { AdminService } from '../../services/admin/admin.service';
+import {
+  AdminStats,
+  AdminDatabaseUsage,
+  AdminUser,
+} from '../../services/admin/admin.interface';
+import { NBBook } from '../../services/book/book.interface';
 import { AdminGuard } from '../../guards/admin.guard';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 
@@ -23,7 +29,7 @@ export class AdminController {
    */
   @Get('stats')
   @UseGuards(AdminGuard)
-  public async getStats() {
+  public async getStats(): Promise<AdminStats> {
     return this.adminService.getStats();
   }
 
@@ -34,7 +40,7 @@ export class AdminController {
    */
   @Get('users')
   @UseGuards(AdminGuard)
-  public async getUsers() {
+  public async getUsers(): Promise<AdminUser[]> {
     const users = await this.adminService.getUsers();
 
     return users.map((user) => ({
@@ -59,7 +65,7 @@ export class AdminController {
    */
   @Get('books')
   @UseGuards(AdminGuard)
-  public async getBooks() {
+  public async getBooks(): Promise<NBBook[]> {
     return this.adminService.getBooks();
   }
 
@@ -70,7 +76,7 @@ export class AdminController {
    */
   @Get('database-usage')
   @UseGuards(AdminGuard)
-  public async getDatabaseUsage() {
+  public async getDatabaseUsage(): Promise<AdminDatabaseUsage> {
     return this.adminService.getDatabaseUsage();
   }
 }

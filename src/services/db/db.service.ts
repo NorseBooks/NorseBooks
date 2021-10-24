@@ -23,7 +23,9 @@ types.setTypeParser(1114, (timestamp) =>
 /**
  * Parse money type.
  */
-types.setTypeParser(790, (amount) => parseFloat(amount.slice(1)));
+types.setTypeParser(790, (amount) =>
+  parseFloat(amount.slice(1).replace(/,/g, '')),
+);
 
 /**
  * Map of fields to values.

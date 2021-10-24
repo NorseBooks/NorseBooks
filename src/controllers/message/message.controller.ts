@@ -14,6 +14,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { MessageService } from '../../services/message/message.service';
+import { NBMessage } from '../../services/message/message.interface';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
@@ -42,7 +43,7 @@ export class MessageController {
     @QueryString({ name: 'userID' }) userID: string,
     @QueryString({ name: 'content' }) content: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBMessage> {
     return this.messageService.sendMessage(user.id, userID, content);
   }
 
@@ -58,7 +59,7 @@ export class MessageController {
   public async getMessage(
     @QueryString({ name: 'messageID' }) messageID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBMessage> {
     const message = await this.messageService.getMessage(messageID);
 
     if (message.fromUserID === user.id || message.toUserID === user.id) {
@@ -76,7 +77,9 @@ export class MessageController {
    */
   @Get('threads')
   @UseGuards(SessionRequiredGuard)
-  public async getMessageThreads(@UserSession() user: NBUser) {
+  public async getMessageThreads(
+    @UserSession() user: NBUser,
+  ): Promise<NBMessage[]> {
     return this.messageService.getMessageThreads(user.id);
   }
 
@@ -92,7 +95,7 @@ export class MessageController {
   public async getMessageHistory(
     @QueryString({ name: 'userID' }) userID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBMessage[]> {
     return this.messageService.getMessages(user.id, userID);
   }
 
@@ -107,7 +110,7 @@ export class MessageController {
   public async markRead(
     @QueryString({ name: 'messageID' }) messageID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     const message = await this.messageService.getMessage(messageID);
 
     if (message.toUserID === user.id) {
@@ -128,7 +131,7 @@ export class MessageController {
   public async deleteMessage(
     @QueryString({ name: 'messageID' }) messageID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     const message = await this.messageService.getMessage(messageID);
 
     if (message.fromUserID === user.id) {

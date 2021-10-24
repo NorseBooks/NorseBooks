@@ -9,7 +9,7 @@ import { BookService } from '../../services/book/book.service';
 import { ReportService } from '../../services/report/report.service';
 import { FeedbackService } from '../../services/feedback/feedback.service';
 import { AdminService } from '../../services/admin/admin.service';
-import { Resources } from '../../services/resource/resource.interface';
+import { ResourceMap } from '../../services/resource/resource.interface';
 import { OtherUserInfo } from '../../services/user/user.interface';
 import { NBBook } from '../../services/book/book.interface';
 import { NBReport } from '../../services/report/report.interface';
@@ -42,12 +42,12 @@ export class AdminComponent implements OnInit {
   public done = false;
   public stats!: AdminStats;
   public dbUsage: AdminDatabaseUsage = {};
-  public resources: Resources = {};
+  public resources: ResourceMap = {};
   public reports: NBReport[] = [];
   public feedback: NBFeedback[] = [];
   public users: AdminUser[] = [];
   public books: NBBook[] = [];
-  public newResources: Resources = {};
+  public newResources: ResourceMap = {};
   public reportUsers: OtherUserInfo[] = [];
   public reportBooks: NBBook[] = [];
   public feedbackUsers: OtherUserInfo[] = [];
@@ -149,7 +149,7 @@ export class AdminComponent implements OnInit {
     this.settingResource = true;
 
     try {
-      await this.resourceService.set(name, this.newResources[name]);
+      await this.resourceService.set(name, this.newResources[name].value);
     } catch (err: any) {
       this.snackBar.open(`Error: ${err}`, undefined, {
         duration: 3000,

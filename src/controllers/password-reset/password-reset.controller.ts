@@ -7,7 +7,7 @@ import { Controller, UseInterceptors, Post, Patch, Get } from '@nestjs/common';
 import { PasswordResetService } from '../../services/password-reset/password-reset.service';
 import { UserService } from '../../services/user/user.service';
 import { QueryString } from '../../decorators/query-string.decorator';
-import { Hostname } from 'src/decorators/hostname.decorator';
+import { Hostname } from '../../decorators/hostname.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { sendFormattedEmail } from '../../emailer';
 
@@ -31,7 +31,7 @@ export class PasswordResetController {
   public async requestPasswordReset(
     @QueryString({ name: 'email' }) email: string,
     @Hostname() hostname: string,
-  ) {
+  ): Promise<void> {
     const emailAddress = email.includes('@') ? email : `${email}@luther.edu`;
 
     const userExists = await this.userService.userExistsByEmail(emailAddress);
@@ -69,7 +69,7 @@ export class PasswordResetController {
   @Get('exists')
   public async passwordResetExists(
     @QueryString({ name: 'resetID' }) resetID: string,
-  ) {
+  ): Promise<boolean> {
     return this.passwordResetService.passwordResetExists(resetID);
   }
 
@@ -83,7 +83,7 @@ export class PasswordResetController {
   public async resetPassword(
     @QueryString({ name: 'resetID' }) resetID: string,
     @QueryString({ name: 'newPassword' }) newPassword: string,
-  ) {
+  ): Promise<void> {
     await this.passwordResetService.resetPassword(resetID, newPassword);
   }
 }

@@ -9,7 +9,7 @@ import { ResourceService } from '../resource/resource.service';
 import { UserService } from '../user/user.service';
 import { BookService, bookTableName } from '../book/book.service';
 import { NBReport } from './report.interface';
-import { NBBook } from 'app/src/app/services/book/book.interface';
+import { NBBook } from '../../services/book/book.interface';
 import { ServiceException } from '../service.exception';
 
 /**

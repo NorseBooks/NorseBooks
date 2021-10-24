@@ -5,6 +5,7 @@
 
 import { Controller, UseInterceptors, Get } from '@nestjs/common';
 import { DepartmentService } from '../../services/department/department.service';
+import { NBDepartment } from '../../services/department/department.interface';
 import { QueryNumber } from '../../decorators/query-number.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 
@@ -25,7 +26,7 @@ export class DepartmentController {
   @Get()
   public async getDepartment(
     @QueryNumber({ name: 'departmentID' }) departmentID: number,
-  ) {
+  ): Promise<string> {
     return this.departmentService.getDepartmentName(departmentID);
   }
 
@@ -35,7 +36,7 @@ export class DepartmentController {
    * @returns All departments.
    */
   @Get('all')
-  public async getDepartments() {
+  public async getDepartments(): Promise<NBDepartment[]> {
     return this.departmentService.getDepartments();
   }
 }

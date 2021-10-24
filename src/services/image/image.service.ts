@@ -34,7 +34,7 @@ export class ImageService {
    * @returns The new image record.
    */
   public async createImage(data: string): Promise<NBImage> {
-    const imageData = await this.shrinkImageBase64(data);
+    const imageData = await this.shrinkImageAutoBase64(data);
 
     const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
@@ -93,7 +93,7 @@ export class ImageService {
     imageID: string,
     newData: string,
   ): Promise<NBImage> {
-    const imageData = await this.shrinkImageBase64(newData);
+    const imageData = await this.shrinkImageAutoBase64(newData);
 
     const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
@@ -136,18 +136,12 @@ export class ImageService {
     factor: number,
     quality = 100,
   ): Promise<Buffer> {
-    return new Promise((resolve) => {
-      jimp.read(image).then((img) => {
-        const width = img.bitmap.width;
-        img
-          .resize(Math.floor(width * factor), jimp.AUTO)
-          .quality(quality)
-          .getBufferAsync(jimp.MIME_JPEG)
-          .then((buffer) => {
-            resolve(buffer);
-          });
-      });
-    });
+    const img = await jimp.read(image);
+    const width = img.bitmap.width;
+    return img
+      .resize(Math.floor(width * factor), jimp.AUTO)
+      .quality(quality)
+      .getBufferAsync(jimp.MIME_JPEG);
   }
 
   /**
@@ -163,27 +157,15 @@ export class ImageService {
     maxWidth = 1920,
     maxHeight = 1080,
   ): Promise<Buffer> {
-    return new Promise((resolve) => {
-      jimp.read(image).then((img) => {
-        const existingRatio = img.bitmap.width / img.bitmap.height;
-        const potentialRatio = maxWidth / maxHeight;
-        if (existingRatio > potentialRatio) {
-          img
-            .resize(maxWidth, jimp.AUTO)
-            .getBufferAsync(jimp.MIME_JPEG)
-            .then((buffer) => {
-              resolve(buffer);
-            });
-        } else {
-          img
-            .resize(jimp.AUTO, maxHeight)
-            .getBufferAsync(jimp.MIME_JPEG)
-            .then((buffer) => {
-              resolve(buffer);
-            });
-        }
-      });
-    });
+    const img = await jimp.read(image);
+    const existingRatio = img.bitmap.width / img.bitmap.height;
+    const potentialRatio = maxWidth / maxHeight;
+
+    if (existingRatio > potentialRatio) {
+      return img.resize(maxWidth, jimp.AUTO).getBufferAsync(jimp.MIME_JPEG);
+    } else {
+      return img.resize(jimp.AUTO, maxHeight).getBufferAsync(jimp.MIME_JPEG);
+    }
   }
 
   /**
@@ -191,6 +173,8 @@ export class ImageService {
    *
    * @param image The image buffer.
    * @param maxImageSize The maximum size of the image.
+   * @param maxWidth The maximum width of the image.
+   * @param maxHeight The maximum height of the image.
    * @param factor The scale factor.
    * @param quality The JPEG quality.
    * @returns The resulting image buffer.
@@ -208,12 +192,12 @@ export class ImageService {
     } else {
       const buffer = await this.shrinkImageToSize(image, maxWidth, maxHeight);
 
-      if (buffer.length * (4 / 3) < maxImageSize) {
+      if (buffer.length < maxImageSize) {
         return buffer;
       } else {
         let newBuffer = await this.shrinkImage(buffer, factor, quality);
 
-        while (newBuffer.length * (4 / 3) >= maxImageSize) {
+        while (newBuffer.length >= maxImageSize) {
           newBuffer = await this.shrinkImage(newBuffer, factor, quality);
         }
 
@@ -223,18 +207,47 @@ export class ImageService {
   }
 
   /**
-   * Shrinks a base64 encoded image.
+   * Shrinks a base64 encoded image automatically.
    *
    * @param imageB64 The base64 image.
+   * @param maxWidth The maximum width of the image.
+   * @param maxHeight The maximum height of the image.
+   * @param factor The scale factor.
+   * @param quality The JPEG quality.
    * @returns The shrunk base64 image.
    */
-  private async shrinkImageBase64(imageB64: string): Promise<string> {
+  private async shrinkImageAutoBase64(
+    imageB64: string,
+    maxWidth = 1600,
+    maxHeight = 900,
+    factor = 0.7071,
+    quality = 40,
+  ): Promise<string> {
     const maxImageSize = await this.resourceService.getResource<number>(
       'MAX_IMAGE_SIZE',
     );
 
-    const image = Buffer.from(imageB64, 'base64');
-    const shrunk = await this.shrinkImageAuto(image, maxImageSize);
-    return shrunk.toString('base64');
+    if (imageB64.length < maxImageSize) {
+      return imageB64;
+    } else {
+      const imageBuffer = Buffer.from(imageB64, 'base64');
+      let shrunkImageBuffer = await this.shrinkImageToSize(
+        imageBuffer,
+        maxWidth,
+        maxHeight,
+      );
+      let shrunkImageB64 = shrunkImageBuffer.toString('base64');
+
+      while (shrunkImageB64.length >= maxImageSize) {
+        shrunkImageBuffer = await this.shrinkImage(
+          shrunkImageBuffer,
+          factor,
+          quality,
+        );
+        shrunkImageB64 = shrunkImageBuffer.toString('base64');
+      }
+
+      return shrunkImageB64;
+    }
   }
 }

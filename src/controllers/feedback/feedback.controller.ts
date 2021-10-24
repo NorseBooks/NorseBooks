@@ -13,12 +13,16 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { FeedbackService } from '../../services/feedback/feedback.service';
+import { NBFeedback } from '../../services/feedback/feedback.interface';
+import { ResourceService } from '../../services/resource/resource.service';
 import { SessionRequiredGuard } from '../../guards/session-required.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 import { QueryString } from '../../decorators/query-string.decorator';
+import { Hostname } from '../../decorators/hostname.decorator';
 import { UserSession } from '../../decorators/user-session.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { NBUser } from '../../services/user/user.interface';
+import { sendFormattedEmail, emailAddress } from '../../emailer';
 
 /**
  * Feedback controller.
@@ -26,7 +30,10 @@ import { NBUser } from '../../services/user/user.interface';
 @Controller('api/feedback')
 @UseInterceptors(new ResponseInterceptor())
 export class FeedbackController {
-  constructor(private readonly feedbackService: FeedbackService) {}
+  constructor(
+    private readonly feedbackService: FeedbackService,
+    private readonly resourceService: ResourceService,
+  ) {}
 
   /**
    * Send feedback to the admins.
@@ -40,8 +47,27 @@ export class FeedbackController {
   public async sendFeedback(
     @QueryString({ name: 'feedback' }) feedback: string,
     @UserSession() user: NBUser,
-  ) {
-    return this.feedbackService.sendFeedback(user.id, feedback);
+    @Hostname() hostname: string,
+  ): Promise<NBFeedback> {
+    const feedbackRecord = await this.feedbackService.sendFeedback(
+      user.id,
+      feedback,
+    );
+
+    const adminEmails = await this.resourceService.getResource<boolean>(
+      'ADMIN_EMAILS',
+    );
+
+    if (adminEmails) {
+      await sendFormattedEmail(
+        emailAddress,
+        'Admin notification',
+        'admin-notification',
+        { hostname, notificationType: 'user feedback' },
+      );
+    }
+
+    return feedbackRecord;
   }
 
   /**
@@ -56,7 +82,7 @@ export class FeedbackController {
   public async getFeedback(
     @QueryString({ name: 'feedbackID' }) feedbackID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<NBFeedback> {
     const feedback = await this.feedbackService.getFeedback(feedbackID);
 
     if (feedback.userID === user.id || user.admin) {
@@ -74,7 +100,9 @@ export class FeedbackController {
    */
   @Get('user-feedback')
   @UseGuards(SessionRequiredGuard)
-  public async getUserFeedback(@UserSession() user: NBUser) {
+  public async getUserFeedback(
+    @UserSession() user: NBUser,
+  ): Promise<NBFeedback | undefined> {
     return this.feedbackService.getUserFeedback(user.id);
   }
 
@@ -85,7 +113,7 @@ export class FeedbackController {
    */
   @Get('all')
   @UseGuards(AdminGuard)
-  public async getAllFeedback() {
+  public async getAllFeedback(): Promise<NBFeedback[]> {
     return this.feedbackService.getAllFeedback();
   }
 
@@ -100,7 +128,7 @@ export class FeedbackController {
   public async deleteFeedback(
     @QueryString({ name: 'feedbackID' }) feedbackID: string,
     @UserSession() user: NBUser,
-  ) {
+  ): Promise<void> {
     const feedback = await this.feedbackService.getFeedback(feedbackID);
 
     if (feedback.userID === user.id || user.admin) {

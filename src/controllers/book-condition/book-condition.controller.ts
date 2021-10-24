@@ -5,6 +5,7 @@
 
 import { Controller, UseInterceptors, Get } from '@nestjs/common';
 import { BookConditionService } from '../../services/book-condition/book-condition.service';
+import { NBBookCondition } from '../../services/book-condition/book-condition.interface';
 import { QueryNumber } from '../../decorators/query-number.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 
@@ -25,7 +26,7 @@ export class BookConditionController {
   @Get()
   public async getBookCondition(
     @QueryNumber({ name: 'conditionID' }) conditionID: number,
-  ) {
+  ): Promise<string> {
     return this.bookConditionService.getBookConditionName(conditionID);
   }
 
@@ -35,7 +36,7 @@ export class BookConditionController {
    * @returns All book conditions.
    */
   @Get('all')
-  public async getBookConditions() {
+  public async getBookConditions(): Promise<NBBookCondition[]> {
     return this.bookConditionService.getBookConditions();
   }
 }
