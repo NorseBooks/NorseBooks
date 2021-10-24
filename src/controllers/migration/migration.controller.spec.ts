@@ -1,3 +1,8 @@
+/**
+ * Migration controller tests.
+ * @packageDocumentation
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { MigrationController } from './migration.controller';
 
