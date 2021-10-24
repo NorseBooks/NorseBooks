@@ -7,7 +7,7 @@ import { Controller, UseInterceptors, Post, Patch, Get } from '@nestjs/common';
 import { PasswordResetService } from '../../services/password-reset/password-reset.service';
 import { UserService } from '../../services/user/user.service';
 import { QueryString } from '../../decorators/query-string.decorator';
-import { Hostname } from 'src/decorators/hostname.decorator';
+import { Hostname } from '../../decorators/hostname.decorator';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { sendFormattedEmail } from '../../emailer';
 
