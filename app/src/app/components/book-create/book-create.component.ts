@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { Dialog } from '../dialog/dialog.component';
 import { ResourceService } from '../../services/resource/resource.service';
 import { UserService } from '../../services/user/user.service';
 import { DepartmentService } from '../../services/department/department.service';
@@ -45,6 +46,8 @@ export class BookCreateComponent implements OnInit {
   public imageData = '';
   public readonly inputAppearance = inputAppearance;
   public readonly acceptImageTypes = acceptImageTypes;
+  @ViewChild('maxBooksDialog') maxBooksDialog!: Dialog;
+  @ViewChild('maxBooksTemplate') maxBooksTemplate!: TemplateRef<any>;
 
   constructor(
     private readonly router: Router,
@@ -77,6 +80,15 @@ export class BookCreateComponent implements OnInit {
     this.bookConditions = await this.bookConditionService.getBookConditions();
 
     this.done = true;
+
+    const userMaxBooks = await this.resourceService.get<number>(
+      'USER_MAX_BOOKS',
+    );
+    const userBooks = await this.userService.getCurrentBooks();
+
+    if (userBooks.length >= userMaxBooks) {
+      this.openMaxBooksDialog();
+    }
   }
 
   /**
@@ -120,6 +132,24 @@ export class BookCreateComponent implements OnInit {
       }
 
       this.submittingCreateBookForm = false;
+    }
+  }
+
+  /**
+   * Open the max books dialog.
+   */
+  public openMaxBooksDialog(): void {
+    this.maxBooksDialog.openDialog(this.maxBooksTemplate);
+  }
+
+  /**
+   * Navigate to the user's profile.
+   *
+   * @param confirm Whether the action was confirmed.
+   */
+  public async goToProfile(confirm: boolean): Promise<void> {
+    if (confirm) {
+      await this.router.navigate(['profile']);
     }
   }
 }
