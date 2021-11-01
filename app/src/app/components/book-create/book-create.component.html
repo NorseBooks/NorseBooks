@@ -181,7 +181,22 @@
       </form>
     </mat-card-content>
   </mat-card>
+
+  <nb-dialog
+    #maxBooksDialog
+    title="Maximum books reached"
+    doneButtonLabel="Go to profile"
+    width="500px"
+    (close)="goToProfile($event)"
+  ></nb-dialog>
 </div>
+
+<ng-template #maxBooksTemplate>
+  <p>
+    You have reached the maximum number of books allowed per user. Please remove
+    books from the site once they have been sold to make room for new ones.
+  </p>
+</ng-template>
 
 <ng-template #loading>
   <div class="center">
