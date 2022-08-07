@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "postinstall": "cd app && npm install --force",
+    "postinstall": "cd app && npm install --legacy-peer-deps",
     "prebuild": "rimraf dist",
     "build": "npm run build:frontend && npm run build:backend",
     "build:backend": "nest build",
